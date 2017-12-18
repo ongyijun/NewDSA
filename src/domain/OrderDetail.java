@@ -13,11 +13,13 @@ public class OrderDetail {
     private Orders orders;
     private Food food;
     private int Quantity;
+    private double foodTotal;
 
-    public OrderDetail(Orders orders, Food food, int Quantity) {
+    public OrderDetail(Orders orders, Food food, int Quantity, double foodTotal) {
         this.orders = orders;
         this.food = food;
         this.Quantity = Quantity;
+        this.foodTotal = foodTotal;
     }
 
     public Orders getOrders() {
@@ -42,6 +44,14 @@ public class OrderDetail {
 
     public void setQuantity(int Quantity) {
         this.Quantity = Quantity;
+    }
+
+    public double getFoodTotal() {
+        return foodTotal;
+    }
+
+    public void setFoodTotal(double foodTotal) {
+        this.foodTotal = foodTotal;
     }
 
     @Override
