@@ -32,7 +32,6 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
             lastNode = lastNode.next;
         }
         TotalEntries++;
-        System.out.println("New Item Added Successfully!");
     }
 
     public T get(int position) {
@@ -48,6 +47,44 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
         }
         return getResult;
     }
+
+    public boolean replace(int givenPosition, T newEntry) {
+        boolean success = true;
+
+        if ((givenPosition >= 1) && (givenPosition <= TotalEntries)) {
+            Node currentNode = firstNode;
+            for (int i = 0; i < givenPosition - 1; ++i) {
+                currentNode = currentNode.next;		// advance currentNode to next node
+            }
+            currentNode.data = newEntry;	// replace the givenPosition node with newEntry
+        } else {
+            success = false;
+        }
+        return success;
+    }
+    
+    public T remove(int givenPosition) {
+    T result = null;                 // return value
+
+    if ((givenPosition >= 1) && (givenPosition <= TotalEntries)) {
+      if (givenPosition == 1) {      // case 1: remove first entry
+        result = firstNode.data;     // save entry to be removed
+        firstNode = firstNode.next;
+        firstNode.previous= null;
+      } else {                         // case 2: givenPosition > 1
+        Node nodeBefore = firstNode;
+        for (int i = 1; i < givenPosition - 1; ++i) {
+          nodeBefore = nodeBefore.next;		// advance nodeBefore to its next node
+        }
+        result = nodeBefore.next.data;  // save entry to be removed
+        Node nodeAfter = nodeBefore.next.next;
+        nodeBefore.next = nodeAfter;	// make node before point to node after
+        nodeAfter.previous = nodeBefore;
+      }
+      TotalEntries--;
+    }
+    return result;                   // return removed entry, or null if operation fails
+  }
 
     public int getTotalEntries() {
         return TotalEntries;
@@ -75,14 +112,14 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
                 for (int j = 1; j < i + 1; j++) {             //getting the compare node before the current node
                     DeliveryMan Temp = (DeliveryMan) TempNode.data;
                     Node currentNode = DMnode;              //assign current node to temporary node
-                    
+
                     if (DM.getJoinDate().getTime().compareTo(Temp.getJoinDate().getTime()) < 0) {       //If the current node is smaller than compare node
-                        
+
                         found = true;
                         DMnode = DMnode.next;   // moving the current node to the next node first before sorting
-                        
+
                         currentNode.previous.next = currentNode.next;
-                        
+
                         if (currentNode.next != null) {             //if the temporary current node is not the last node
                             currentNode.next.previous = currentNode.previous;
                         } else {                                  //if the temporary current node is last node, then the last node is the previous of temporary current node
@@ -103,8 +140,8 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
                     TempNode = TempNode.next;                  //getting next compare node to perform sorting
                 }
                 if (!found) {
-                        DMnode = DMnode.next;                   //getting next current node if not sort performed
-                    }
+                    DMnode = DMnode.next;                   //getting next current node if not sort performed
+                }
             }
         }
     }

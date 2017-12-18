@@ -12,6 +12,8 @@ package ADT;
 public interface EmployeeListInterface <T>{
     public void add(T newEntry);
     public T get(int position);
+    public boolean replace(int givenPosition, T newEntry);
+    public T remove(int givenPosition);
     public int getTotalEntries();
     public boolean isEmpty();
     public void clear();
