@@ -17,4 +17,5 @@ public interface ModuleCInterface<T> {
     public boolean isEmpty();
     public void clear();
     public void SortOrderDetail();
+    public T remove(int givenPosition);
 }

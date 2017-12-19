@@ -23,9 +23,10 @@ public class TryModuleC {
     ModuleCInterface<OrderDetail> currentDetail = new ModuleCList<OrderDetail>();
     double Subtotal = 0.00;
     ModuleCInterface<Food> CurrentFood = new ModuleCList<Food>();
-    private ModuleCInterface<Restaurant> restaurant = new ModuleCList<Restaurant>();
-    private ModuleCInterface<Food> food = new ModuleCList<Food>();
-    private ModuleCInterface<Customer> customer = new ModuleCList<Customer>();
+    ModuleCInterface<Restaurant> restaurant = new ModuleCList<Restaurant>();
+    ModuleCInterface<Food> food = new ModuleCList<Food>();
+    ModuleCInterface<Customer> customer = new ModuleCList<Customer>();
+    ModuleCInterface<Payment> payment = new ModuleCList<Payment>();
     ModuleCInterface<Orders> order = new ModuleCList<Orders>();
     ModuleCInterface<OrderDetail> orderdetail = new ModuleCList<OrderDetail>();
     /*private List<Orders> order = new ArrayList<>();
@@ -61,6 +62,20 @@ public class TryModuleC {
             int ID = Integer.parseInt(currentID.replace("OR", ""));
             ID++;
             nextID = "OR" + String.format("%06d",ID);
+        }
+        return nextID;
+    }
+    
+    public String getPaymentCurrentID(){
+        String nextID = "";
+        if(payment.isEmpty()){
+                nextID = "PA000001";
+        }
+        else{
+            String currentID = payment.get(payment.getTotalEntries()).getPaymentID();
+            int ID = Integer.parseInt(currentID.replace("PA", ""));
+            ID++;
+            nextID = "PA" + String.format("%06d",ID);
         }
         return nextID;
     }
@@ -207,15 +222,16 @@ public class TryModuleC {
         }
         else{
             System.out.println("\n\nBelow Are The Foods You Have Ordered Inside Your Cart");
-            System.out.println("------------------------------------------------------");
-            System.out.println("-   Food ID   -        Food Name        -  Quantity  -");
-            System.out.println("------------------------------------------------------");
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.println("-   Food ID   -        Food Name        -  Quantity  -  Subtotal(RM)  -");
+            System.out.println("-----------------------------------------------------------------------");
             for(int i=1 ; i<=currentDetail.getTotalEntries(); i++){
                 System.out.printf("\n-  %9s  -",currentDetail.get(i).getFood().getFoodID());
                 System.out.printf(" %22s  -",currentDetail.get(i).getFood().getFoodName());
                 System.out.printf(" %9d  -",currentDetail.get(i).getQuantity());
+                System.out.printf(" %13.2f  -",currentDetail.get(i).getFoodTotal());
             }
-            System.out.println("\n------------------------------------------------------");
+            System.out.println("\n-----------------------------------------------------------------------");
             System.out.println("\nPlease Select Your Selection");
             System.out.println("1. Edit Food");
             System.out.println("2. Delete Food");
@@ -226,11 +242,11 @@ public class TryModuleC {
                 selection = s.nextLine();
                 switch(selection){
                     case "1":{
-                        System.out.println("Edit!");
+                        editFood();
                         break;
                     }
                     case "2":{
-                        System.out.println("Delete");
+                        deleteFood();
                         break;
                     }
                     case "3":{
@@ -255,6 +271,84 @@ public class TryModuleC {
         return again;
     }
     
+    public void editFood(){
+        String foodid = "",selection = "";
+        int newquantity;
+        do{
+            System.out.println("\n\nBelow Are The Foods You Have Ordered Inside Your Cart");
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.println("-   Food ID   -        Food Name        -  Quantity  -  Subtotal(RM)  -");
+            System.out.println("-----------------------------------------------------------------------");
+            for(int i=1 ; i<=currentDetail.getTotalEntries(); i++){
+                System.out.printf("\n-  %9s  -",currentDetail.get(i).getFood().getFoodID());
+                System.out.printf(" %22s  -",currentDetail.get(i).getFood().getFoodName());
+                System.out.printf(" %9d  -",currentDetail.get(i).getQuantity());
+                System.out.printf(" %13.2f  -",currentDetail.get(i).getFoodTotal());
+            }
+            System.out.println("\n-----------------------------------------------------------------------");
+            System.out.print("Please enter the food id that you want to edit:");
+            foodid = s.nextLine();
+            for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
+                if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
+                    do{
+                        System.out.println("Please Enter the Quantity:");
+                        while(!s.hasNextInt()){
+                            System.out.println("Please Enter the Quantity in Integer:");
+                            s.next();
+                        }
+                        newquantity = s.nextInt();
+                        s.nextLine();
+                    }while(newquantity<1);
+                    currentDetail.get(i).setQuantity(newquantity);
+                    double currentFoodTotal = currentDetail.get(i).getFoodTotal();
+                    double newFoodTotal = newquantity*currentDetail.get(i).getFood().getFoodPrice();
+                    double currentSubtotal = currentOrder.getSubtotal();
+                    double newSubtotal = currentSubtotal-currentFoodTotal+newFoodTotal;
+                    currentDetail.get(i).setFoodTotal(newFoodTotal);
+                    currentDetail.get(i).setQuantity(newquantity);
+                    Subtotal = newSubtotal;
+                    currentOrder.setSubtotal(Subtotal);
+                    currentDetail.SortOrderDetail();
+                }
+            }
+            System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
+            selection = s.nextLine();
+            selection = selection.toUpperCase();
+        }while(selection.equals("YES"));
+    }
+    
+    public void deleteFood(){
+        String foodid = "",selection = "";
+        do{
+            System.out.println("\n\nBelow Are The Foods You Have Ordered Inside Your Cart");
+            System.out.println("-----------------------------------------------------------------------");
+            System.out.println("-   Food ID   -        Food Name        -  Quantity  -  Subtotal(RM)  -");
+            System.out.println("-----------------------------------------------------------------------");
+            for(int i=1 ; i<=currentDetail.getTotalEntries(); i++){
+                System.out.printf("\n-  %9s  -",currentDetail.get(i).getFood().getFoodID());
+                System.out.printf(" %22s  -",currentDetail.get(i).getFood().getFoodName());
+                System.out.printf(" %9d  -",currentDetail.get(i).getQuantity());
+                System.out.printf(" %13.2f  -",currentDetail.get(i).getFoodTotal());
+            }
+            System.out.println("\n-----------------------------------------------------------------------");
+            System.out.print("Please enter the food id that you want to remove:");
+            foodid = s.nextLine();
+            for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
+                if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
+                    double currentFoodTotal = currentDetail.get(i).getFoodTotal();
+                    double currentSubtotal = currentOrder.getSubtotal();
+                    double newSubtotal = currentSubtotal-currentFoodTotal;
+                    Subtotal = newSubtotal;
+                    currentOrder.setSubtotal(Subtotal);
+                    currentDetail.remove(i);
+                }
+            }
+            System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
+            selection = s.nextLine();
+            selection = selection.toUpperCase();
+        }while(selection.equals("YES"));
+    }
+    
     public boolean Confirmation(Customer current){
         String selection = "";
         double roundoff = 0.00, total = 0.00;
@@ -269,7 +363,7 @@ public class TryModuleC {
         System.out.printf("Subtotal: RM%.2f\n",currentOrder.getSubtotal());
         System.out.printf("GST: RM%.2f\n",(currentOrder.getSubtotal()*0.06));
         System.out.printf("Total: RM%.2f\n",(currentOrder.getSubtotal()*1.06));
-        System.out.println("\n\nAre You Sure Want To CheckOut?");
+        System.out.println("\n\nAre You Sure Want To CheckOut And Make Payment?");
         System.out.println("1. Yes");
         System.out.println("2. Back To Food Selection");
         while(!selection.equals("1") && !selection.equals("2")){
@@ -284,6 +378,7 @@ public class TryModuleC {
                     currentOrder.setTotal(Subtotal*1.06);
                     currentOrder.setOrderStatus("1");//change to 1
                     order.add(currentOrder);
+                    payment.add(new Payment(getPaymentCurrentID(),currentOrder,currentOrder.getTotal(),cal,"Paid","Online"));
                     for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
                         orderdetail.addDetail(currentDetail.get(i));
                     }
