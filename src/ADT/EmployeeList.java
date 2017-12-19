@@ -6,6 +6,7 @@
 package ADT;
 
 import domain.DeliveryMan;
+import domain.Employee;
 
 /**
  *
@@ -21,7 +22,7 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
         clear();
     }
 
-    public void add(T newEntry) {
+    public void add(T newEntry) {   //basic operation
         Node node = new Node(newEntry);
         if (isEmpty()) {
             firstNode = node;
@@ -34,7 +35,21 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
         TotalEntries++;
     }
 
-    public T get(int position) {
+    public boolean addWithICValidation(T newEntry) {
+        Employee e = (Employee) newEntry;
+        Node currentNode = firstNode;
+        for (int i = 1; i <= TotalEntries; i++) {
+            Employee compareE = (Employee) currentNode.data;
+            if (e.getStaffIC().equals(compareE.getStaffIC())) {
+                return false;
+            }
+            currentNode = currentNode.next;
+        }
+        add(newEntry);
+        return true;
+    }
+
+    public T get(int position) {    //basic operation
         T getResult = null;
         if (position > 0 && position <= TotalEntries) {
             Node tempNode = firstNode;
@@ -48,53 +63,98 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
         return getResult;
     }
 
-    public boolean replace(int givenPosition, T newEntry) {
+    public boolean replace(int givenPosition, T newEntry) {     //basic operation
         boolean success = true;
 
         if ((givenPosition >= 1) && (givenPosition <= TotalEntries)) {
             Node currentNode = firstNode;
             for (int i = 0; i < givenPosition - 1; ++i) {
-                currentNode = currentNode.next;		// advance currentNode to next node
+                currentNode = currentNode.next;
             }
-            currentNode.data = newEntry;	// replace the givenPosition node with newEntry
+            currentNode.data = newEntry;
         } else {
             success = false;
         }
         return success;
     }
-    
-    public T remove(int givenPosition) {
-    T result = null;                 // return value
 
-    if ((givenPosition >= 1) && (givenPosition <= TotalEntries)) {
-      if (givenPosition == 1) {      // case 1: remove first entry
-        result = firstNode.data;     // save entry to be removed
-        firstNode = firstNode.next;
-        firstNode.previous= null;
-      } else {                         // case 2: givenPosition > 1
-        Node nodeBefore = firstNode;
-        for (int i = 1; i < givenPosition - 1; ++i) {
-          nodeBefore = nodeBefore.next;		// advance nodeBefore to its next node
+    public T getEmployeeDetails(String StaffID) {
+        T result = null;
+        Node currentNode = firstNode;
+        for (int i = 1; i <= TotalEntries; i++) {
+            Employee e = (Employee) currentNode.data;
+            if (e.getStaffID().equals(StaffID)) {
+                result = currentNode.data;
+                i = TotalEntries + 1;
+            }
+            currentNode = currentNode.next;
         }
-        result = nodeBefore.next.data;  // save entry to be removed
-        Node nodeAfter = nodeBefore.next.next;
-        nodeBefore.next = nodeAfter;	// make node before point to node after
-        nodeAfter.previous = nodeBefore;
-      }
-      TotalEntries--;
+        return result;
     }
-    return result;                   // return removed entry, or null if operation fails
-  }
 
-    public int getTotalEntries() {
+    public boolean updateDeliveryManDetail(T anEntry) {
+        DeliveryMan DM = (DeliveryMan) anEntry;
+        Node currentNode = firstNode;
+        for (int i = 1; i <= TotalEntries; i++) {
+            DeliveryMan compareDM = (DeliveryMan) currentNode.data;
+            if (DM.getStaffID().equals(compareDM.getStaffID())) {
+                currentNode.data = anEntry;
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
+        return false;
+    }
+
+    public T remove(int givenPosition) {        //basic operation
+        T result = null;
+
+        if ((givenPosition >= 1) && (givenPosition <= TotalEntries)) {
+            if (givenPosition == 1) {
+                result = firstNode.data;
+                firstNode = firstNode.next;
+                if (firstNode != null) {
+                    firstNode.previous = null;
+                }
+            } else {
+                Node nodeBefore = firstNode;
+                for (int i = 1; i < givenPosition - 1; ++i) {
+                    nodeBefore = nodeBefore.next;
+                }
+                result = nodeBefore.next.data;
+                Node nodeAfter = nodeBefore.next.next;
+                nodeBefore.next = nodeAfter;
+                if (nodeAfter != null) {
+                    nodeAfter.previous = nodeBefore;
+                }
+            }
+            TotalEntries--;
+        }
+        return result;
+    }
+
+    public boolean removeStaff(String StaffID) {
+        Node currentNode = firstNode;
+        for (int i = 1; i <= TotalEntries; i++) {
+            Employee e = (Employee) currentNode.data;
+            if (e.getStaffID().equals(StaffID)) {
+                remove(i);
+                return true;
+            }
+            currentNode = currentNode.next;
+        }
+        return false;
+    }
+
+    public int getTotalEntries() {  //basic operation
         return TotalEntries;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty() {  //basic operation
         return TotalEntries == 0;
     }
 
-    public void clear() {
+    public void clear() {   //basic operation
         firstNode = null;
         lastNode = null;
         TotalEntries = 0;
@@ -144,6 +204,67 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
                 }
             }
         }
+    }
+
+    public void SortDeliveryManRating() {
+
+        if (!isEmpty()) {       //If the list is Not Empty
+            Node DMnode = firstNode;                        //get the first node as current node
+            for (int i = 1; i <= TotalEntries; i++) {       //getting the current node
+                boolean found = false;
+                Node TempNode = firstNode;                  //reset compare node to the first node
+                DeliveryMan DM = (DeliveryMan) DMnode.data;
+
+                for (int j = 1; j < i + 1; j++) {             //getting the compare node before the current node
+                    DeliveryMan Temp = (DeliveryMan) TempNode.data;
+                    Node currentNode = DMnode;              //assign current node to temporary node
+
+                    if (DM.getRating() > Temp.getRating()) {       //If the current node is bigger than compare node
+
+                        found = true;
+                        DMnode = DMnode.next;   // moving the current node to the next node first before sorting
+
+                        currentNode.previous.next = currentNode.next;
+
+                        if (currentNode.next != null) {             //if the temporary current node is not the last node
+                            currentNode.next.previous = currentNode.previous;
+                        } else {                                  //if the temporary current node is last node, then the last node is the previous of temporary current node
+                            lastNode = currentNode.previous;
+                        }
+
+                        currentNode.previous = TempNode.previous;
+                        currentNode.next = TempNode;
+                        if (TempNode.previous != null) {            //if the compare node is not the first node
+                            TempNode.previous.next = currentNode;
+                        } else {                                  //if the compare node is first node, then the first node will be temporary current node
+                            firstNode = currentNode;
+                        }
+                        TempNode.previous = currentNode;
+
+                        j = i;                                    //after sort the temporary current node with compare node, jump out the for loop
+                    }
+                    TempNode = TempNode.next;                  //getting next compare node to perform sorting
+                }
+                if (!found) {
+                    DMnode = DMnode.next;                   //getting next current node if not sort performed
+                }
+            }
+        }
+    }
+
+    public boolean updateDeliveryManRating(String StaffID, double rating) {
+        Node currentNode = firstNode;
+        for (int i = 1; i <= TotalEntries; i++) {
+            DeliveryMan DM = (DeliveryMan) currentNode.data;
+            if (DM.getStaffID().equals(StaffID)) {
+                Double Rating = ((DM.getRating() * DM.getTotalRateReceived()) + rating) / (DM.getTotalRateReceived() + 1);
+                DM.setRating(Rating);
+                DM.setTotalRateReceived(DM.getTotalRateReceived() + 1);
+                currentNode.data = (T) DM;
+                return true;
+            }
+        }
+        return false;
     }
 
     private class Node {
