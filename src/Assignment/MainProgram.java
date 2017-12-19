@@ -441,7 +441,8 @@ public class MainProgram {
             String CurrentAvailable = "Not Yet Clock-In";
             String CurrentLocation = "None";
             double rating = 0.0;
-            DeliveryMan DM = new DeliveryMan(0, CurrentAvailable, CurrentLocation, rating, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, Salary, joinDate);
+            int totalRateReceived = 0;
+            DeliveryMan DM = new DeliveryMan(0, CurrentAvailable, CurrentLocation, rating,totalRateReceived, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, Salary, joinDate);
             DMList.add(DM);
             return true;
         } else if (choice == 2) { //Admin
@@ -575,7 +576,7 @@ public class MainProgram {
         Calendar DMjoinDate = Calendar.getInstance();
         DMjoinDate.add(Calendar.MONTH, 5);
         HRjoinDate.add(Calendar.MONTH, 1);
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "None",4.0 ,"DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500,DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "None",4.0 ,5 ,"DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500,DMjoinDate));
         MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750,HRjoinDate));
         MP.ADList.add(new Admin(0, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 0, 0,ADjoinDate));
         MP.menu();
