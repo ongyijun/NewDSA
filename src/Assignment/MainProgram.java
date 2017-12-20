@@ -20,6 +20,7 @@ public class MainProgram {
     EmployeeListInterface<DeliveryMan> DMList = new EmployeeList<>();
     EmployeeListInterface<Admin> ADList = new EmployeeList<>();
     EmployeeListInterface<HR> HRList = new EmployeeList<>();
+    EmployeeListInterface<WorkStatus> wsList = new EmployeeList<>();
     private Employee loginStaff;
     Scanner s = new Scanner(System.in);
 
@@ -95,7 +96,7 @@ public class MainProgram {
                     if (loginStaff instanceof DeliveryMan) {
                         System.out.println("\n\n\n");
                         login = true;
-                        //DeliveryManMenu(loginStaff);
+                        DMMenu();
                     } else if (loginStaff instanceof HR) {
                         login = true;
                         System.out.println("\n\n\n");
@@ -112,11 +113,57 @@ public class MainProgram {
                     System.out.println("Error. Username Not Found!Please Try Again.\n\n");
                 }
             }
-            if(username.equals("-1")){
-                System.out.println("Thank You For Using Our System.\nPress Enter to Continue...");
-                s.nextLine();
+            if (username.equals("-1")) {
                 login = true;
                 System.out.println("\n\n\n");
+            }
+        }
+    }
+
+    public void DMMenu() {
+        DeliveryMan DM = (DeliveryMan) loginStaff;
+        String selection = "-1";
+        Date date = new Date();
+        java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        System.out.println("Welcome Back, " + loginStaff.getStaffName() + "\nCurrent Date:" + dateFormat.format(date) + "\nCurrent Status: " + DM.getCurrentAvailable());  //display login staff information
+        System.out.println("\nPlease Select The Option Below");
+        System.out.println("1. Clock In / Clock Out \n2. Change Deliver Status \n3. View Deliver Schedule\n4. Update Personal Contact Details\n5. Retrive Customer Details\n0. Log Out");
+
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("0")) {
+            System.out.print("Option : ");
+            selection = s.nextLine();
+            switch (selection) {
+                case "1": {
+                    // D.DeliveryMenClockInOut(DMList, deliveryMen.getStaffID());
+                    break;
+                }
+                case "2": {
+                    // D.ChangeDeliverStatus(DMList, deliveryMen.getStaffID());
+                    break;
+                }
+                case "3": {
+                    //D.ViewDeliverSchedule(customer, DMList, order, restaurant, deliveryMen.getStaffID());
+                    break;
+                }
+                case "4": {
+                    DeliveryManUpdatePersonalDetails();
+                    DMMenu();
+                    break;
+                }
+                case "5": {
+                    //C.retrieveCustomer();
+                    break;
+                }
+                case "0": {
+                    loginStaff = null;
+                    System.out.println("Thank You For Using Our System.\nPress Any Key to Continue...");
+                    s.nextLine();
+                    System.out.println("\n\n\n");
+                    break;
+                }
+                default: {
+                    System.out.println("Please Enter Again...");
+                }
             }
         }
     }
@@ -182,15 +229,16 @@ public class MainProgram {
         System.out.println("3. Add New HR");
         System.out.println("4. Update Delivery Man Status");
         System.out.println("5. View Staff Details");
+        System.out.println("6. Remove Staff");
         System.out.println("0. Log Out");
-        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("0")) {
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("6") && !selection.equals("0")) {
             System.out.print("Option: ");
             selection = s.nextLine();
             switch (selection) {
                 case "1": {
                     boolean success = AddNewEmployee(1);
                     if (success) {
-                        System.out.println("New Employee Added Successfully.Press Enter to Continue...");
+                        System.out.println("New Employee Added Successfully.\nPress Enter to Continue...");
                         s.nextLine();
                     }
                     System.out.println("\n\n\n");
@@ -200,7 +248,7 @@ public class MainProgram {
                 case "2": {
                     boolean success = AddNewEmployee(2);
                     if (success) {
-                        System.out.println("New Employee Added Successfully.Press Enter to Continue...");
+                        System.out.println("New Employee Added Successfully.\nPress Enter to Continue...");
                         s.nextLine();
                     }
                     System.out.println("\n\n\n");
@@ -210,7 +258,7 @@ public class MainProgram {
                 case "3": {
                     boolean success = AddNewEmployee(3);
                     if (success) {
-                        System.out.println("New Employee Added Successfully.Press Enter to Continue...");
+                        System.out.println("New Employee Added Successfully.\nPress Enter to Continue...");
                         s.nextLine();
                     }
                     System.out.println("\n\n\n");
@@ -218,15 +266,16 @@ public class MainProgram {
                     break;
                 }
                 case "4": {
-                    System.out.print("Please Enter A Delivery Man ID (-1 to back): ");
-                    String ID = s.nextLine();
-                    if (!ID.equals("-1")) {
-
+                    boolean find = false;
+                    String ID = "0";
+                    while (!find && !ID.equals("-1")) {
+                        System.out.print("Please Enter A Delivery Man ID (-1 to back): ");
+                        ID = s.nextLine();
+                        find = DeliveryManUpdateStatus(ID.toUpperCase());
+                        if (!find) {
+                            System.out.println("Delivery Man ID Not Found.Please Try Again.\n");
+                        }
                     }
-                    //boolean find = B.DisplayDeliveryManUpdateStatus(ID.toUpperCase());
-                    //if (find) {
-                    //    DMList = B.getDeliveryMen();
-                    //}
                     HRMenu();
                     break;
                 }
@@ -258,9 +307,85 @@ public class MainProgram {
                     HRMenu();
                     break;
                 }
+                case "6": {
+                    boolean find = false;
+                    while (find == false) {
+                        System.out.print("Please Enter A Staff ID (-1 to back): ");
+                        String ID = s.nextLine();
+                        if (!ID.equals("-1")) {
+                            Employee e = DisplayStaffDetails(ID.toUpperCase());
+                            if (e == null) {
+                                System.out.println("Error. Staff ID Not Found!");
+                            } else {
+                                find = true;
+                                System.out.printf("Staff ID: %s\n"
+                                        + "StaffName: %s\n"
+                                        + "Staff Phone No: %s\n"
+                                        + "Staff Address: %s\n"
+                                        + "Staff Position: %s\n"
+                                        + "Staff Status: %s\n"
+                                        + "Staff Basic Salary: %.2f\n",
+                                        e.getStaffID(), e.getStaffName(), e.getStaffPhNo(), e.getStaffAdds(), e.getStaffPosition(), e.getWorkingStatus(), e.getBasicSalary());
+                                boolean success = false;
+                                while (!success) {
+                                    System.out.print("Are You Sure U Want To Remove This? (Y/N) :");
+                                    String confirm = s.nextLine();
+                                    try {
+                                        if (Character.toUpperCase(confirm.charAt(0)) == 'Y') {
+                                            boolean remove = true;
+                                            for (int i = 1; i <= wsList.getTotalEntries(); i++) {
+                                                if (e.getStaffID().equals(wsList.get(i).getDM().getStaffID())) {
+                                                    remove = false;
+                                                }
+                                            }
+                                            if (remove) {
+                                                boolean removeSuccessfully = false;
+                                                if (e instanceof DeliveryMan) {
+                                                    removeSuccessfully = DMList.removeStaff(e.getStaffID());
+                                                } else if (e instanceof HR) {
+                                                    if (!loginStaff.getStaffID().equals(e.getStaffID())) {
+                                                        removeSuccessfully = HRList.removeStaff(e.getStaffID());
+                                                    }
+                                                } else {
+                                                    removeSuccessfully = ADList.removeStaff(e.getStaffID());
+                                                }
+
+                                                if (removeSuccessfully) {
+                                                    System.out.println("Removed Successfully.\nPress Enter to Continue...");
+                                                    s.nextLine();
+                                                    success = true;
+                                                } else {
+                                                    System.out.println("Removed Failed. Please Seek for Help from IT department.\nPress Enter to Continue...");
+                                                    s.nextLine();
+                                                    success = true;
+                                                }
+                                            } else {
+                                                System.out.println("Remove Failed. The Employee has dependency with the work status.\nPress Enter to Continue....");
+                                                success = true;
+                                                s.nextLine();
+                                            }
+                                        } else if (Character.toUpperCase(confirm.charAt(0)) == 'N') {
+                                            System.out.println("Operation Stopped by user.\nPress Enter to Continue....");
+                                            success = true;
+                                            s.nextLine();
+                                        } else {
+                                            System.out.println("Please Enter Only (Y) or (N).\n");
+                                        }
+                                    } catch (Exception ex) {
+                                        System.out.println("Please Do Not Leave It Blank!");
+                                    }
+                                }
+                            }
+                        } else {
+                            find = true;
+                        }
+                    }
+                    HRMenu();
+                    break;
+                }
                 case "0": {
                     loginStaff = null;
-                    System.out.println("Thank You For Using Our System.\nPress Enter to Continue...");
+                    System.out.println("\nThank You For Using Our System.\nPress Enter to Continue...");
                     s.nextLine();
                     System.out.println("\n\n\n");
                     break;
@@ -279,61 +404,80 @@ public class MainProgram {
         boolean login = false;
         for (int i = 1; i <= DMList.getTotalEntries(); i++) {  //verify is it delivery man
             if (DMList.get(i).getStaffID().equals(username)) {   //if found username
-                while (login == false) {
-                    System.out.print("Please Enter Password (-1 to back): ");
-                    String pw = s.nextLine();
-                    if (DMList.get(i).getStaffPw().equals(pw)) { //if password correct
-                        login = true;
-                        System.out.println("Login As " + DMList.get(i).getStaffPosition() + " Successfully!\nPress Enter to Continue...");
-                        s.nextLine();
-                        loginStaff = DMList.get(i);
-                        return true;
-                    } else if (pw.equals("-1")) {  //if back
-                        loginStaff = null;
-                        return true;
-                    } else {
-                        System.out.println("Error. Wrong Password Entered!Please Try Again.\n");
+                if (DMList.get(i).getWorkingStatus().equals("Employed")) {
+                    while (login == false) {
+                        System.out.print("Please Enter Password (-1 to back): ");
+                        String pw = s.nextLine();
+                        if (DMList.get(i).getStaffPw().equals(pw)) { //if password correct
+                            login = true;
+                            System.out.println("Login As " + DMList.get(i).getStaffPosition() + " Successfully!\nPress Enter to Continue...");
+                            s.nextLine();
+                            loginStaff = DMList.get(i);
+                            return true;
+                        } else if (pw.equals("-1")) {  //if back
+                            loginStaff = null;
+                            return true;
+                        } else {
+                            System.out.println("Error. Wrong Password Entered!Please Try Again.\n");
+                        }
                     }
+                } else {
+                    System.out.println("The ID Had Already Been Deactivated.\nPress Enter to Continue...");
+                    s.nextLine();
+                    return true;
                 }
             }
         }
         for (int i = 1; i <= HRList.getTotalEntries(); i++) {  //verify is it HR
             if (HRList.get(i).getStaffID().equals(username)) {
-                while (login == false) {
-                    System.out.print("Please Enter Password (-1 to back): ");
-                    String pw = s.nextLine();
-                    if (HRList.get(i).getStaffPw().equals(pw)) { //if password correct
-                        login = true;
-                        System.out.println("Login As " + HRList.get(i).getStaffPosition() + " Successfully!\nPress Enter to Continue...");
-                        s.nextLine();
-                        loginStaff = HRList.get(i);
-                        return true;
-                    } else if (pw.equals("-1")) { //if back
-                        loginStaff = null;
-                        return true;
-                    } else {
-                        System.out.println("Error. Wrong Password Entered!Please Try Again.\n");
+                if (DMList.get(i).getWorkingStatus().equals("Employed")) {
+                    while (login == false) {
+                        System.out.print("Please Enter Password (-1 to back): ");
+                        String pw = s.nextLine();
+                        if (HRList.get(i).getStaffPw().equals(pw)) { //if password correct
+                            login = true;
+                            System.out.println("Login As " + HRList.get(i).getStaffPosition() + " Successfully!\nPress Enter to Continue...");
+                            s.nextLine();
+                            loginStaff = HRList.get(i);
+                            return true;
+                        } else if (pw.equals("-1")) { //if back
+                            loginStaff = null;
+                            return true;
+                        } else {
+                            System.out.println("Error. Wrong Password Entered!Please Try Again.\n");
+                        }
                     }
+                } else {
+                    System.out.println("The ID Had Already Been Deactivated.\nPress Enter to Continue...");
+                    s.nextLine();
+                    return true;
                 }
             }
         }
         for (int i = 1; i <= ADList.getTotalEntries(); i++) {  //verify is it Admin
             if (ADList.get(i).getStaffID().equals(username)) {
-                while (login == false) {
-                    System.out.print("Please Enter Password (-1 to back): ");
-                    String pw = s.nextLine();
-                    if (ADList.get(i).getStaffPw().equals(pw)) { //if password correct
-                        login = true;
-                        System.out.println("Login As " + ADList.get(i).getStaffPosition() + " Successfully!\nPress Enter to Continue...");
-                        s.nextLine();
-                        loginStaff = ADList.get(i);
-                        return true;
-                    } else if (pw.equals("-1")) {  //if back
-                        loginStaff = null;
-                        return true;
-                    } else {
-                        System.out.println("Error. Wrong Password Entered!Try Again.\n");
+                if (DMList.get(i).getWorkingStatus().equals("Employed")) {
+                    while (login == false) {
+
+                        System.out.print("Please Enter Password (-1 to back): ");
+                        String pw = s.nextLine();
+                        if (ADList.get(i).getStaffPw().equals(pw)) { //if password correct
+                            login = true;
+                            System.out.println("Login As " + ADList.get(i).getStaffPosition() + " Successfully!\nPress Enter to Continue...");
+                            s.nextLine();
+                            loginStaff = ADList.get(i);
+                            return true;
+                        } else if (pw.equals("-1")) {  //if back
+                            loginStaff = null;
+                            return true;
+                        } else {
+                            System.out.println("Error. Wrong Password Entered!Try Again.\n");
+                        }
                     }
+                } else {
+                    System.out.println("The ID Had Already Been Deactivated.\nPress Enter to Continue...");
+                    s.nextLine();
+                    return true;
                 }
             }
         }
@@ -342,26 +486,14 @@ public class MainProgram {
 
     public Employee DisplayStaffDetails(String StaffID) {
         boolean find = false;
-        for (int i = 0; i < DMList.getTotalEntries(); i++) {
-            if (DMList.get(i).getStaffID().equals(StaffID)) {
-                return DMList.get(i);
-            }
+        Employee e = DMList.getEmployeeDetails(StaffID);
+        if (e == null) {
+            e = HRList.getEmployeeDetails(StaffID);
         }
-        if (find == false) {
-            for (int i = 0; i < HRList.getTotalEntries(); i++) {
-                if (HRList.get(i).getStaffID().equals(StaffID)) {
-                    return HRList.get(i);
-                }
-            }
+        if (e == null) {
+            e = ADList.getEmployeeDetails(StaffID);
         }
-        if (find == false) {
-            for (int i = 0; i < ADList.getTotalEntries(); i++) {
-                if (ADList.get(i).getStaffID().equals(StaffID)) {
-                    return ADList.get(i);
-                }
-            }
-        }
-        return null;
+        return e;
     }
 
     public boolean AddNewEmployee(int choice) {
@@ -391,10 +523,32 @@ public class MainProgram {
         if (IC.equals("-1")) {
             return false;
         }
-        System.out.print("Enter Phone No: ");
-        String PhNo = s.nextLine();
-        if (PhNo.equals("-1")) {
-            return false;
+        boolean PhNoFormat = false;
+        String PhNo = "";
+        while (!PhNoFormat) {
+            PhNoFormat = true;
+            System.out.print("Enter Phone No: ");
+            PhNo = s.nextLine();
+            if (PhNo.equals("-1")) {
+                return false;
+            }
+            if (PhNo.length() < 11) {
+                PhNoFormat = false;
+            }
+            for (int i = 0; i < PhNo.length(); i++) {
+                if (!Character.isDigit(PhNo.charAt(i))) {
+                    if (i != 3) {
+                        PhNoFormat = false;
+                    } else {
+                        if (PhNo.charAt(i) != '-' && PhNo.charAt(i) != ' ') {
+                            PhNoFormat = false;
+                        }
+                    }
+                }
+            }
+            if (!PhNoFormat) {
+                System.out.println("Format of Phone Contact Number should only contains INTEGERs and One(1) Dash!\n");
+            }
         }
         char Gender = ' ';
         while (Gender != 'M' && Gender != 'F') {
@@ -403,9 +557,13 @@ public class MainProgram {
             if (G.equals("-1")) {
                 return false;
             } else {
-                Gender = Character.toUpperCase(G.charAt(0));
-                if (Gender != 'M' && Gender != 'F') {
-                    System.out.println("Please Enter only M or F.");
+                try {
+                    Gender = Character.toUpperCase(G.charAt(0));
+                    if (Gender != 'M' && Gender != 'F') {
+                        System.out.println("Please Enter only M or F.");
+                    }
+                } catch (Exception ex) {
+                    System.out.println("Please Do Not Leave It Blank!");
                 }
             }
         }
@@ -442,9 +600,15 @@ public class MainProgram {
             String CurrentLocation = "None";
             double rating = 0.0;
             int totalRateReceived = 0;
-            DeliveryMan DM = new DeliveryMan(0, CurrentAvailable, CurrentLocation, rating,totalRateReceived, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, Salary, joinDate);
-            DMList.add(DM);
-            return true;
+            DeliveryMan DM = new DeliveryMan(0, CurrentAvailable, CurrentLocation, rating, totalRateReceived, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, Salary, joinDate);
+            boolean success = DMList.addWithICValidation(DM);
+            if (success) {
+                return true;
+            } else {
+                System.out.println("Error! The IC have been used!\nPress Enter to Continue...");
+                s.nextLine();
+                return false;
+            }
         } else if (choice == 2) { //Admin
             String Position = "Admin";
             boolean parseDouble = false;
@@ -466,8 +630,14 @@ public class MainProgram {
             String WorkingStatus = "Employed";
             Admin admin = new Admin(annualSale, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, 0, 0, joinDate);
             admin.calculateSalary();
-            ADList.add(admin);
-            return true;
+            boolean success = ADList.addWithICValidation(admin);
+            if (success) {
+                return true;
+            } else {
+                System.out.println("Error! The IC have been used!\nPress Enter to Continue...");
+                s.nextLine();
+                return false;
+            }
         } else {//HR
             String Position = "HR";
             boolean parseInt = false;
@@ -505,31 +675,47 @@ public class MainProgram {
             String WorkingStatus = "Employed";
             HR hr = new HR(TotalStaffManaged, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, 0, joinDate);
             hr.calculateSalary();
-            HRList.add(hr);
-            return true;
+            boolean success = HRList.addWithICValidation(hr);
+            if (success) {
+                return true;
+            } else {
+                System.out.println("Error! The IC have been used!\nPress Enter to Continue...");
+                s.nextLine();
+                return false;
+            }
         }
     }
 
     public boolean DeliveryManUpdateStatus(String StaffID) {
         boolean find = false;
-        for (int i = 0; i < DMList.getTotalEntries(); i++) {
+        for (int i = 1; i <= DMList.getTotalEntries(); i++) {
             if (DMList.get(i).getStaffID().equals(StaffID)) {
                 find = true;
                 DeliveryMan DM = DMList.get(i);
                 if (DM.getWorkingStatus().equals("Employed")) {
-                    String choice = "0";
+                    String choice = "-1";
                     System.out.println("\n\nName: " + DM.getStaffName() + "\nIC: " + DM.getStaffIC());
-                    System.out.print("Choose A Reason\n 1. Retired\n 2. Resigned\n0.Back");
+                    System.out.print("Choose A Reason\n 1. Retired\n 2. Resigned\n 0. Back\n");
                     while (!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
                         System.out.print("Your Choice: ");
                         choice = s.nextLine();
                         switch (choice) {
                             case "1": {
-                                updateDeliveryManStatus(DM, choice);
+                                DM.setWorkingStatus("Retired");
+                                boolean success = DMList.updateDeliveryManDetail(DM);
+                                if (success) {
+                                    System.out.println("\nUpdate Successfully.\nPress Enter to Continue...");
+                                    s.nextLine();
+                                }
                                 break;
                             }
                             case "2": {
-                                updateDeliveryManStatus(DM, choice);
+                                DM.setWorkingStatus("Resigned");
+                                boolean success = DMList.updateDeliveryManDetail(DM);
+                                if (success) {
+                                    System.out.println("Update Successfully.\nPress Enter to Continue...");
+                                    s.nextLine();
+                                }
                                 break;
                             }
                             case "0": {
@@ -550,23 +736,81 @@ public class MainProgram {
         return find;
     }
 
-    public void updateDeliveryManStatus(DeliveryMan DM, String i) {
-        if (i.equals("1")) {
-            DM.setWorkingStatus("Retired");
-        } else {
-            DM.setWorkingStatus("Resigned");
-        }
-        for (int j = 0; j < DMList.getTotalEntries(); j++) {
-            if (DMList.get(j).getStaffID().equals(DM.getStaffID())) {
-                DMList.replace(j, DM);
+    public void DeliveryManUpdatePersonalDetails() {
+        DeliveryMan DM = (DeliveryMan) loginStaff;
+        System.out.println("\n\nYour ID: " + DM.getStaffID() + "\nYour Name: " + DM.getStaffName() + "\nYour Phone No: " + DM.getStaffPhNo() + "\nYour Address: " + DM.getStaffAdds() + "\nYour Email: " + DM.getStaffEmail());
+        String choice = "-1";
+        System.out.println("What You want do update:\n1. Phone No\n2. Address\n3. Email\n0. Back");
+        while (!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("0")) {
+            System.out.print("Choice: ");
+            choice = s.nextLine();
+            switch (choice) {
+                case "1": {
+                    boolean PhNoFormat = false;
+                    String newPhNo = null;
+                    while (!PhNoFormat) {
+                        PhNoFormat = true;
+                        System.out.println("\n\nYour Current Phone No: " + DM.getStaffPhNo());
+                        System.out.print("New Phone No: ");
+                        newPhNo = s.nextLine();
+                        if (newPhNo.length() < 11) {
+                            PhNoFormat = false;
+                        }
+                        for (int i = 0; i < newPhNo.length(); i++) {
+                            if (!Character.isDigit(newPhNo.charAt(i))) {
+                                if (i != 3) {
+                                    PhNoFormat = false;
+                                } else {
+                                    if (newPhNo.charAt(i) != '-' && newPhNo.charAt(i) != ' ') {
+                                        PhNoFormat = false;
+                                    }
+                                }
+                            }
+                        }
+                        if (!PhNoFormat) {
+                            System.out.println("Format of Phone Contact Number should only contains INTEGERs and One(1) Dash!\n");
+                        }
+                    }
+                    DM.setStaffPhNo(newPhNo);
+                    DMList.updateDeliveryManDetail(DM);
+                    System.out.println("Update Phone No Successfully! Press Enter to Continue...");
+                    s.nextLine();
+                    break;
+                }
+                case "2": {
+                    System.out.println("\n\nYour Current Address: " + DM.getStaffAdds());
+                    System.out.print("New Address: ");
+                    String newAdds = s.nextLine();
+                    DM.setStaffAdds(newAdds);
+                    DMList.updateDeliveryManDetail(DM);
+                    System.out.println("Update Address Successfully! Press Enter to Continue...");
+                    s.nextLine();
+                    break;
+                }
+                case "3": {
+                    System.out.println("\n\nYour Current Email: " + DM.getStaffEmail());
+                    System.out.print("New Email: ");
+                    String newEmail = s.nextLine();
+                    DM.setStaffEmail(newEmail);
+                    DMList.updateDeliveryManDetail(DM);
+                    System.out.println("Update Email Successfully! Press Enter to Continue...");
+                    s.nextLine();
+                }
+                case "0": {
+                    System.out.println("\n\n");
+                    break;
+                }
+                default: {
+                    System.out.println("Please Enter Again...");
+                    break;
+                }
             }
         }
-        System.out.println("Update Status Successfully! New Status: " + DM.getWorkingStatus());
-        System.out.println("Press Enter to Continue...");
-        s.nextLine();
-        System.out.println("\n\n\n");
-
     }
+    
+    //ToDo
+    public void CustomerFeedBackRating(){
+    }  
     //Miw End
 
     public static void main(String[] args) {
@@ -576,9 +820,11 @@ public class MainProgram {
         Calendar DMjoinDate = Calendar.getInstance();
         DMjoinDate.add(Calendar.MONTH, 5);
         HRjoinDate.add(Calendar.MONTH, 1);
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "None",4.0 ,5 ,"DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500,DMjoinDate));
-        MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750,HRjoinDate));
-        MP.ADList.add(new Admin(0, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 0, 0,ADjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "None", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750, HRjoinDate));
+        MP.ADList.add(new Admin(20000, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 6000, 6000, ADjoinDate));
+        MP.wsList.add(new WorkStatus("WS000001", HRjoinDate, DMjoinDate, 0, 0, MP.DMList.get(1)));
+
         MP.menu();
         // TODO code application logic here
         /*Calendar date3 = Calendar.getInstance();
