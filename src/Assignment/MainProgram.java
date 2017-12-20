@@ -849,6 +849,7 @@ public class MainProgram {
     }
 
     public void RetrievePendingDelivery() {
+        DMList.SortPendingDelivery();
         int count = 0;
         Calendar today = java.util.Calendar.getInstance();
         java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
@@ -1146,17 +1147,14 @@ public class MainProgram {
         HRjoinDate.add(Calendar.MONTH, 1);
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000002", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, HRjoinDate));
-
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000003", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
-
+        MP.DMList.add(new DeliveryMan(3, "Not Available", "Not Available", 4.0, 1, "DM000103", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000004", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 5.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(5, "Not Available", "Not Available", 4.0, 1, "DM000009", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.5, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
         MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 3.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));

@@ -23,5 +23,6 @@ public interface EmployeeListInterface <T>{
     public void clear(); //basic operation
     public void SortMostExperienceDeliveryMan();
     public void SortDeliveryManRating();
+    public void SortPendingDelivery();
     public boolean updateDeliveryManRating(String StaffID, double rating);
 }
