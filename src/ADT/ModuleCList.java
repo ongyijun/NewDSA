@@ -133,29 +133,6 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                         OrderDetail current = (OrderDetail)currentNode.data;
                         OrderDetail temp = (OrderDetail)tempNode.data;
                         if(temp.getFoodTotal()>current.getFoodTotal()){
-                            /*Node nextNode = tempNode.next;
-                            Node previousNode = tempNode.previous;
-                            if(i==1){
-                                tempNode.next = currentNode.next;
-                                currentNode.next.previous = tempNode;
-                                nextNode.previous = currentNode;
-                                currentNode.next = nextNode;
-                                currentNode.previous = previousNode;
-                                previousNode.next = currentNode;
-                                firstNode = tempNode;
-                            }
-                            else{
-                                Node previousNode1 = currentNode.previous;
-                                tempNode.next = currentNode.next;
-                                currentNode.next.previous = tempNode;
-                                tempNode.previous = previousNode1;
-                                previousNode1.next = tempNode;
-                                nextNode.previous = currentNode;
-                                currentNode.next = nextNode;
-                                currentNode.previous = previousNode;
-                                previousNode.next = currentNode;
-                            }*/
-                            
                             T value = tempNode.data;
                             tempNode.data=currentNode.data;
                             currentNode.data = value;
@@ -178,8 +155,16 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             }
             value = tempNode.data;
             if(givenPosition==1){
-                firstNode = tempNode.next;
-                tempNode.next.previous = null;
+                if(firstNode.next!=null){
+                    firstNode = tempNode.next;
+                    tempNode.next.previous = null;
+                }
+                else{
+                    clear();
+                    TotalEntries++; 
+                    // totalEntries already become 0 by clear but bottom stil contains totalentries--
+                    // if did not contains totalentries ++, totalentries will become -1
+                }
             }
             else if(givenPosition==TotalEntries){
                 lastNode = tempNode.previous;
@@ -208,7 +193,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                         tempNode = tempNode.next;
                         Orders current = (Orders)currentNode.data;
                         Orders temp = (Orders)tempNode.data;
-                        if(temp.getOrdersDateTime().getTime().compareTo(current.getOrdersDateTime().getTime())>0){
+                        if(temp.getOrdersDateTime().getTime().compareTo(current.getOrdersDateTime().getTime())<0){
                             T value = tempNode.data;
                             tempNode.data=currentNode.data;
                             currentNode.data = value;
@@ -219,31 +204,37 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             Calendar comparecal = Calendar.getInstance();
             Calendar cal = Calendar.getInstance();
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            DateFormat dateFormat1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             try{
                 Date date = dateFormat.parse(day);
                 comparecal.setTime(date);
             }catch(ParseException ex){
                 System.out.print(ex);
             }
-            String reporttitle = "Daily Summary Report";
-            System.out.printf("%50s%20s\n",reporttitle,dateFormat.format(cal.getTime()));
-            System.out.println("\t\t--------------------------------------------------------------------");
+            String reporttitle = "Daily Order Detailed Report";
+            System.out.printf("%66s of %s\n",reporttitle,dateFormat.format(comparecal.getTime()));
+            System.out.printf("%61s%s\n",String.format("Generate Date:"),dateFormat.format(comparecal.getTime()));
+            System.out.println("\t\t------------------------------------------------------------------------------------------");
+            System.out.println("\t\t-   No.   -     Customer     -     Restaurant     -     Total     -          Order       -");
+            System.out.println("\t\t-         -       Name       -        Name        -               -        Date Time     -");
+            System.out.println("\t\t------------------------------------------------------------------------------------------");
             tempNode = firstNode;
             int j=0;
             for(int i=1 ; i<=TotalEntries ; i++){
                 Orders record = (Orders)tempNode.data;
-                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0){
-                    System.out.printf("%50s%20s\n",String.format("Customer Name:"),record.getCustomer().getCustName());
-                    System.out.printf("%50s%20s\n",String.format("Restaurant Name:"),record.getRestaurant().getRestaurantName());
-                    System.out.printf("%50s%16s%.2f\n",String.format("Total:"),String.format("RM"),record.getTotal());
-                    System.out.printf("%50s%20s\n",String.format("Order Date:"),dateFormat.format(record.getOrdersDateTime().getTime()));
-                    System.out.println("\t\t--------------------------------------------------------------------");
+                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0&&!record.getOrderStatus().equals("0")){
+                    System.out.printf("\t\t- %4d    -",j+1);
+                    System.out.printf("%14s    -",record.getCustomer().getCustName());
+                    System.out.printf("%15s     -",record.getRestaurant().getRestaurantName());
+                    System.out.printf("%9s%.2f -",String.format("RM"),record.getTotal());
+                    System.out.printf("%20s  -\n",dateFormat1.format(record.getOrdersDateTime().getTime()));
+                    System.out.println("\t\t------------------------------------------------------------------------------------------");
                     j++;
                     success = true;
                 }
                 tempNode = tempNode.next;
             }
-            System.out.printf("%70s%d\n",String.format("Record Count : "),j);
+            System.out.printf("%103s%d\n",String.format("Record Count : "),j);
             return success;
     }
     
