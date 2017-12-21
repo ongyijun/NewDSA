@@ -84,10 +84,10 @@ public class MainProgram {
     public void staffMenu() {
         Scanner s = new Scanner(System.in);
         boolean login = false;
+        System.out.println("*********************************");
+        System.out.println("*Welcome to Staff Menu Interface*");
+        System.out.println("*********************************");
         while (login == false) {
-            System.out.println("*********************************");
-            System.out.println("*Welcome to Staff Menu Interface*");
-            System.out.println("*********************************");
             System.out.print("Please Enter Staff ID (-1 to back): ");
             String username = s.nextLine();
             if (!username.equals("-1")) {
@@ -110,7 +110,7 @@ public class MainProgram {
                         login = true;
                     }
                 } else {
-                    System.out.println("Error. Username Not Found!Please Try Again.\n\n");
+                    System.out.println("Error. Username Not Found!Please Try Again.\n");
                 }
             }
             if (username.equals("-1")) {
@@ -178,8 +178,10 @@ public class MainProgram {
         System.out.println("2. Retrieve Delivery Man Pending Delivery");
         System.out.println("3. Generate Total Deliveries Report");
         System.out.println("4. Generate Total Distance Report");
+        System.out.println("5. Generate Top 20 Most Experience Delivery Man Report");
+        System.out.println("6. Generate Top 20 Most Rating Delivery Man Report");
         System.out.println("0. Log Out");
-        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") & !selection.equals("5") && !selection.equals("0")) {
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("6") && !selection.equals("0")) {
             System.out.print("Option: ");
             selection = s.nextLine();
             switch (selection) {
@@ -189,17 +191,27 @@ public class MainProgram {
                     break;
                 }
                 case "2": {
-                    //B.RetrieveDeliveryManPendingDeliveryMenu();
+                    RetrievePendingDelivery();
                     AdminMenu();
                     break;
                 }
                 case "3": {
-                    //B.generateTotalDeliveriesReportMenu();
+                    generateTotalDeliveriesReport();
                     AdminMenu();
                     break;
                 }
                 case "4": {
-                    //B.generateTotalDistanceReportMenu();
+                    generateTotalDistanceReport();
+                    AdminMenu();
+                    break;
+                }
+                case "5": {
+                    generateMostExperienceDeliverymanReport();
+                    AdminMenu();
+                    break;
+                }
+                case "6": {
+                    generateMostRatingDeliverymanReport();
                     AdminMenu();
                     break;
                 }
@@ -485,7 +497,6 @@ public class MainProgram {
     }
 
     public Employee DisplayStaffDetails(String StaffID) {
-        boolean find = false;
         Employee e = DMList.getEmployeeDetails(StaffID);
         if (e == null) {
             e = HRList.getEmployeeDetails(StaffID);
@@ -807,10 +818,324 @@ public class MainProgram {
             }
         }
     }
-    
-    //ToDo
-    public void CustomerFeedBackRating(){
-    }  
+
+    public void CustomerFeedBackRating(DeliveryMan DM) {
+        boolean success = false;
+        while (!success) {
+            try {
+                System.out.println("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man? (-1 to Cancel) :");
+                double rate = s.nextDouble();
+                if (rate < -1 || rate > 10) {
+                    System.out.println("Please Enter the Integer in range of 0.0 to 10.0 only.\nPress Enter to Continue...");
+                    s.nextLine();
+                    System.out.println("\n\n");
+                } else if (rate == -1) {
+                    System.out.println("Feedback Cancelled.\nPress Enter to Continue...");
+                    s.nextLine();
+                    System.out.println("\n\n");
+                    success = true;
+                } else {
+                    DMList.updateDeliveryManRating(DM.getStaffID(), rate);
+                    System.out.println("Thank You for your feedback, has a nice day.\nPress Enter to Continue...");
+                    s.nextLine();
+                    System.out.println("\n\n");
+                    success = true;
+                }
+            } catch (Exception ex) {
+                System.out.println("Please Enter only INTEGERs!\nPress Enter to Continue...");
+                s.nextLine();
+            }
+        }
+    }
+
+    public void RetrievePendingDelivery() {
+        DMList.SortPendingDelivery();
+        int count = 0;
+        Calendar today = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        String todayDate = SDF.format(today.getTime());
+        System.out.println("\n\t\t\t\tPending Delivery of Delivery Man\n\t\t\t\t\tDate: " + todayDate);
+        for (int i = 0; i < 100; i++) {
+            System.out.print("*");
+        }
+        System.out.println("\nStaff ID\tStaff Name\tCurrent Available\tCurrent Location\tTotal Pending Order");
+        for (int i = 0; i < 100; i++) {
+            System.out.print("*");
+        }
+        for (int i = 1; i <= DMList.getTotalEntries(); i++) {
+            if (DMList.get(i).getTotalPendingDelivery() > 0) {
+                System.out.print("\n" + DMList.get(i).getStaffID() + "\t"
+                        + DMList.get(i).getStaffName() + "\t" + DMList.get(i).getCurrentAvailable() + "\t\t"
+                        + DMList.get(i).getCurrentLocation() + "\t\t" + DMList.get(i).getTotalPendingDelivery());
+                count++;
+            }
+        }
+        if (count == 0) {
+            System.out.print("\n\t\tNone Record(s) Found...");
+        }
+        System.out.print("\n");
+        for (int i = 0; i < 100; i++) {
+            System.out.print("*");
+        }
+        System.out.println("\n\n\nPress Enter To Continue,..");
+        s.nextLine();
+    }
+
+    public void generateTotalDeliveriesReport() {
+        System.out.println("Please Select The Option Below\n1. Generate Today Total Deliveries Report\n2. Generate Specific Date Total Deliveries Report\n0. Back");
+        String choice = "-1";
+        while (!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
+            System.out.print("Your Choice: ");
+            choice = s.nextLine();
+            switch (choice) {
+                case "1": {
+                    int count = 0;
+                    java.util.Calendar today = java.util.Calendar.getInstance();
+                    java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                    java.text.SimpleDateFormat SDF2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    String todayDate = SDF.format(today.getTime());
+                    System.out.println("\n\t\t\t\tTotal Deliveries of Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("*");
+                    }
+                    System.out.println("\nStaff ID\tStaff Name\tCheck In Date\t\tCheck Out Date\t\tTotal Deliveries");
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("*");
+                    }
+
+                    for (int i = 1; i <= wsList.getTotalEntries(); i++) {
+                        String compareDate = SDF.format(wsList.get(i).getCheckIn().getTime());
+                        if (wsList.get(i).getTotalDeliveredOrder() > 0 && todayDate.equals(compareDate)) {
+                            System.out.println("\n" + wsList.get(i).getDM().getStaffID() + "\t" + wsList.get(i).getDM().getStaffName() + "\t" + SDF2.format(wsList.get(i).getCheckIn().getTime()) + "\t"
+                                    + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDeliveredOrder());
+                            count++;
+                        }
+                    }
+                    if (count == 0) {
+                        System.out.println("\n\t\t\t\tNo Record(s) Found...");
+                    }
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("*");
+                    }
+                    System.out.println("\n\n\nPress Enter To Continue,..");
+                    s.nextLine();
+                    break;
+                }
+                case "2": {
+                    int count = 0;
+                    boolean parseDate = false;
+                    while (!parseDate) {
+                        System.out.print("Enter A Date (DD/MM/YYYY): ");
+                        String date = s.nextLine();
+                        try {
+                            java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                            java.util.Date newDate = SDF.parse(date);
+                            String compareDate = SDF.format(newDate);
+                            parseDate = true;
+                            System.out.println("\n\t\t\t\tTotal Deliveries of Delivery Man Report\n\t\t\t\t\tDate: " + compareDate);
+                            for (int i = 0; i < 100; i++) {
+                                System.out.print("*");
+                            }
+                            System.out.println("\nStaff ID\tStaff Name\tCheck In Date\t\tCheck Out Date\t\tTotal Deliveries");
+                            for (int i = 0; i < 100; i++) {
+                                System.out.print("*");
+                            }
+                            java.text.SimpleDateFormat SDF2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                            for (int i = 1; i <= wsList.getTotalEntries(); i++) {
+                                if (wsList.get(i).getTotalDeliveredOrder() > 0 && compareDate.equals(SDF.format(wsList.get(i).getCheckIn().getTime()))) {
+                                    System.out.println("\n" + wsList.get(i).getDM().getStaffID() + "\t" + wsList.get(i).getDM().getStaffName() + "\t" + SDF2.format(wsList.get(i).getCheckIn().getTime()) + "\t"
+                                            + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDeliveredOrder());
+                                    count++;
+                                }
+                            }
+                            if (count == 0) {
+                                System.out.println("\n\t\t\t\tNo Record(s) Found...");
+                            }
+                            for (int i = 0; i < 100; i++) {
+                                System.out.print("*");
+                            }
+                            System.out.println("\n\n\nPress Enter To Continue,..");
+                            s.nextLine();
+                        } catch (Exception e) {
+                            System.out.println("Wrong Date Format! Try Again!");
+                        }
+                    }
+                    break;
+                }
+                case "0": {
+                    break;
+                }
+                default: {
+                    try {
+                        Integer.parseInt(choice);
+                        System.out.println("Please Enter Again...");
+                    } catch (Exception e) {
+                        System.out.println("Please Enter only Integer...");
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public void generateTotalDistanceReport() {
+        System.out.println("Please Select The Option Below\n1. Generate Today Total Distance Report\n2. Generate Specific Date Total Distance Report\n0. Back");
+        String choice = "-1";
+        while (!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
+            System.out.print("Your Choice: ");
+            choice = s.nextLine();
+            switch (choice) {
+                case "1": {
+                    int count = 0;
+                    java.util.Calendar today = java.util.Calendar.getInstance();
+                    java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                    java.text.SimpleDateFormat SDF2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    String todayDate = SDF.format(today.getTime());
+                    System.out.println("\n\t\t\t\tTotal Distances of Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("*");
+                    }
+                    System.out.println("\nStaff ID\tStaff Name\tCheck In Date\t\tCheck Out Date\t\tTotal Distance(in KM)");
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("*");
+                    }
+
+                    for (int i = 1; i <= wsList.getTotalEntries(); i++) {
+                        String compareDate = SDF.format(wsList.get(i).getCheckIn().getTime());
+                        if (wsList.get(i).getTotalDistance() > 0 && todayDate.equals(compareDate)) {
+                            System.out.println("\n" + wsList.get(i).getDM().getStaffID() + "\t" + wsList.get(i).getDM().getStaffName() + "\t" + SDF2.format(wsList.get(i).getCheckIn().getTime()) + "\t"
+                                    + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDistance());
+                            count++;
+                        }
+                    }
+                    if (count == 0) {
+                        System.out.println("\n\t\t\t\tNo Record(s) Found...");
+                    }
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("*");
+                    }
+                    System.out.println("\n\n\nPress Enter To Continue,..");
+                    s.nextLine();
+                    break;
+                }
+                case "2": {
+                    int count = 0;
+                    boolean parseDate = false;
+                    while (!parseDate) {
+                        System.out.print("Enter A Date (DD/MM/YYYY): ");
+                        String date = s.nextLine();
+                        try {
+                            java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                            java.util.Date newDate = SDF.parse(date);
+                            String compareDate = SDF.format(newDate);
+                            parseDate = true;
+                            System.out.println("\n\t\t\t\tTotal Distances of Delivery Man Report\n\t\t\t\t\tDate: " + compareDate);
+                            for (int i = 0; i < 100; i++) {
+                                System.out.print("*");
+                            }
+                            System.out.println("\nStaff ID\tStaff Name\tCheck In Date\t\tCheck Out Date\t\tTotal Distance(in KM)");
+                            for (int i = 0; i < 100; i++) {
+                                System.out.print("*");
+                            }
+                            java.text.SimpleDateFormat SDF2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                            for (int i = 1; i <= wsList.getTotalEntries(); i++) {
+                                if (wsList.get(i).getTotalDistance() > 0 && compareDate.equals(SDF.format(wsList.get(i).getCheckIn().getTime()))) {
+                                    System.out.println("\n" + wsList.get(i).getDM().getStaffID() + "\t" + wsList.get(i).getDM().getStaffName() + "\t" + SDF2.format(wsList.get(i).getCheckIn().getTime()) + "\t"
+                                            + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDistance());
+                                    count++;
+                                }
+                            }
+                            if (count == 0) {
+                                System.out.println("\n\t\t\t\tNo Record(s) Found...");
+                            }
+                            for (int i = 0; i < 100; i++) {
+                                System.out.print("*");
+                            }
+                            System.out.println("\n\n\nPress Enter To Continue,..");
+                            s.nextLine();
+                        } catch (Exception e) {
+                            System.out.println("Wrong Date Format! Try Again!");
+                        }
+                    }
+                    break;
+                }
+                case "3": {
+                    break;
+                }
+                default: {
+                    try {
+                        Integer.parseInt(choice);
+                        System.out.println("Please Enter Again...");
+                    } catch (Exception e) {
+                        System.out.println("Please Enter only Integer...");
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public void generateMostExperienceDeliverymanReport() {
+        DMList.SortMostExperienceDeliveryMan();
+        int count = 0;
+        java.util.Calendar today = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        String todayDate = SDF.format(today.getTime());
+        System.out.println("\n\t\t\t\tTop 20 Most Experience Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+        for (int i = 0; i < 110; i++) {
+            System.out.print("*");
+        }
+        System.out.println("\nNo\tStaff ID\tStaff Name\tStaff Phone No\tStaff Email\t\tJoin Date\tSalary(RM)");
+        for (int i = 0; i < 110; i++) {
+            System.out.print("*");
+        }
+        for (int i = 1; i <= DMList.getTotalEntries(); i++) {
+            if (count < 20) {
+                System.out.println("\n" + i + "\t" + DMList.get(i).getStaffID() + "\t" + DMList.get(i).getStaffName() + "\t" + DMList.get(i).getStaffPhNo() + "\t"
+                        + DMList.get(i).getStaffEmail() + "\t" + SDF.format(DMList.get(i).getJoinDate().getTime()) + "\t" + String.format("%.2f", DMList.get(i).getBasicSalary()));
+                count++;
+            }
+        }
+        if (count == 0) {
+            System.out.println("\n\t\t\t\tNo Record(s) Found...");
+        }
+        for (int i = 0; i < 110; i++) {
+            System.out.print("*");
+        }
+        System.out.println("\n\n\nPress Enter To Continue,..");
+        s.nextLine();
+    }
+
+    public void generateMostRatingDeliverymanReport() {
+        DMList.SortDeliveryManRating();
+        int count = 0;
+        java.util.Calendar today = java.util.Calendar.getInstance();
+        java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        String todayDate = SDF.format(today.getTime());
+        System.out.println("\n\t\t\t\tTop 20 Most Rating Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+        for (int i = 0; i < 100; i++) {
+            System.out.print("*");
+        }
+        System.out.println("\nNo\tStaff ID\tStaff Name\tJoin Date\tRating\tTotal Rated Received\tSalary(RM)");
+        for (int i = 0; i < 100; i++) {
+            System.out.print("*");
+        }
+        for (int i = 1; i <= DMList.getTotalEntries(); i++) {
+            if (count < 20) {
+                System.out.println("\n" + i + "\t" + DMList.get(i).getStaffID() + "\t" + DMList.get(i).getStaffName() + "\t" + SDF.format(DMList.get(i).getJoinDate().getTime()) + "\t"
+                        + String.format("%.2f", DMList.get(i).getRating()) + "\t\t\t" + DMList.get(i).getTotalRateReceived() + "\t" + String.format("%.2f", DMList.get(i).getBasicSalary()));
+                count++;
+            }
+        }
+        if (count == 0) {
+            System.out.println("\n\t\t\t\tNo Record(s) Found...");
+        }
+        for (int i = 0; i < 100; i++) {
+            System.out.print("*");
+        }
+        System.out.println("\n\n\nPress Enter To Continue,..");
+        s.nextLine();
+    }
     //Miw End
 
     public static void main(String[] args) {
@@ -820,7 +1145,32 @@ public class MainProgram {
         Calendar DMjoinDate = Calendar.getInstance();
         DMjoinDate.add(Calendar.MONTH, 5);
         HRjoinDate.add(Calendar.MONTH, 1);
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "None", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000002", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, HRjoinDate));
+        MP.DMList.add(new DeliveryMan(3, "Not Available", "Not Available", 4.0, 1, "DM000103", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000004", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 5.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(5, "Not Available", "Not Available", 4.0, 1, "DM000009", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.5, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 3.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+
         MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750, HRjoinDate));
         MP.ADList.add(new Admin(20000, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 6000, 6000, ADjoinDate));
         MP.wsList.add(new WorkStatus("WS000001", HRjoinDate, DMjoinDate, 0, 0, MP.DMList.get(1)));
