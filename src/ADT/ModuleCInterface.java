@@ -18,4 +18,5 @@ public interface ModuleCInterface<T> {
     public void clear();
     public void SortOrderDetail();
     public T remove(int givenPosition);
+    public boolean GenerateDetailReport(String day);
 }
