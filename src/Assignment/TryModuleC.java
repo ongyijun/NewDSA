@@ -79,7 +79,7 @@ public class TryModuleC {
          payment.add(new Payment("PA000003", order.get(3), 12.00, cal1, "1", "Online"));
          payment.add(new Payment("PA000004", order.get(4), 13.00, cal, "1", "Online"));
          CustomerLogin();
-         order.GenerateDetailReport("2017/12/22");
+         GenerateOrderReport();
     }
     
     public void CustomerLogin(){
@@ -547,6 +547,13 @@ public class TryModuleC {
         }
         }
         return true;
+    }
+    
+    public void GenerateOrderReport(){
+        String reportday = "";
+        System.out.print("Please Enter The Day (YYYY/MM/DD) : ");
+        reportday = s.nextLine();
+        order.GenerateDetailReport(reportday);
     }
     
     public void retrieveCustomer(){

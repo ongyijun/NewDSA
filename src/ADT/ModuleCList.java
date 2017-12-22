@@ -245,6 +245,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         newsubtotal = currentSubtotal-currentFoodTotal+newFoodTotal;
         currentDetail.setFoodTotal(newFoodTotal);
         currentDetail.setQuantity(newquantity);
+        currentNode.data = (T)currentDetail;
         SortOrderDetail();
         return newsubtotal;
     }
@@ -256,6 +257,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         double currentFoodTotal = currentDetail.getFoodTotal();
         newsubtotal = subtotal-currentFoodTotal;
         remove(position);
+        currentNode.data = (T)currentDetail;
         return newsubtotal;
     }
     
