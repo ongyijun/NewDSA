@@ -11,7 +11,7 @@ package ADT;
  */
 public interface EmployeeListInterface <T>{
     public void add(T newEntry); //basic operation
-    public boolean addWithICValidation(T newEntry);
+    public boolean addWithValidation(T newEntry);
     public T get(int position); //basic operation
     public boolean replace(int givenPosition, T newEntry); //basic operation
     public T getEmployeeDetails(String StaffID);
