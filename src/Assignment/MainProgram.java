@@ -894,7 +894,7 @@ public class MainProgram {
                     java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
                     java.text.SimpleDateFormat SDF2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                     String todayDate = SDF.format(today.getTime());
-                    System.out.println("\n\t\t\t\tTotal Deliveries of Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+                    System.out.println("\n\t\t\tDaily Total Deliveries of Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
                     for (int i = 0; i < 100; i++) {
                         System.out.print("*");
                     }
@@ -917,7 +917,7 @@ public class MainProgram {
                     for (int i = 0; i < 100; i++) {
                         System.out.print("*");
                     }
-                    System.out.println("\n\n\nPress Enter To Continue,..");
+                    System.out.println("\n\n\nPress Enter To Continue...");
                     s.nextLine();
                     break;
                 }
@@ -932,7 +932,7 @@ public class MainProgram {
                             java.util.Date newDate = SDF.parse(date);
                             String compareDate = SDF.format(newDate);
                             parseDate = true;
-                            System.out.println("\n\t\t\t\tTotal Deliveries of Delivery Man Report\n\t\t\t\t\tDate: " + compareDate);
+                            System.out.println("\n\t\t\tDaily Total Deliveries of Delivery Man Report\n\t\t\t\t\tDate: " + compareDate);
                             for (int i = 0; i < 100; i++) {
                                 System.out.print("*");
                             }
@@ -954,7 +954,7 @@ public class MainProgram {
                             for (int i = 0; i < 100; i++) {
                                 System.out.print("*");
                             }
-                            System.out.println("\n\n\nPress Enter To Continue,..");
+                            System.out.println("\n\n\nPress Enter To Continue...");
                             s.nextLine();
                         } catch (Exception e) {
                             System.out.println("Wrong Date Format! Try Again!");
@@ -991,7 +991,7 @@ public class MainProgram {
                     java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
                     java.text.SimpleDateFormat SDF2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                     String todayDate = SDF.format(today.getTime());
-                    System.out.println("\n\t\t\t\tTotal Distances of Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+                    System.out.println("\n\t\t\tDaily Total Distances of Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
                     for (int i = 0; i < 100; i++) {
                         System.out.print("*");
                     }
@@ -1014,7 +1014,7 @@ public class MainProgram {
                     for (int i = 0; i < 100; i++) {
                         System.out.print("*");
                     }
-                    System.out.println("\n\n\nPress Enter To Continue,..");
+                    System.out.println("\n\n\nPress Enter To Continue...");
                     s.nextLine();
                     break;
                 }
@@ -1029,7 +1029,7 @@ public class MainProgram {
                             java.util.Date newDate = SDF.parse(date);
                             String compareDate = SDF.format(newDate);
                             parseDate = true;
-                            System.out.println("\n\t\t\t\tTotal Distances of Delivery Man Report\n\t\t\t\t\tDate: " + compareDate);
+                            System.out.println("\n\t\t\tDaily Total Distances of Delivery Man Report\n\t\t\t\t\tDate: " + compareDate);
                             for (int i = 0; i < 100; i++) {
                                 System.out.print("*");
                             }
@@ -1051,7 +1051,7 @@ public class MainProgram {
                             for (int i = 0; i < 100; i++) {
                                 System.out.print("*");
                             }
-                            System.out.println("\n\n\nPress Enter To Continue,..");
+                            System.out.println("\n\n\nPress Enter To Continue...");
                             s.nextLine();
                         } catch (Exception e) {
                             System.out.println("Wrong Date Format! Try Again!");
@@ -1102,7 +1102,7 @@ public class MainProgram {
         for (int i = 0; i < 110; i++) {
             System.out.print("*");
         }
-        System.out.println("\n\n\nPress Enter To Continue,..");
+        System.out.println("\n\n\nPress Enter To Continue...");
         s.nextLine();
     }
 
@@ -1133,7 +1133,7 @@ public class MainProgram {
         for (int i = 0; i < 100; i++) {
             System.out.print("*");
         }
-        System.out.println("\n\n\nPress Enter To Continue,..");
+        System.out.println("\n\n\nPress Enter To Continue...");
         s.nextLine();
     }
     //Miw End
