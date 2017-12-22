@@ -85,11 +85,9 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             return value;
         }
         else if(newposition > 0 && newposition <= TotalEntries){
-            Node tempnode = firstNode;
-            for(int i=1 ; i<newposition ; i++){
-                tempnode = tempnode.next;
-            }
-            value = tempnode.data;
+            Node tempNode;
+            tempNode = getRecordAt(newposition);
+            value = tempNode.data;
         }
         else{
             System.out.println("Out Of Bound");
@@ -145,14 +143,12 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
     
     public T remove(int givenPosition){
         T value = null;
-        Node tempNode = firstNode;
+        Node tempNode;
         if(isEmpty()){
             System.out.println("No Record In List");
         }
         else if(givenPosition>=1&&givenPosition<=TotalEntries){
-            for(int i=1; i<givenPosition ; i++){
-                tempNode = tempNode.next;
-            }
+            tempNode = getRecordAt(givenPosition);
             value = tempNode.data;
             if(givenPosition==1){
                 if(firstNode.next!=null){
@@ -236,6 +232,44 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             }
             System.out.printf("%103s%d\n",String.format("Record Count : "),j);
             return success;
+    }
+    
+    public double editCart(int newquantity, int position, double subtotal){
+        double newsubtotal = 0.00;
+        Node currentNode = getRecordAt(position);
+        OrderDetail currentDetail = (OrderDetail) currentNode.data;
+        currentDetail.setQuantity(newquantity);
+        double currentFoodTotal = currentDetail.getFoodTotal();
+        double newFoodTotal = newquantity*currentDetail.getFood().getFoodPrice();
+        double currentSubtotal = subtotal;
+        newsubtotal = currentSubtotal-currentFoodTotal+newFoodTotal;
+        currentDetail.setFoodTotal(newFoodTotal);
+        currentDetail.setQuantity(newquantity);
+        SortOrderDetail();
+        return newsubtotal;
+    }
+    
+    public double deleteFood(int position, double subtotal){
+        double newsubtotal = 0.00;
+        Node currentNode = getRecordAt(position);
+        OrderDetail currentDetail = (OrderDetail) currentNode.data;
+        double currentFoodTotal = currentDetail.getFoodTotal();
+        newsubtotal = subtotal-currentFoodTotal;
+        remove(position);
+        return newsubtotal;
+    }
+    
+    private Node getRecordAt(int position){
+        Node tempNode = firstNode;
+        if(isEmpty()){
+            System.out.println("Wrong Record");
+        }
+        else if(position>=1&&position<=TotalEntries){
+            for(int i=1; i<position ; i++){
+                tempNode = tempNode.next;
+            }
+        }
+        return tempNode;
     }
     
     private class Node {

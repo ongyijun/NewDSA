@@ -74,8 +74,12 @@ public class TryModuleC {
          orderdetail.add(new OrderDetail(order.get(2), food.get(1), 1,16.00));
          orderdetail.add(new OrderDetail(order.get(3), food.get(2), 1,15.00));
          orderdetail.add(new OrderDetail(order.get(4), food.get(1), 1,16.00));
-         /*CustomerLogin();*/
-         order.GenerateDetailReport("2017/12/21");
+         payment.add(new Payment("PA000001", order.get(1), 10.00, cal2, "1", "Online"));
+         payment.add(new Payment("PA000002", order.get(2), 11.00, cal, "1", "Online"));
+         payment.add(new Payment("PA000003", order.get(3), 12.00, cal1, "1", "Online"));
+         payment.add(new Payment("PA000004", order.get(4), 13.00, cal, "1", "Online"));
+         CustomerLogin();
+         order.GenerateDetailReport("2017/12/22");
     }
     
     public void CustomerLogin(){
@@ -322,23 +326,7 @@ public class TryModuleC {
                             s.nextLine();
                         }while(quantity<1);
                         double currentSubtotal = CurrentFood.get(i).getFoodPrice()*quantity;
-                        
-                        /*for(int q=1 ; q<=currentDetail.getTotalEntries() ; q++){
-                            if(currentDetail.get(q).getFood().getFoodID().equals(foodid)){
-                                int currentqty = currentDetail.get(q).getQuantity();
-                                quantity = quantity + currentqty;
-                                currentDetail.get(q).setQuantity(quantity);
-                                currentSubtotal = CurrentFood.get(i).getFoodPrice()*(quantity-currentqty);
-                                currentDetail.get(q).setFoodTotal(CurrentFood.get(i).getFoodPrice()*(quantity));
-                                currentDetail.SortOrderDetail();
-                                ordered=true;
-                            }
-                        }
-
-                        if(ordered == false){*/
                         currentDetail.addDetail(new OrderDetail(currentOrder,CurrentFood.get(i),quantity,currentSubtotal));
-                        /*}*/
-
                         Subtotal+=currentSubtotal;
                         currentOrder.setSubtotal(Subtotal);
                     }
@@ -442,16 +430,8 @@ public class TryModuleC {
                         newquantity = s.nextInt();
                         s.nextLine();
                     }while(newquantity<1);
-                    currentDetail.get(i).setQuantity(newquantity);
-                    double currentFoodTotal = currentDetail.get(i).getFoodTotal();
-                    double newFoodTotal = newquantity*currentDetail.get(i).getFood().getFoodPrice();
-                    double currentSubtotal = currentOrder.getSubtotal();
-                    double newSubtotal = currentSubtotal-currentFoodTotal+newFoodTotal;
-                    currentDetail.get(i).setFoodTotal(newFoodTotal);
-                    currentDetail.get(i).setQuantity(newquantity);
-                    Subtotal = newSubtotal;
+                    Subtotal = currentDetail.editCart(newquantity,i,currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
-                    currentDetail.SortOrderDetail();
                 }
             }
             System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
@@ -482,12 +462,8 @@ public class TryModuleC {
             }
             for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
                 if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
-                    double currentFoodTotal = currentDetail.get(i).getFoodTotal();
-                    double currentSubtotal = currentOrder.getSubtotal();
-                    double newSubtotal = currentSubtotal-currentFoodTotal;
-                    Subtotal = newSubtotal;
+                    Subtotal = currentDetail.deleteFood(i, currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
-                    currentDetail.remove(i);
                 }
             }
             System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
