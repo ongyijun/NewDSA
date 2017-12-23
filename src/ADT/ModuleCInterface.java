@@ -19,4 +19,6 @@ public interface ModuleCInterface<T> {
     public void SortOrderDetail();
     public T remove(int givenPosition);
     public boolean GenerateDetailReport(String day);
+    public double editCart(int newquantity, int position, double subtotal);
+    public double deleteFood(int position, double subtotal);
 }
