@@ -63,9 +63,9 @@ public class MainProgram {
                 case "4": {
                     //A.RestaurantLogin(r);
                     /*
-                    if (a) {
-                        RestaurantMenu(restaurant);
-                    }
+                     if (a) {
+                     RestaurantMenu(restaurant);
+                     }
                      */
                     break;
                 }
@@ -134,15 +134,19 @@ public class MainProgram {
             selection = s.nextLine();
             switch (selection) {
                 case "1": {
+                    CustomerFeedBackRating(DM);
                     // D.DeliveryMenClockInOut(DMList, deliveryMen.getStaffID());
+                    DMMenu();
                     break;
                 }
                 case "2": {
                     // D.ChangeDeliverStatus(DMList, deliveryMen.getStaffID());
+                    DMMenu();
                     break;
                 }
                 case "3": {
                     //D.ViewDeliverSchedule(customer, DMList, order, restaurant, deliveryMen.getStaffID());
+                    DMMenu();
                     break;
                 }
                 case "4": {
@@ -152,6 +156,7 @@ public class MainProgram {
                 }
                 case "5": {
                     //C.retrieveCustomer();
+                    DMMenu();
                     break;
                 }
                 case "0": {
@@ -612,7 +617,7 @@ public class MainProgram {
             double rating = 0.0;
             int totalRateReceived = 0;
             DeliveryMan DM = new DeliveryMan(0, CurrentAvailable, CurrentLocation, rating, totalRateReceived, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, Salary, joinDate);
-            boolean success = DMList.addWithICValidation(DM);
+            boolean success = DMList.addWithValidation(DM);
             if (success) {
                 return true;
             } else {
@@ -641,7 +646,7 @@ public class MainProgram {
             String WorkingStatus = "Employed";
             Admin admin = new Admin(annualSale, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, 0, 0, joinDate);
             admin.calculateSalary();
-            boolean success = ADList.addWithICValidation(admin);
+            boolean success = ADList.addWithValidation(admin);
             if (success) {
                 return true;
             } else {
@@ -686,7 +691,7 @@ public class MainProgram {
             String WorkingStatus = "Employed";
             HR hr = new HR(TotalStaffManaged, ID, Pw, Name, IC, PhNo, Gender, Adds, Email, Position, WorkingStatus, Salary, 0, joinDate);
             hr.calculateSalary();
-            boolean success = HRList.addWithICValidation(hr);
+            boolean success = HRList.addWithValidation(hr);
             if (success) {
                 return true;
             } else {
@@ -825,8 +830,9 @@ public class MainProgram {
             try {
                 System.out.println("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man? (-1 to Cancel) :");
                 double rate = s.nextDouble();
+                s.nextLine();
                 if (rate < -1 || rate > 10) {
-                    System.out.println("Please Enter the Integer in range of 0.0 to 10.0 only.\nPress Enter to Continue...");
+                    System.out.print("Please Enter the Integer in range of 0.0 to 10.0 only.\nPress Enter to Continue...");
                     s.nextLine();
                     System.out.println("\n\n");
                 } else if (rate == -1) {
@@ -835,11 +841,18 @@ public class MainProgram {
                     System.out.println("\n\n");
                     success = true;
                 } else {
-                    DMList.updateDeliveryManRating(DM.getStaffID(), rate);
-                    System.out.println("Thank You for your feedback, has a nice day.\nPress Enter to Continue...");
-                    s.nextLine();
-                    System.out.println("\n\n");
-                    success = true;
+                    boolean update = DMList.updateDeliveryManRating(DM.getStaffID(), rate);
+                    if (update) {
+                        System.out.println("Thank You for your feedback, has a nice day.\nPress Enter to Continue...");
+                        s.nextLine();
+                        System.out.println("\n\n");
+                        success = true;
+                    } else {
+                        System.out.println("System Error.\nPress Enter to Continue...");
+                        s.nextLine();
+                        System.out.println("\n\n");
+                        success = true;
+                    }
                 }
             } catch (Exception ex) {
                 System.out.println("Please Enter only INTEGERs!\nPress Enter to Continue...");
@@ -877,7 +890,7 @@ public class MainProgram {
         for (int i = 0; i < 100; i++) {
             System.out.print("*");
         }
-        System.out.println("\n\n\nPress Enter To Continue,..");
+        System.out.println("\n\n\nPress Enter To Continue...");
         s.nextLine();
     }
 
@@ -944,7 +957,7 @@ public class MainProgram {
                             for (int i = 1; i <= wsList.getTotalEntries(); i++) {
                                 if (wsList.get(i).getTotalDeliveredOrder() > 0 && compareDate.equals(SDF.format(wsList.get(i).getCheckIn().getTime()))) {
                                     System.out.println("\n" + wsList.get(i).getDM().getStaffID() + "\t" + wsList.get(i).getDM().getStaffName() + "\t" + SDF2.format(wsList.get(i).getCheckIn().getTime()) + "\t"
-                                            + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDeliveredOrder());
+                                            + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDeliveredOrder() + "\n");
                                     count++;
                                 }
                             }
@@ -1081,7 +1094,7 @@ public class MainProgram {
         java.util.Calendar today = java.util.Calendar.getInstance();
         java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
         String todayDate = SDF.format(today.getTime());
-        System.out.println("\n\t\t\t\tTop 20 Most Experience Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+        System.out.println("\n\t\t\tTop 20 Most Experience Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
         for (int i = 0; i < 110; i++) {
             System.out.print("*");
         }
@@ -1090,10 +1103,11 @@ public class MainProgram {
             System.out.print("*");
         }
         for (int i = 1; i <= DMList.getTotalEntries(); i++) {
-            if (count < 20) {
-                System.out.println("\n" + i + "\t" + DMList.get(i).getStaffID() + "\t" + DMList.get(i).getStaffName() + "\t" + DMList.get(i).getStaffPhNo() + "\t"
-                        + DMList.get(i).getStaffEmail() + "\t" + SDF.format(DMList.get(i).getJoinDate().getTime()) + "\t" + String.format("%.2f", DMList.get(i).getBasicSalary()));
+            if (count < 20 && DMList.get(i).getWorkingStatus().equals("Employed")) {
                 count++;
+                System.out.println("\n" + count + "\t" + DMList.get(i).getStaffID() + "\t" + DMList.get(i).getStaffName() + "\t" + DMList.get(i).getStaffPhNo() + "\t"
+                        + DMList.get(i).getStaffEmail() + "\t" + SDF.format(DMList.get(i).getJoinDate().getTime()) + "\t" + String.format("%.2f", DMList.get(i).getBasicSalary()));
+
             }
         }
         if (count == 0) {
@@ -1112,7 +1126,7 @@ public class MainProgram {
         java.util.Calendar today = java.util.Calendar.getInstance();
         java.text.SimpleDateFormat SDF = new java.text.SimpleDateFormat("dd/MM/yyyy");
         String todayDate = SDF.format(today.getTime());
-        System.out.println("\n\t\t\t\tTop 20 Most Rating Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
+        System.out.println("\n\t\t\tTop 20 Most Rating Delivery Man Report\n\t\t\t\t\tDate: " + todayDate);
         for (int i = 0; i < 100; i++) {
             System.out.print("*");
         }
@@ -1121,10 +1135,10 @@ public class MainProgram {
             System.out.print("*");
         }
         for (int i = 1; i <= DMList.getTotalEntries(); i++) {
-            if (count < 20) {
-                System.out.println("\n" + i + "\t" + DMList.get(i).getStaffID() + "\t" + DMList.get(i).getStaffName() + "\t" + SDF.format(DMList.get(i).getJoinDate().getTime()) + "\t"
-                        + String.format("%.2f", DMList.get(i).getRating()) + "\t\t\t" + DMList.get(i).getTotalRateReceived() + "\t" + String.format("%.2f", DMList.get(i).getBasicSalary()));
+            if (count < 20 && DMList.get(i).getWorkingStatus().equals("Employed")) {
                 count++;
+                System.out.println("\n" + count + "\t" + DMList.get(i).getStaffID() + "\t" + DMList.get(i).getStaffName() + "\t" + SDF.format(DMList.get(i).getJoinDate().getTime()) + "\t"
+                        + String.format("%.2f", DMList.get(i).getRating()) + "\t\t\t" + DMList.get(i).getTotalRateReceived() + "\t" + String.format("%.2f", DMList.get(i).getBasicSalary()));
             }
         }
         if (count == 0) {
@@ -1145,31 +1159,11 @@ public class MainProgram {
         Calendar DMjoinDate = Calendar.getInstance();
         DMjoinDate.add(Calendar.MONTH, 5);
         HRjoinDate.add(Calendar.MONTH, 1);
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000002", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, HRjoinDate));
-        MP.DMList.add(new DeliveryMan(3, "Not Available", "Not Available", 4.0, 1, "DM000103", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000004", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 5.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(5, "Not Available", "Not Available", 4.0, 1, "DM000009", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.5, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 3.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.0, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456789", 'M', "2345 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.3, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456781", 'M', "2341 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
+        MP.DMList.add(new DeliveryMan(0, "Not Available", "Not Available", 9.75, 5, "DM000002", "123456", "Ong Yi Yi", "971009-02-5213", "012-3456782", 'M', "2342 Lorong 3 Jalan ABC, 51021 KL", "OngYiYi@gmail.com", "Delivery Man", "Employed", 3750, 3750, HRjoinDate));
+        MP.DMList.add(new DeliveryMan(3, "Not Available", "Not Available", 5.6, 2, "DM000003", "123456", "Ong Jun Jun", "971009-02-5213", "012-3456783", 'M', "2343 Lorong 3 Jalan ABC, 51022 KL", "OngJunJun@gmail.com", "Delivery Man", "Employed", 4000, 4000, HRjoinDate));
+        MP.DMList.add(new DeliveryMan(4, "Not Available", "Not Available", 7.4, 3, "DM000004", "123456", "Ong Ong Yi", "971009-02-5213", "012-3456784", 'M', "2344 Lorong 3 Jalan ABC, 51023 KL", "OngOngYi@gmail.com", "Delivery Man", "Employed", 3250, 3250, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(2, "Not Available", "Not Available", 5.5, 7, "DM000005", "123456", "Ong Ong Jun", "971009-02-5213", "012-3456785", 'M', "2345 Lorong 3 Jalan ABC, 51024 KL", "OngOngJun@gmail.com", "Delivery Man", "Employed", 3000, 3000, DMjoinDate));
 
         MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750, HRjoinDate));
         MP.ADList.add(new Admin(20000, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 6000, 6000, ADjoinDate));
@@ -1178,38 +1172,38 @@ public class MainProgram {
         MP.menu();
         // TODO code application logic here
         /*Calendar date3 = Calendar.getInstance();
-        Calendar date1 = Calendar.getInstance();
-        Calendar date2 = Calendar.getInstance();
-        Calendar date4 = Calendar.getInstance();
-        date3.add(Calendar.MINUTE, 5);
-        date2.add(Calendar.MINUTE, 3);
-        date4.add(Calendar.MINUTE, 1);
-        DeliveryMan newEntry = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date1);
-        DeliveryMan newEntry3 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date3);
-        DeliveryMan newEntry2 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date2);
-        DeliveryMan newEntry4 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date4);
-        DM.add(newEntry3);
-        DM.add(newEntry2);
-        DM.add(newEntry);
+         Calendar date1 = Calendar.getInstance();
+         Calendar date2 = Calendar.getInstance();
+         Calendar date4 = Calendar.getInstance();
+         date3.add(Calendar.MINUTE, 5);
+         date2.add(Calendar.MINUTE, 3);
+         date4.add(Calendar.MINUTE, 1);
+         DeliveryMan newEntry = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date1);
+         DeliveryMan newEntry3 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date3);
+         DeliveryMan newEntry2 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date2);
+         DeliveryMan newEntry4 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date4);
+         DM.add(newEntry3);
+         DM.add(newEntry2);
+         DM.add(newEntry);
 
-        System.out.println(DM.get(1).getJoinDate().getTime());
-        System.out.println(DM.get(2).getJoinDate().getTime());
-        System.out.println(DM.get(3).getJoinDate().getTime() + "\n");
+         System.out.println(DM.get(1).getJoinDate().getTime());
+         System.out.println(DM.get(2).getJoinDate().getTime());
+         System.out.println(DM.get(3).getJoinDate().getTime() + "\n");
 
-        DM.SortMostExperienceDeliveryMan();
+         DM.SortMostExperienceDeliveryMan();
 
-        DM.add(newEntry4);
-        System.out.println("\n" + DM.get(1).getJoinDate().getTime());
-        System.out.println(DM.get(2).getJoinDate().getTime());
-        System.out.println(DM.get(3).getJoinDate().getTime());
-        System.out.println(DM.get(4).getJoinDate().getTime() + "\n");
+         DM.add(newEntry4);
+         System.out.println("\n" + DM.get(1).getJoinDate().getTime());
+         System.out.println(DM.get(2).getJoinDate().getTime());
+         System.out.println(DM.get(3).getJoinDate().getTime());
+         System.out.println(DM.get(4).getJoinDate().getTime() + "\n");
 
-        DM.SortMostExperienceDeliveryMan();
+         DM.SortMostExperienceDeliveryMan();
 
-        System.out.println("\n" + DM.get(1).getJoinDate().getTime());
-        System.out.println(DM.get(2).getJoinDate().getTime());
-        System.out.println(DM.get(3).getJoinDate().getTime());
-        System.out.println(DM.get(4).getJoinDate().getTime());*/
+         System.out.println("\n" + DM.get(1).getJoinDate().getTime());
+         System.out.println(DM.get(2).getJoinDate().getTime());
+         System.out.println(DM.get(3).getJoinDate().getTime());
+         System.out.println(DM.get(4).getJoinDate().getTime());*/
 
     }
 

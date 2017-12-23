@@ -35,12 +35,12 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
         TotalEntries++;
     }
 
-    public boolean addWithICValidation(T newEntry) {
+    public boolean addWithValidation(T newEntry) {
         Employee e = (Employee) newEntry;
         Node currentNode = firstNode;
         for (int i = 1; i <= TotalEntries; i++) {
             Employee compareE = (Employee) currentNode.data;
-            if (e.getStaffIC().equals(compareE.getStaffIC())) {
+            if (e.getStaffIC().equals(compareE.getStaffIC()) || e.getStaffID().equals(compareE.getStaffID())) {
                 return false;
             }
             currentNode = currentNode.next;
@@ -251,7 +251,7 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
             }
         }
     }
-    
+
     public void SortPendingDelivery() {
 
         if (!isEmpty()) {       //If the list is Not Empty
@@ -303,12 +303,13 @@ public class EmployeeList<T> implements EmployeeListInterface<T> {
         for (int i = 1; i <= TotalEntries; i++) {
             DeliveryMan DM = (DeliveryMan) currentNode.data;
             if (DM.getStaffID().equals(StaffID)) {
-                Double Rating = ((DM.getRating() * DM.getTotalRateReceived()) + rating) / (DM.getTotalRateReceived() + 1);
+                double Rating = ((DM.getRating() * DM.getTotalRateReceived()) + rating) / (DM.getTotalRateReceived() + 1);
                 DM.setRating(Rating);
                 DM.setTotalRateReceived(DM.getTotalRateReceived() + 1);
                 currentNode.data = (T) DM;
                 return true;
             }
+            currentNode = currentNode.next;
         }
         return false;
     }
