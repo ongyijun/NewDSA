@@ -5,11 +5,9 @@
  */
 package ADT;
 
-import domain.Food;
+import domain.Payment;
 import domain.OrderDetail;
 import domain.Orders;
-import domain.Restaurant;
-import domain.Customer;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,7 +53,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         else{
             OrderDetail newDetail = (OrderDetail)newNode.data;
             Node tempNode = firstNode;
-            while(tempNode!=null&&found==false){
+            for(int i=1 ; i<=TotalEntries&&found==false ; i++){
                 OrderDetail testDetail = (OrderDetail)tempNode.data;
                 if(newDetail.getFood().getFoodID().equals(testDetail.getFood().getFoodID())){
                     found = true;
@@ -66,12 +64,13 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                     testDetail.setQuantity(newqty);
                     testDetail.setFoodTotal(newfoodtotal);
                     tempNode.data = (T)testDetail;
+                    break;
                 }
                 tempNode = tempNode.next;
             }
             if(found==false){
-                newNode.previous = lastNode;
                 lastNode.next = newNode;
+                newNode.previous = lastNode;
                 lastNode = lastNode.next;
                 TotalEntries++;
             }
@@ -79,14 +78,14 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         SortOrderDetail();
     }
     
-    public T get(int newposition){
+    public T get(int position){
         T value = null;
         if(isEmpty()){
             return value;
         }
-        else if(newposition > 0 && newposition <= TotalEntries){
+        else if(position > 0 && position <= TotalEntries){
             Node tempNode;
-            tempNode = getRecordAt(newposition);
+            tempNode = getRecordAt(position);
             value = tempNode.data;
         }
         else{
@@ -107,7 +106,10 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
     }
     
     public void SortOrderDetail(){
-        if(!isEmpty()&&TotalEntries==2){
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else if(!isEmpty()&&TotalEntries==2){
                 OrderDetail first = (OrderDetail)firstNode.data;
                 OrderDetail last = (OrderDetail)lastNode.data;
                 if(last.getFoodTotal()>first.getFoodTotal()){
@@ -175,10 +177,42 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         return value;
     }
     
-    public boolean GenerateDetailReport(String day){
-        boolean success = false;
+    public String GetCurrentOrderID(){
+        String nextID = "";
+        if(isEmpty()){
+                nextID = "OR000001";
+        }
+        else{
+            Orders order = (Orders)lastNode.data;
+            String currentID = order.getOrdersID();
+            int ID = Integer.parseInt(currentID.replace("OR", ""));
+            ID++;
+            nextID = "OR" + String.format("%06d",ID);
+        }
+        return nextID;
+    }
+    public String GetCurrentPaymentID(){
+        String nextID = "";
+        if(isEmpty()){
+                nextID = "PA000001";
+        }
+        else{
+            Payment payment = (Payment)lastNode.data;
+            String currentID = payment.getPaymentID();
+            int ID = Integer.parseInt(currentID.replace("PA", ""));
+            ID++;
+            nextID = "PA" + String.format("%06d",ID);
+        }
+        return nextID;
+    }
+    
+    private void SortOrderQuantity(){
         Node currentNode = firstNode;
-            Node tempNode = null;
+        Node tempNode = null;
+        if(isEmpty()){
+            System.out.println("No Record");
+        }
+        else{
             for(int i=1 ; i<=TotalEntries ; i++){
                 if(i>1&&currentNode.next!=null){
                     currentNode = currentNode.next;
@@ -189,7 +223,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                         tempNode = tempNode.next;
                         Orders current = (Orders)currentNode.data;
                         Orders temp = (Orders)tempNode.data;
-                        if(temp.getOrdersDateTime().getTime().compareTo(current.getOrdersDateTime().getTime())<0){
+                        if(temp.getTotalQuantity()>current.getTotalQuantity()){
                             T value = tempNode.data;
                             tempNode.data=currentNode.data;
                             currentNode.data = value;
@@ -197,6 +231,44 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                     }
                 }
             }
+        }
+    }
+    
+    private void SortOrderDate(){
+        Node currentNode = firstNode;
+        Node tempNode = null;
+        if(isEmpty()){
+            System.out.println("No Record");
+        }
+        else{
+            for(int i=1 ; i<=TotalEntries ; i++){
+                if(i>1&&currentNode.next!=null){
+                    currentNode = currentNode.next;
+                }
+                tempNode = currentNode;
+                for(int j=i+1 ; j<=TotalEntries ; j++){
+                    if(tempNode.next!=null){
+                        tempNode = tempNode.next;
+                        Orders current = (Orders)currentNode.data;
+                        Orders temp = (Orders)tempNode.data;
+                        if(temp.getOrdersDateTime().getTime().compareTo(current.getOrdersDateTime().getTime())>0){
+                            T value = tempNode.data;
+                            tempNode.data=currentNode.data;
+                            currentNode.data = value;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public boolean GenerateDetailReportByQuantity(String day){
+        boolean success = false;
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else{
+            SortOrderQuantity();
             Calendar comparecal = Calendar.getInstance();
             Calendar cal = Calendar.getInstance();
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -207,14 +279,14 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             }catch(ParseException ex){
                 System.out.print(ex);
             }
-            String reporttitle = "Daily Order Detailed Report";
-            System.out.printf("%66s of %s\n",reporttitle,dateFormat.format(comparecal.getTime()));
-            System.out.printf("%61s%s\n",String.format("Generate Date:"),dateFormat.format(comparecal.getTime()));
+            String reporttitle = "Daily Order Detailed Report Based on Quantity";
+            System.out.printf("%78s of %s\n",reporttitle,dateFormat.format(comparecal.getTime()));
+            System.out.printf("%64s%s\n",String.format("Generate Date:"),dateFormat.format(cal.getTime()));
             System.out.println("\t\t------------------------------------------------------------------------------------------");
             System.out.println("\t\t-   No.   -     Customer     -     Restaurant     -     Total     -          Order       -");
-            System.out.println("\t\t-         -       Name       -        Name        -               -        Date Time     -");
+            System.out.println("\t\t-         -       Name       -        Name        -    Quantity   -        Date Time     -");
             System.out.println("\t\t------------------------------------------------------------------------------------------");
-            tempNode = firstNode;
+            Node tempNode = firstNode;
             int j=0;
             for(int i=1 ; i<=TotalEntries ; i++){
                 Orders record = (Orders)tempNode.data;
@@ -222,7 +294,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                     System.out.printf("\t\t- %4d    -",j+1);
                     System.out.printf("%14s    -",record.getCustomer().getCustName());
                     System.out.printf("%15s     -",record.getRestaurant().getRestaurantName());
-                    System.out.printf("%9s%.2f -",String.format("RM"),record.getTotal());
+                    System.out.printf("%12d   -",record.getTotalQuantity());
                     System.out.printf("%20s  -\n",dateFormat1.format(record.getOrdersDateTime().getTime()));
                     System.out.println("\t\t------------------------------------------------------------------------------------------");
                     j++;
@@ -231,33 +303,90 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                 tempNode = tempNode.next;
             }
             System.out.printf("%103s%d\n",String.format("Record Count : "),j);
-            return success;
+        }
+        return success;
+    }
+    
+    public boolean GenerateDetailReportByTime(String day){
+        boolean success = false;
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else{
+            SortOrderDate();
+            Calendar comparecal = Calendar.getInstance();
+            Calendar cal = Calendar.getInstance();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            DateFormat dateFormat1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            try{
+                Date date = dateFormat.parse(day);
+                comparecal.setTime(date);
+            }catch(ParseException ex){
+                System.out.print(ex);
+            }
+            String reporttitle = "Daily Order Detailed Report Based on Time";
+            System.out.printf("%78s of %s\n",reporttitle,dateFormat.format(comparecal.getTime()));
+            System.out.printf("%64s%s\n",String.format("Generate Date:"),dateFormat.format(cal.getTime()));
+            System.out.println("\t\t------------------------------------------------------------------------------------------");
+            System.out.println("\t\t-   No.   -     Customer     -     Restaurant     -     Total     -          Order       -");
+            System.out.println("\t\t-         -       Name       -        Name        -    Quantity   -        Date Time     -");
+            System.out.println("\t\t------------------------------------------------------------------------------------------");
+            Node tempNode = firstNode;
+            int j=0;
+            for(int i=1 ; i<=TotalEntries ; i++){
+                Orders record = (Orders)tempNode.data;
+                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0&&!record.getOrderStatus().equals("0")){
+                    System.out.printf("\t\t- %4d    -",j+1);
+                    System.out.printf("%14s    -",record.getCustomer().getCustName());
+                    System.out.printf("%15s     -",record.getRestaurant().getRestaurantName());
+                    System.out.printf("%12d   -",record.getTotalQuantity());
+                    System.out.printf("%20s  -\n",dateFormat1.format(record.getOrdersDateTime().getTime()));
+                    System.out.println("\t\t------------------------------------------------------------------------------------------");
+                    j++;
+                    success = true;
+                }
+                tempNode = tempNode.next;
+            }
+            System.out.printf("%103s%d\n",String.format("Record Count : "),j);
+        }
+        return success;
     }
     
     public double editCart(int newquantity, int position, double subtotal){
         double newsubtotal = 0.00;
-        Node currentNode = getRecordAt(position);
-        OrderDetail currentDetail = (OrderDetail) currentNode.data;
-        currentDetail.setQuantity(newquantity);
-        double currentFoodTotal = currentDetail.getFoodTotal();
-        double newFoodTotal = newquantity*currentDetail.getFood().getFoodPrice();
-        double currentSubtotal = subtotal;
-        newsubtotal = currentSubtotal-currentFoodTotal+newFoodTotal;
-        currentDetail.setFoodTotal(newFoodTotal);
-        currentDetail.setQuantity(newquantity);
-        currentNode.data = (T)currentDetail;
-        SortOrderDetail();
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else{
+            Node currentNode = getRecordAt(position);
+            OrderDetail currentDetail = (OrderDetail) currentNode.data;
+            currentDetail.setQuantity(newquantity);
+            double currentFoodTotal = currentDetail.getFoodTotal();
+            double newFoodTotal = newquantity*currentDetail.getFood().getFoodPrice();
+            double currentSubtotal = subtotal;
+            newsubtotal = currentSubtotal-currentFoodTotal+newFoodTotal;
+            currentDetail.setFoodTotal(newFoodTotal);
+            currentDetail.setQuantity(newquantity);
+            currentNode.data = (T)currentDetail;
+            SortOrderDetail();
+        }
         return newsubtotal;
     }
     
     public double deleteFood(int position, double subtotal){
         double newsubtotal = 0.00;
-        Node currentNode = getRecordAt(position);
-        OrderDetail currentDetail = (OrderDetail) currentNode.data;
-        double currentFoodTotal = currentDetail.getFoodTotal();
-        newsubtotal = subtotal-currentFoodTotal;
-        remove(position);
-        currentNode.data = (T)currentDetail;
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else{
+            Node currentNode = getRecordAt(position);
+            OrderDetail currentDetail = (OrderDetail) currentNode.data;
+            double currentFoodTotal = currentDetail.getFoodTotal();
+            newsubtotal = subtotal-currentFoodTotal;
+            remove(position);
+            currentNode.data = (T)currentDetail;
+            SortOrderDetail();
+        }
         return newsubtotal;
     }
     
