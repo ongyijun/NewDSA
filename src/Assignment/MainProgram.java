@@ -2621,6 +2621,10 @@ public class MainProgram {
                 no++;
             }
         }
+        if(no == 1)
+        {
+            System.out.println("*                          No Deliver Order                               *");
+        }
         System.out.println("***************************************************************************");
         
         System.out.println("\nPlease Select The Option Below");
@@ -2849,7 +2853,8 @@ public class MainProgram {
         }
         if(!check)
         {
-            System.out.println("No Deliver Order");
+            System.out.println("\n\nNo Deliver Order\n\n");
+            s.nextLine();
         }
         DeliveryManMainMenu(DM);
     }
@@ -2896,9 +2901,12 @@ public class MainProgram {
     public void AutoAssign1()//Get Order
     {
         Orders curOrder = new Orders();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -2);
         
         for(int i = 1 ; i <= order.getTotalEntries() ; i++)
         {
+            //if(order.get(i).getOrderStatus().equals("1") && order.get(i).getOrdersDateTime().getTime().after(cal.getTime()))
             if(order.get(i).getOrderStatus().equals("1"))
             {
                 curOrder = order.get(i);
@@ -2910,6 +2918,7 @@ public class MainProgram {
     public void AutoAssign2(Orders curOrder)//Assign
     {
         Calendar cal = Calendar.getInstance();
+        
         WorkStatus curWS = new WorkStatus();
         int tmpPendingDelivery = 0;
         boolean Available = false;
