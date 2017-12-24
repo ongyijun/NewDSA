@@ -19,12 +19,13 @@ public class Orders {
     private double Total;
     private String OrderStatus;
     private Calendar OrdersDateTime;
+    private int TotalQuantity;
     
     public Orders(){
         
     }
     
-    public Orders(Restaurant restaurant, Customer customer, String OrdersID, double Subtotal, double Total, String OrderStatus, Calendar OrdersDateTime) {
+    public Orders(Restaurant restaurant, Customer customer, String OrdersID, double Subtotal, double Total, String OrderStatus, Calendar OrdersDateTime, int TotalQuantity) {
         this.restaurant = restaurant;
         this.customer = customer;
         this.OrdersID = OrdersID;
@@ -32,6 +33,15 @@ public class Orders {
         this.Total = Total;
         this.OrderStatus = OrderStatus;
         this.OrdersDateTime = OrdersDateTime;
+        this.TotalQuantity = TotalQuantity;
+    }
+
+    public int getTotalQuantity() {
+        return TotalQuantity;
+    }
+
+    public void setTotalQuantity(int TotalQuantity) {
+        this.TotalQuantity = TotalQuantity;
     }
 
     public String getOrderStatus() {

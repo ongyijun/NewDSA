@@ -66,10 +66,10 @@ public class TryModuleC {
          }catch(ParseException ex){
              System.out.println(ex);
          }
-         order.add(new Orders(restaurant.get(1), customer.get(1), "OR000001", 10.00, 11.00, "1",cal2));
-         order.add(new Orders(restaurant.get(2), customer.get(2), "OR000002", 11.00, 12.00, "1",cal));
-         order.add(new Orders(restaurant.get(1), customer.get(1), "OR000003", 12.00, 13.00, "1",cal1));
-         order.add(new Orders(restaurant.get(2), customer.get(2), "OR000004", 13.00, 14.00, "1",cal));
+         order.add(new Orders(restaurant.get(1), customer.get(1), "OR000001", 10.00, 11.00, "1",cal2,1));
+         order.add(new Orders(restaurant.get(2), customer.get(2), "OR000002", 11.00, 12.00, "1",cal,2));
+         order.add(new Orders(restaurant.get(1), customer.get(1), "OR000003", 12.00, 13.00, "1",cal1,10));
+         order.add(new Orders(restaurant.get(2), customer.get(2), "OR000004", 13.00, 14.00, "1",cal,2));
          orderdetail.add(new OrderDetail(order.get(1), food.get(1), 1,15.00));
          orderdetail.add(new OrderDetail(order.get(2), food.get(1), 1,16.00));
          orderdetail.add(new OrderDetail(order.get(3), food.get(2), 1,15.00));
@@ -80,6 +80,7 @@ public class TryModuleC {
          payment.add(new Payment("PA000004", order.get(4), 13.00, cal, "1", "Online"));
          CustomerLogin();
          GenerateOrderReport();
+         /*retrieveCustomer();*/
     }
     
     public void CustomerLogin(){
@@ -114,7 +115,7 @@ public class TryModuleC {
     }
     
     public void CustomerMenu(Customer current){
-        String selection = "0";
+        String selection = "";
 
         System.out.println("--------------");
         System.out.println("Customer Menu");
@@ -122,8 +123,8 @@ public class TryModuleC {
         System.out.println("Please select the below option");
         System.out.println("1. Make Order");
         System.out.println("2. Cancel Order");
-        System.out.println("3. Logout");
-        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3")) {
+        System.out.println("0. Logout");
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("0")) {
             System.out.print("Option: ");
             selection = s.nextLine();
             
@@ -138,7 +139,7 @@ public class TryModuleC {
                     CustomerMenu(current);
                     break;
                 }
-                case "3": {
+                case "0": {
                     System.out.println("\n\n\n\n");
                     break;
                 }
@@ -149,34 +150,6 @@ public class TryModuleC {
                 }
             }
         }
-    }
-    
-    public String getCurrentID(){
-        String nextID = "";
-        if(order.isEmpty()){
-                nextID = "OR000001";
-        }
-        else{
-            String currentID = order.get(order.getTotalEntries()).getOrdersID();
-            int ID = Integer.parseInt(currentID.replace("OR", ""));
-            ID++;
-            nextID = "OR" + String.format("%06d",ID);
-        }
-        return nextID;
-    }
-    
-    public String getPaymentCurrentID(){
-        String nextID = "";
-        if(payment.isEmpty()){
-                nextID = "PA000001";
-        }
-        else{
-            String currentID = payment.get(payment.getTotalEntries()).getPaymentID();
-            int ID = Integer.parseInt(currentID.replace("PA", ""));
-            ID++;
-            nextID = "PA" + String.format("%06d",ID);
-        }
-        return nextID;
     }
     
     public void cancelOrder(Customer current){
@@ -224,7 +197,7 @@ public class TryModuleC {
     public void SelectRestaurant(Customer current){
         boolean find = false;
         int resIndex=0;
-        String selection = "0";
+        String selection = "";
         System.out.println("\n\n*****************");
         System.out.println("*Restaurant List*");
         System.out.println("*****************");
@@ -232,9 +205,9 @@ public class TryModuleC {
         for(int i=1 ; i<=restaurant.getTotalEntries() ; i++){
             System.out.println(i+". "+restaurant.get(i).getRestaurantName());
         }
-        System.out.print("Please Enter the Restaurant Name (Example:KFC) B to Back: ");
+        System.out.print("Please Enter the Restaurant Name (Example:KFC) 0 to Back: ");
         selection = s.nextLine();
-        if(selection.equals("B")){
+        if(selection.equals("0")){
             CustomerMenu(current);
         }
         else{
@@ -260,9 +233,9 @@ public class TryModuleC {
     
     public void makeOrder(Customer current, int resIndex){
         boolean checkout=false, ordered=false;
-        String selection = "0",foodid = "0", nextID = "0";
+        String selection = "",foodid = "", nextID = "";
         int quantity;
-        nextID = getCurrentID();
+        nextID = order.GetCurrentOrderID();
         Calendar cal = Calendar.getInstance();
         currentOrder.setOrdersID(nextID);
         currentOrder.setCustomer(current);
@@ -279,9 +252,9 @@ public class TryModuleC {
             System.out.printf("Food Price-> RM%.2f\n",CurrentFood.get(k).getFoodPrice());
         }
         System.out.println("---------------------------------------------------");
-        while(!foodid.equals("C")&&!foodid.equals("B")&&!foodid.equals("V")&&checkout==false){
+        while(!foodid.equals("C")&&!foodid.equals("0")&&!foodid.equals("V")&&checkout==false){
             System.out.println("Please Enter the Food ID that You Want");
-            System.out.println("(Press C to confirm, B to back and cancel, V to view cart):");
+            System.out.println("(Press C to confirm, 0 to back and cancel, V to view cart):");
             foodid = s.nextLine();
             foodid = foodid.toUpperCase();
             
@@ -291,7 +264,7 @@ public class TryModuleC {
                     makeOrder(current,resIndex);
                 }
             }
-            else if(foodid.equals("B")){
+            else if(foodid.equals("0")){
                 currentOrder = new Orders();
                 currentDetail.clear();
                 Subtotal = 0.00;
@@ -320,7 +293,7 @@ public class TryModuleC {
                             System.out.println("Please Enter the Quantity:");
                             while(!s.hasNextInt()){
                                 System.out.println("Please Enter the Quantity in Integer:");
-                                s.next();
+                                s.nextLine();
                             }
                             quantity = s.nextInt();
                             s.nextLine();
@@ -328,6 +301,7 @@ public class TryModuleC {
                         double currentSubtotal = CurrentFood.get(i).getFoodPrice()*quantity;
                         currentDetail.addDetail(new OrderDetail(currentOrder,CurrentFood.get(i),quantity,currentSubtotal));
                         Subtotal+=currentSubtotal;
+                        currentOrder.setTotalQuantity(currentOrder.getTotalQuantity()+quantity);
                         currentOrder.setSubtotal(Subtotal);
                     }
                 }
@@ -363,8 +337,8 @@ public class TryModuleC {
             System.out.println("1. Edit Food");
             System.out.println("2. Delete Food");
             System.out.println("3. Cancel Order");
-            System.out.println("4. Back");
-            while(!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4")){
+            System.out.println("0. Back");
+            while(!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("0")){
                 System.out.print("Selection: ");
                 selection = s.nextLine();
                 switch(selection){
@@ -385,7 +359,7 @@ public class TryModuleC {
                         again = false;
                         break;
                     }
-                    case "4":{
+                    case "0":{
                         break;
                     }
                     default:{
@@ -422,14 +396,15 @@ public class TryModuleC {
             for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
                 if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
                     do{
-                        System.out.println("Please Enter the Quantity:");
+                        System.out.print("Please Enter the Quantity:");
                         while(!s.hasNextInt()){
-                            System.out.println("Please Enter the Quantity in Integer:");
+                            System.out.print("Please Enter the Quantity in Integer:");
                             s.next();
                         }
                         newquantity = s.nextInt();
                         s.nextLine();
                     }while(newquantity<1);
+                    currentOrder.setTotalQuantity(currentOrder.getTotalQuantity()-currentDetail.get(i).getQuantity()+newquantity);
                     Subtotal = currentDetail.editCart(newquantity,i,currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
                 }
@@ -462,6 +437,7 @@ public class TryModuleC {
             }
             for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
                 if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
+                    currentOrder.setTotalQuantity(currentOrder.getTotalQuantity()-currentDetail.get(i).getQuantity());
                     Subtotal = currentDetail.deleteFood(i, currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
                 }
@@ -476,13 +452,15 @@ public class TryModuleC {
         String selection = "";
         double roundoff = 0.00, total = 0.00;
         System.out.println("\n\nBelow Are The Foods You Have Ordered");
-        System.out.println("------------------------------------");
-        for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
-            System.out.println("Food ID: "+currentDetail.get(i).getFood().getFoodID());
-            System.out.println("Food Name: "+currentDetail.get(i).getFood().getFoodName());
-            System.out.println("Quantity: "+currentDetail.get(i).getQuantity());
+        System.out.println("------------------------------------------------------");
+        System.out.println("-   Food ID   -        Food Name        -  Quantity  -");
+        System.out.println("------------------------------------------------------");
+        for(int h=1;h<=currentDetail.getTotalEntries();h++){
+            System.out.printf("-  %9s  -",currentDetail.get(h).getFood().getFoodID());
+            System.out.printf(" %22s  -",currentDetail.get(h).getFood().getFoodName());
+            System.out.printf(" %9d  -\n",currentDetail.get(h).getQuantity());
         }
-        System.out.println("------------------------------------");
+        System.out.println("------------------------------------------------------");
         System.out.printf("Subtotal: RM%.2f\n",currentOrder.getSubtotal());
         System.out.printf("GST: RM%.2f\n",(currentOrder.getSubtotal()*0.06));
         System.out.printf("Total: RM%.2f\n",(currentOrder.getSubtotal()*1.06));
@@ -502,19 +480,22 @@ public class TryModuleC {
                     currentOrder.setTotal(Subtotal*1.06);
                     currentOrder.setOrderStatus("1");//change to 1
                     order.add(currentOrder);
-                    payment.add(new Payment(getPaymentCurrentID(),currentOrder,currentOrder.getTotal(),cal,"1","Online"));
+                    payment.add(new Payment(payment.GetCurrentPaymentID(),currentOrder,currentOrder.getTotal(),cal,"1","Online"));
                     for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
                         orderdetail.add(currentDetail.get(i));
                         orderdetail.SortOrderDetail();
                     }
                     System.out.println("\nThank You For Your Order.");
                     System.out.println("You Have Order The Following Items.");
-                    System.out.println("-----------------------------------");
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("-   Food ID   -        Food Name        -  Quantity  -");
+                    System.out.println("------------------------------------------------------");
                     for(int h=1;h<=currentDetail.getTotalEntries();h++){
-                        System.out.println("Food Name: "+currentDetail.get(h).getFood().getFoodName());
-                        System.out.println("Food ID: "+currentDetail.get(h).getFood().getFoodID());
-                        System.out.println("Quantity: "+currentDetail.get(h).getQuantity());
+                        System.out.printf("-  %9s  -",currentDetail.get(h).getFood().getFoodID());
+                        System.out.printf(" %22s  -",currentDetail.get(h).getFood().getFoodName());
+                        System.out.printf(" %9d  -\n",currentDetail.get(h).getQuantity());
                     }
+                    System.out.println("------------------------------------------------------");
                     System.out.printf("Subtotal: RM%.2f\n",currentOrder.getSubtotal());
                     System.out.printf("GST: RM%.2f\n",(currentOrder.getSubtotal()*0.06));
                     System.out.printf("Total: RM%.2f\n",currentOrder.getTotal());
@@ -553,7 +534,8 @@ public class TryModuleC {
         String reportday = "";
         System.out.print("Please Enter The Day (YYYY/MM/DD) : ");
         reportday = s.nextLine();
-        order.GenerateDetailReport(reportday);
+        order.GenerateDetailReportByQuantity(reportday);
+        order.GenerateDetailReportByTime(reportday);
     }
     
     public void retrieveCustomer(){
