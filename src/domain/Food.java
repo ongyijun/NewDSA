@@ -15,10 +15,10 @@ public class Food {
     private double FoodPrice;
     private String FoodType;
     private char FoodAvailability;
-    private char pStatus;
+    private int pStatus;
     private Restaurant restaurant;
 
-    public Food(String FoodID, String FoodName, double FoodPrice, String FoodType, char FoodAvailability, Restaurant restaurant, char pStatus) {
+    public Food(String FoodID, String FoodName, double FoodPrice, String FoodType, char FoodAvailability, Restaurant restaurant, int pStatus) {
         this.FoodID = FoodID;
         this.FoodName = FoodName;
         this.FoodPrice = FoodPrice;
@@ -76,11 +76,11 @@ public class Food {
         this.FoodID = FoodID;
     }
 
-    public char getpStatus(){
+    public int getpStatus(){
         return pStatus;
     }
     
-    public void setpStatus(char pStatus) {
+    public void setpStatus(int pStatus) {
         this.pStatus = pStatus;
     }
 

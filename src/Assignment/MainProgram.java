@@ -25,19 +25,26 @@ public class MainProgram {
     EmployeeListInterface<HR> HRList = new EmployeeList<>();
     EmployeeListInterface<WorkStatus> wsList = new EmployeeList<>();
     private Employee loginStaff;
+    private Restaurant r;
     Orders currentOrder = new Orders();
     ModuleCInterface<OrderDetail> currentDetail = new ModuleCList<>();
     double Subtotal = 0.00;
     Scanner s = new Scanner(System.in);
     ModuleCInterface<Food> CurrentFood = new ModuleCList<>();
     /*Jye Jye chg here to ur list, currentFood is mine one*/
-    ModuleCInterface<Restaurant> restaurant = new ModuleCList<>();
-    ModuleCInterface<Food> food = new ModuleCList<>();
-    ModuleCInterface<Customer> customer = new ModuleCList<>();
+    //ModuleCInterface<Restaurant> restaurant = new ModuleCList<>();
+    //ModuleCInterface<Food> food = new ModuleCList<>();
+    //ModuleCInterface<Customer> customer = new ModuleCList<>();
+    AListInterface<Restaurant> restaurant = new AList<>();
+    AListInterface<Food> food = new AList<>();
+    AListInterface<Customer> customer = new AList<>();
+    Scanner sc = new Scanner(System.in);
     /**/
     ModuleCInterface<Payment> payment = new ModuleCList<>();
     ModuleCInterface<Orders> order = new ModuleCList<>();
     ModuleCInterface<OrderDetail> orderdetail = new ModuleCList<>();
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -53,14 +60,15 @@ public class MainProgram {
         System.out.println("2. Staff Login");
         System.out.println("3. Customer Login");
         System.out.println("4. Affiliate Login");
+        System.out.println("5. Customer Registration");
         System.out.println("0. Exit");
-        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("0")) {
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4")&& !selection.equals("5") && !selection.equals("0")) {
             System.out.print("Option: ");
             selection = s.nextLine();
             switch (selection) {
                 case "1": {
                     //create class at module A and import the module A at this class and den call the method from here
-                    //A.RestaurantRegistration();
+                    RestaurantRegistration();
                     menu();
                     break;
                 }
@@ -75,12 +83,15 @@ public class MainProgram {
                     break;
                 }
                 case "4": {
-                    //A.RestaurantLogin(r);
-                    /*
-                     if (a) {
-                     RestaurantMenu(restaurant);
-                     }
-                     */
+                    boolean a = RestaurantLogin(r);
+                    
+                    if (a = true) {
+                        menu();
+                    }
+                    break;
+                }
+                case "5":{
+                    CustomerRegistration();
                     break;
                 }
                 case "0": {
@@ -133,6 +144,7 @@ public class MainProgram {
             }
         }
     }
+    
 
     public void DMMenu() {
         DeliveryMan DM = (DeliveryMan) loginStaff;
@@ -1196,15 +1208,15 @@ public class MainProgram {
         MP.wsList.add(new WorkStatus("WS000001", HRjoinDate, DMjoinDate, 0, 0, MP.DMList.get(1)));
         MP.restaurant.add(new Restaurant("RE000001", "Nandos", "Western", 'A', "Tneh Chee Wei", "asd", "016-6666666", "Setapak", "100", "1234567890"));
         MP.restaurant.add(new Restaurant("RE000002", "KFC", "FastFood", 'N', "Tneh Chee Wai", "asd", "016-6666666", "Wangsa Maju", "200", "1234567890"));
-        MP.food.add(new Food("FM000001", "Chicken Bolognese", 11.50, "Noodles", 'A', MP.restaurant.get(1), 'N'));
-        MP.food.add(new Food("FM000002", "Fish Bolognese", 11.50, "Noodles", 'A', MP.restaurant.get(1), 'N'));
-        MP.food.add(new Food("FM000003", "Beef Bolognese", 13.50, "Noodles", 'A', MP.restaurant.get(1), 'N'));
-        MP.food.add(new Food("FM000004", "Dinner Plate A", 11.50, "Set", 'A', MP.restaurant.get(2), 'N'));
-        MP.food.add(new Food("FM000005", "Dinner Plate B", 12.50, "Set", 'A', MP.restaurant.get(2), 'N'));
-        MP.food.add(new Food("FM000006", "Dinner Plate C", 13.50, "Set", 'A', MP.restaurant.get(2), 'N'));
-        MP.food.add(new Food("FM000007", "Chicken Rice", 9.50, "Rice", 'A', MP.restaurant.get(1), 'Y'));
-        MP.food.add(new Food("FM000008", "Dinner Plate D", 5.50, "Set", 'A', MP.restaurant.get(2), 'Y'));
-        MP.food.add(new Food("FM000009", "Dinner Plate E", 6.50, "Set", 'A', MP.restaurant.get(2), 'Y'));
+        MP.food.add(new Food("FM000001", "Chicken Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 3));
+        MP.food.add(new Food("FM000002", "Fish Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 1));
+        MP.food.add(new Food("FM000003", "Beef Bolognese", 13.50, "Side Dish", 'A', MP.restaurant.get(1), 2));
+        MP.food.add(new Food("FM000004", "Dinner Plate A", 11.50, "Beverage", 'A', MP.restaurant.get(2), 3));
+        MP.food.add(new Food("FM000005", "Dinner Plate B", 12.50, "Side Dish", 'A', MP.restaurant.get(2), 2));
+        MP.food.add(new Food("FM000006", "Dinner Plate C", 13.50, "Beverage", 'A', MP.restaurant.get(2), 1));
+        MP.food.add(new Food("FM000007", "Chicken Rice", 9.50, "Rice", 'A', MP.restaurant.get(1), 3));
+        MP.food.add(new Food("FM000008", "Dinner Plate D", 5.50, "Side Dish", 'A', MP.restaurant.get(2), 3));
+        MP.food.add(new Food("FM000009", "Dinner Plate E", 6.50, "Beverage", 'A', MP.restaurant.get(2),2));
         MP.customer.add(new Customer("CU000001", "Miw Jin Li", "14,Taman Cantik,53300,Setapak,Kuala Lumpur", "Setapak", "0167897898", "971003355333", "1234567890"));
         MP.customer.add(new Customer("CU000002", "Miw Jin Le", "14,Taman Cantik,53300,Wangsa Maju,Kuala Lumpur", "Wangsa Maju", "0167897899", "970104079999", "1234567890"));
         Calendar cal = Calendar.getInstance();
@@ -1283,7 +1295,7 @@ public class MainProgram {
         System.out.print("Password:");
         password = s.nextLine();
         
-        for(int i=1 ; i<=customer.getTotalEntries(); i++){
+        for(int i=1 ; i<=customer.getNumOfEntries(); i++){
             if(name.equals(customer.get(i).getCustName().toUpperCase())){
                 if(password.equals(customer.get(i).getCustPass())){
                     check++;
@@ -1390,7 +1402,7 @@ public class MainProgram {
         System.out.println("*Restaurant List*");
         System.out.println("*****************");
         System.out.println("Please select the below option");
-        for(int i=1 ; i<=restaurant.getTotalEntries() ; i++){
+        for(int i=1 ; i<=restaurant.getNumOfEntries() ; i++){
             System.out.println(i+". "+restaurant.get(i).getRestaurantName());
         }
         System.out.print("Please Enter the Restaurant Name (Example:KFC) 0 to Back: ");
@@ -1399,11 +1411,11 @@ public class MainProgram {
             CustomerMenu(current);
         }
         else{
-        for(int i=1 ; i<=restaurant.getTotalEntries()&&find==false ; i++){
+        for(int i=1 ; i<=restaurant.getNumOfEntries()&&find==false ; i++){
             if(selection.equals(restaurant.get(i).getRestaurantName())){
                 find = true;
                 resIndex = i;
-                for(int j=1 ; j<=food.getTotalEntries() ; j++){
+                for(int j=1 ; j<=food.getNumOfEntries() ; j++){
                     if(food.get(j).getRestaurant().getRestaurantName().equals(selection)&&food.get(j).getFoodAvailability()=='A'){
                         CurrentFood.add(food.get(j));
                     }
@@ -1778,7 +1790,7 @@ public class MainProgram {
                 s.nextLine();
             }
             contact = s.nextLine();
-            for(int i=1 ; i<=customer.getTotalEntries(); i++){
+            for(int i=1 ; i<=customer.getNumOfEntries(); i++){
                 if(contact.equals(customer.get(i).getCustTelNo())){
                     System.out.println("\n\nPersonal Information");
                     System.out.println("---------------------------");
@@ -1797,4 +1809,698 @@ public class MainProgram {
         };
     }
     /*End of Module C*/
+    
+    //Module A
+    public void CustomerRegistration(){
+        int select = 0, check = 0;
+        System.out.println("----------------------");
+        System.out.println("Customer Registration");
+        System.out.println("----------------------");
+        
+        int totalCust = customer.getNumOfEntries();
+        String CustID = String.format("CU%06d", totalCust + 1);
+        System.out.println("Customer ID: " + CustID);
+        System.out.print("Customer Name: ");
+        String CustName = sc.nextLine();
+        System.out.print("Address: ");
+        String CustAddress = sc.nextLine();
+        System.out.println("1. Setapak");
+        System.out.println("2. Wangsa Maju");
+        System.out.println("3. Taman Melawati");
+        System.out.println("4. Genting Kelang");
+        do{
+        System.out.print("Area: ");
+        if(sc.hasNextInt()){
+            check = 1;
+            select = sc.nextInt();
+        String CustArea = null;
+        switch(select){
+            case 1:{
+                CustArea = "Setapak";
+                break;
+            }
+            case 2:{
+                CustArea = "Wangsa Maju";
+                break;
+            }
+            case 3:{
+                CustArea = "Taman Melawati";
+                break; 
+            }
+            case 4:{
+                CustArea = "Genting Kelang";
+                break;
+            }
+            default:{
+                System.out.println("Invalid Input");
+            }
+        }
+        System.out.print("Contact No: ");
+        sc.nextLine();
+        String CustTelNo = sc.nextLine();
+        System.out.print("IC No: ");
+        String CustIC = sc.nextLine();
+        System.out.print("Password: ");
+        String CustPass = sc.nextLine();
+        
+            boolean b = true;
+            for (int i = 1; i <= customer.getNumOfEntries(); i++) {
+                if (CustIC.equals(customer.get(i).getCustIC())) {
+                    System.out.println("Customer already exists in the system.");
+                    CustomerRegistration();
+                    b = false;
+                }
+            }
+            if (b == true) {
+                Customer cust = new Customer(CustID, CustName, CustAddress, CustArea, CustTelNo, CustIC, CustPass);
+                customer.add(cust);
+                System.out.println("Successfully Registered.");
+                System.out.println(cust);
+
+            }
+        }else{
+            System.out.println("Invalid Input");
+            sc.next();
+            check = 0;
+        }
+        }while(check == 0);
+    }
+    
+    public void RestaurantRegistration() {
+        int select = 0, check = 0;
+        System.out.println("-----------------------");
+        System.out.println("Affiliate Registration");
+        System.out.println("-----------------------");
+
+        int totalRest = restaurant.getNumOfEntries();
+        String restid = String.format("RE%06d", totalRest + 1);
+        System.out.println("Restaurant ID: " + restid);
+        System.out.println("(Please remember the ID for further use.)");
+        System.out.print("Restaurant Name: ");
+        String rName = sc.nextLine();
+        System.out.print("Restaurant Type: ");
+        String rType = sc.nextLine();
+        char rMenu = 'A';
+        System.out.print("Owner Name: ");
+        String oName = sc.nextLine();
+        System.out.print("Address: ");
+        String add = sc.nextLine();
+        System.out.print("Contact No: ");
+        String no = sc.nextLine();
+        System.out.println("1. Setapak");
+        System.out.println("2. Wangsa Maju");
+        System.out.println("3. Taman Melawati");
+        System.out.println("4. Genting Kelang");
+        do{
+        System.out.print("Area: ");
+        if(sc.hasNextInt()){
+            check = 1;
+            select = sc.nextInt();
+        String area = null;
+        switch(select){
+            case 1:{
+                area = "Setapak";
+                break;
+            }
+            case 2:{
+                area = "Wangsa Maju";
+                break;
+            }
+            case 3:{
+                area = "Taman Melawati";
+                break; 
+            }
+            case 4:{
+                area = "Genting Kelang";
+                break;
+            }
+            default:{
+                System.out.println("Invalid Input");
+            }
+        }
+        System.out.print("Latitude: ");
+        sc.nextLine();
+        String latitude = sc.nextLine();
+        System.out.print("Password: ");
+        String pass = sc.nextLine();
+
+        boolean b = true;
+        for (int i = 1; i <= restaurant.getNumOfEntries(); i++) {
+            if (add.equals(restaurant.get(i).getAddress())) {
+                System.out.println("Restaurant already exists in the system.");
+                RestaurantRegistration();
+                b = false;
+            }
+        }
+        if (b == true) {
+            Restaurant rest = new Restaurant(restid, rName, rType, rMenu, oName, add, no, area, latitude, pass);
+            restaurant.add(rest);
+            System.out.println("Successfully Registered.");
+            System.out.println(rest);
+            //System.out.println("Restaurant Name: " + rlist.get(totalRest+1).getRestaurantName());
+        }
+        }else{
+            System.out.println("Invalid Input");
+            sc.next();
+            check = 0;
+            }
+        }while(check == 0);
+    }
+    
+    public boolean RestaurantLogin(Restaurant r) {
+        int idcount = 0;
+        boolean exit = false;
+        int password = 0;
+        while (idcount == 0) {
+            System.out.println("----------------");            
+            System.out.println("Affiliate Login");
+            System.out.println("----------------");
+            System.out.print("Restaurant ID (press E to exit): ");
+            String id = sc.nextLine().toUpperCase();
+            if(id.equals("E")){
+                exit = true;
+                return exit;
+            }else{
+                for (int i=1;i <= restaurant.getNumOfEntries(); i++) {
+                    if (id.equals(restaurant.get(i).getRestaurantID())) {
+                        while (password == 0) {
+                            System.out.print("Password: ");
+                            String pass = sc.nextLine();
+                            idcount = 1;
+                            if (pass.equals(restaurant.get(i).getPassword())) {
+                                password = 1;
+                                System.out.println("Successfully Login");
+                                r = restaurant.get(i);
+                                RestaurantMenu(r);
+                            } else {
+                                System.out.println("Invalid password");
+                            }
+                        }
+                    }
+                }
+            }
+            if (idcount == 0) {
+                System.out.println("Invalid ID");
+                RestaurantLogin(r);
+            }
+        }
+        return exit;
+        
+    }
+    
+    public String FoodID(){
+        int totalFood = food.getNumOfEntries();
+        String foodid = null;
+        if(!food.isEmpty()){
+            String fid = food.get(totalFood).getFoodID();
+            int num = Integer.parseInt(fid.replaceAll("\\D+", ""));
+            foodid = String.format("FM%06d", num + 1);
+        }else{
+            foodid = String.format("FM%06d", totalFood + 1);
+        }
+        return foodid;
+    }
+    
+    public void addFood(Restaurant r){
+        int check = 0;
+        System.out.println("--------");
+        System.out.println("Add Food");
+        System.out.println("--------");
+        
+        //int totalFood = flist.getNumOfEntries();
+        //String foodid = String.format("FM%06d", totalFood + 1);
+        String foodid = FoodID();
+        System.out.println("Food ID: " + foodid);
+        System.out.print("Food Name: ");
+        String fName = sc.nextLine();
+        do{
+        System.out.print("Food Price: RM");
+        if(sc.hasNextDouble()){
+            Double price = sc.nextDouble();
+            check = 1;
+        sc.nextLine();
+        System.out.print("Food Type(M-Main Dish S-Side Dish B-Beverage): ");
+        char select = Character.toUpperCase(sc.next().charAt(0));
+        char fAval = 'A';
+        int pStatus = 1;
+        switch(select){
+            
+            case 'M':{
+                String fType = "Main Dish";
+                Food f = new Food(foodid, fName, price, fType, fAval, r, pStatus);
+                food.add(f);
+                System.out.println("Food Successfully Added");
+                break;
+            }
+            case 'S':{
+                String fType = "Side Dish";
+                Food f = new Food(foodid, fName, price, fType, fAval, r, pStatus);
+                food.add(f);
+                System.out.println("Food Successfully Added");
+                break;
+            }
+            case 'B':{
+                String fType = "Beverage";
+                Food f = new Food(foodid, fName, price, fType, fAval, r, pStatus);
+                food.add(f);
+                System.out.println("Food Successfully Added");
+                break;
+            }
+            default:{
+                System.out.println("Invalid Input");
+                sc.nextLine();
+                addFood(r);
+                break;
+            }
+        }
+        int i = food.getNumOfEntries();
+        System.out.println("Food ID: " + food.get(i).getFoodID());
+        System.out.println("Food Name: " + food.get(i).getFoodName());
+        System.out.println("Price: RM" + food.get(i).getFoodPrice());
+        System.out.println("Food Type: " + food.get(i).getFoodType());
+        System.out.println("Food Availability: Available");
+        //System.out.println(flist.get(totalFood+1).getRestaurant());
+        System.out.println("Please press any key to continue.");
+        sc.nextLine();
+        }else{
+            System.out.println("Invalid Input");
+            sc.next();
+            check = 0;
+            }
+        }while(check == 0);
+        RestaurantMenu(r);
+    }
+    
+    public void foodMenu(Restaurant r){
+        System.out.println("-----------------------------------------------------------------------------------------------------------");
+        System.out.printf("%8s %20s %15s %17s %18s \n","Food ID","Food Name","Food Price (RM)","Food Availability","Promotional Status");
+        System.out.println("-----------------------------------------------------------------------------------------------------------");
+        for(int j=1 ; j<=food.getNumOfEntries() ; j++){
+            if((r.getRestaurantID()).equals(food.get(j).getRestaurant().getRestaurantID())&& food.get(j).getFoodAvailability()=='A'||food.get(j).getFoodAvailability()=='N'){
+                int pstatus = food.get(j).getpStatus();
+                String pstat = "";
+                switch(pstatus){
+                    case 1:{
+                       pstat = "Normal";
+                       break;
+                    }
+                    case 2:{
+                        pstat = "Promo";
+                        break;
+                    }
+                    case 3:{
+                        pstat = "Exclusive Promo";
+                        break;
+                    }
+                }
+                System.out.printf("%8s %20s %15.2f %17s %18s \n",food.get(j).getFoodID(),food.get(j).getFoodName(),
+                        food.get(j).getFoodPrice(),food.get(j).getFoodAvailability(),pstat);
+            }
+        }
+    }
+    
+    public void updateFoodInterface(Restaurant r){
+        boolean id = false;
+        System.out.println("------------------");
+        System.out.println("Update Food Detail");
+        System.out.println("------------------");
+        System.out.println("Login as " + r.getRestaurantName() + " Restaurant\n");
+        foodMenu(r);
+        System.out.print("Enter Food ID to update: ");
+        String fid = sc.nextLine().toUpperCase();
+        int i=1; 
+        while(i<=food.getNumOfEntries()){
+            if(fid.equals(food.get(i).getFoodID())&& (r.getRestaurantID()).equals(food.get(i).getRestaurant().getRestaurantID())){        
+                System.out.println("FoodID: " + food.get(i).getFoodID());
+                System.out.println("Food Name: " + food.get(i).getFoodName());
+                System.out.println("Price: RM" + food.get(i).getFoodPrice());
+                System.out.println("Food Type: " + food.get(i).getFoodType());
+                System.out.println("Food Availability: " + food.get(i).getFoodAvailability()+
+                        " (A-Available N-Temporary not available)");
+                System.out.println("Promotional Status: " + food.get(i).getpStatus()+
+                        " (1-Normal 2-Promo 3-Exclusive Promo)");
+                
+                id = true; 
+                
+                System.out.println("Which you want to update?");
+                System.out.println("1 - Food Name");
+                System.out.println("2 - Food Price");
+                System.out.println("3 - Food Availability");
+                System.out.println("4 - Promotional Status");
+                System.out.println("0 - Back");
+                System.out.print("Option: ");
+                int option =sc.nextInt();
+                switch(option){
+                    case 1:{
+                        System.out.println("Current Food Name: " + food.get(i).getFoodName());
+                        System.out.print("Updated Food Name: ");
+                        sc.nextLine();
+                        String uName = sc.nextLine();
+                        food.get(i).setFoodName(uName);
+                        System.out.println("Successfully updated");
+                        sc.nextLine();
+                        RestaurantMenu(r);
+                        break;
+                    }
+                    case 2:{
+                        int t = 1;
+                        System.out.println("Current Food Price: RM" + food.get(i).getFoodPrice());
+                        do{
+                        System.out.print("Updated Food Price: RM");                        
+                        if(sc.hasNextDouble()){
+                        double uPrice = sc.nextDouble();
+                        food.get(i).setFoodPrice(uPrice);
+                        System.out.println("Successfully updated");
+                        sc.nextLine();
+                        RestaurantMenu(r);
+                        t = 1;
+                        }else{
+                          System.out.println("Invalid Input");
+                          sc.next();
+                          t = 0;      
+                        }
+                        }while(t == 0);
+                        break;
+                    }
+                    case 3:{
+                        int a = 0;
+                        System.out.println("Current Food Availability: "+ food.get(i).getFoodAvailability());
+                        System.out.println("A-Available N-Temporary not available");
+                            while(a==0){
+                            System.out.print("Updated Availability: ");
+                            char aval = Character.toUpperCase(sc.next().charAt(0));
+                                switch(aval){
+                                    case 'A':
+                                    case 'N':{
+                                    food.get(i).setFoodAvailability(aval);
+                                    a=1;
+                                    sc.nextLine();
+                                    RestaurantMenu(r);
+                                    break;
+                                }
+                                    default:{
+                                        System.out.println("Invalid Input");
+                                        a = 0;
+                                    }
+                                }
+                            }
+                        break;
+                    }
+                    case 4:{
+                        int a = 0;
+                        System.out.println("Current Promotional Status: "+ food.get(i).getpStatus());
+                        System.out.println("1-Normal 2-Promo 3-Exclusive Promo");
+                        do{
+                            System.out.print("Updated Promotional Status: ");
+                            int select = sc.nextInt();
+                            switch(select){
+                                case 1:{
+                                    food.get(i).setpStatus(1);
+                                    a=1;
+                                    sc.nextLine();
+                                    RestaurantMenu(r);
+                                    break;
+                                }
+                                case 2:{
+                                    food.get(i).setpStatus(2);
+                                    a=1;
+                                    sc.nextLine();
+                                    RestaurantMenu(r);
+                                    break;
+                                }
+                                case 3:{
+                                    food.get(i).setpStatus(3);
+                                    a=1;
+                                    sc.nextLine();
+                                    RestaurantMenu(r);
+                                    break;
+                                }
+                                default:{
+                                    System.out.println("Invalid Input");
+                                    a = 0;
+                                    break;
+                                }
+                            }
+                        }while(a==0);
+                        break;
+                    }
+                    case 0:{
+                        sc.nextLine();
+                        RestaurantMenu(r);
+                        break;
+                    }
+                    default:{
+                        System.out.println("Invalid. Please try again.");
+                    }
+                }
+
+                }
+                    i++;
+            }
+            if(id == false){
+                System.out.println("Invalid Food ID, Please try again.");
+                updateFoodInterface(r);
+            }      
+    }
+    
+    public void deleteFood(Restaurant r){
+        int f=0;
+        System.out.println("----------------");
+        System.out.println("Delete Food Menu");
+        System.out.println("----------------\n");
+        foodMenu(r);
+        System.out.println("Which one you wish to delete");
+        System.out.print("Enter Food ID to delete: ");
+        String fid = sc.nextLine().toUpperCase();
+        for(int i=1;i<=food.getNumOfEntries();i++){
+                if(fid.equals(food.get(i).getFoodID())&& r.getRestaurantID().equals(food.get(i).getRestaurant().getRestaurantID())){
+                    System.out.println("Are you sure you want to delete?(y - yes n - no)");
+                    System.out.print("Option:");
+                    char option = Character.toUpperCase(sc.nextLine().charAt(0));
+                    switch(option){
+                        case 'Y':{
+                            System.out.println("Successfully deleted");
+                            food.delete(i);
+                            f=1;
+                            RestaurantMenu(r);
+                            break;
+                        }
+                        case 'N':{
+                            f=1;
+                            RestaurantMenu(r);
+                            break;
+                        }
+                        default:{
+                            f=0;
+                            System.out.println("Invalid input");
+                            RestaurantMenu(r);
+                            break;
+                        }
+                    }
+                }
+            }
+            if(f==0){
+                System.out.println("Invalid input");
+                deleteFood(r);
+            }
+        
+    }
+    
+    public void SelectShowFirstMenu(Restaurant r){
+        int check = 0;
+        System.out.println("----------------------");
+        System.out.println("Select Show First Menu");
+        System.out.println("----------------------\n");
+        
+        System.out.println("Please select which you want to show first.");
+        System.out.println("A. Show as Normal");
+        System.out.println("N. Show Newest Items First");
+        System.out.println("P. Show Promotional Items First\n");
+        
+        System.out.println("Current Showed Menu: " + r.getRMenu());
+        System.out.println("(A-Show as Normal N-Newest Items First P-Promotional Items First)");
+        do{
+        System.out.print("Option: ");
+        char select = Character.toUpperCase(sc.next().charAt(0));
+        switch(select){
+            case 'A':{
+                System.out.println("Successful Changed.");
+                char sf = 'A';
+                r.setRMenu(sf);
+                check=1;
+                RestaurantMenu(r);
+                break;
+            }
+            case 'N':{
+                System.out.println("Successful Changed.");
+                char sf = 'N';
+                r.setRMenu(sf);
+                check=1;
+                RestaurantMenu(r);
+                break;
+            }
+            case 'P':{
+                System.out.println("Successful Changed.");
+                char sf = 'P';
+                r.setRMenu(sf);
+                check=1;
+                RestaurantMenu(r);
+                break;
+            }
+            default:{
+                System.out.println("Invalid input.");
+                check=0;
+            }
+        }
+        }while(check==0);
+ 
+    }
+    
+    public void showFoodMenu(Restaurant r){
+        char rMenu = r.getRMenu();
+        switch(rMenu){
+            case 'A':{
+                showMenu(r);
+                break;
+            }
+            case 'N':{
+                showNewest(r);
+                break;
+            }
+            case 'P':{
+                showPromotional(r);
+                break;
+            }
+        }
+    }
+    
+    public void showMenu(Restaurant r){
+        System.out.println("---------");
+        System.out.println("Food Menu");
+        System.out.println("---------");
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.printf("%8s %20s %15s %15s \n","Food ID","Food Name","Food Price(RM)","Food Type");
+        System.out.println("--------------------------------------------------------------------------");
+        for(int j=1; j<=food.getNumOfEntries();j++){
+            
+            if(r.getRestaurantID().equals(food.get(j).getRestaurant().getRestaurantID())&&food.get(j).getFoodAvailability()=='A'){
+                System.out.printf("%8s %20s %15.2f %15s \n",food.get(j).getFoodID(),food.get(j).getFoodName(),
+                        food.get(j).getFoodPrice(),food.get(j).getFoodType());
+            }
+        }
+    }
+    
+    public void showNewest(Restaurant r){
+        System.out.println("---------");
+        System.out.println("Food Menu");
+        System.out.println("---------");
+        System.out.println("From Newest Menu to Oldest Menu");
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.printf("%8s %20s %15s %15s \n","Food ID","Food Name","Food Price(RM)","Food Type");
+        System.out.println("----------------------------------------------------------------------------------");
+        String id = r.getRestaurantID();
+        food.sortNewest();
+        for(int i=1 ; i<=food.getNumOfEntries() ; i++){
+            if(id.equals(food.get(i).getRestaurant().getRestaurantID())&&food.get(i).getFoodAvailability()=='A'){
+               System.out.printf("%8s %20s %15.2f %15s \n",food.get(i).getFoodID(),food.get(i).getFoodName(),
+                        food.get(i).getFoodPrice(),food.get(i).getFoodType());
+            }
+        }
+        food.sortNewest();   
+    }
+    
+    public void showPromotional(Restaurant r){
+        System.out.println("-----------------------------------------------------------------------------------------------------------");
+        System.out.printf("%8s %20s %15s %15s %18s \n","Food ID","Food Name","Food Price (RM)","Food Type","Promotional Status");
+        System.out.println("-----------------------------------------------------------------------------------------------------------");
+        food.sortPromotional();
+        for(int j=1 ; j<=food.getNumOfEntries() ; j++){
+            //if((r.getRestaurantID()).equals(flist.get(j).getRestaurant().getRestaurantID())&& flist.get(j).getFoodAvailability()=='A'){
+                int pstatus = food.get(j).getpStatus();
+                String pstat = "";
+                switch(pstatus){
+                    case 1:{
+                       pstat = "Normal";
+                       break;
+                    }
+                    case 2:{
+                        pstat = "Promo";
+                        break;
+                    }
+                    case 3:{
+                        pstat = "Exclusive Promo";
+                        break;
+                    }
+                }
+                System.out.printf("%8s %20s %15.2f %15s %18s \n",food.get(j).getFoodID(),food.get(j).getFoodName(),
+                        food.get(j).getFoodPrice(),food.get(j).getFoodType(),pstat);
+            //}
+        }
+    }
+    
+    
+    public void RestaurantMenu(Restaurant r) {
+        int check = 0;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("---------------");
+        System.out.println("Restaurant Menu");
+        System.out.println("---------------");
+        System.out.println("1. Add New Menu Items");
+        System.out.println("2. Update Menu Item Details");
+        System.out.println("3. Remove Menu Items");
+        System.out.println("4. Select Show First Menu");
+        System.out.println("5. Show Menu");
+        System.out.println("0. Log Out");
+        do{
+        System.out.print("Option: ");
+        if(sc.hasNextInt()){
+            check = 1;
+            int selection = sc.nextInt();
+            sc.nextLine();
+            switch (selection) {
+                case 1: {
+                    addFood(r);
+                    break;
+                }
+                case 2: {
+                    updateFoodInterface(r);
+                    sc.nextLine();
+                    break;
+                }
+                case 3: {
+                    deleteFood(r);
+                    break;
+                }
+                case 4: {
+                    SelectShowFirstMenu(r);
+                    break;
+                }
+                case 5:{
+                    showFoodMenu(r);
+                   // foodMenu(r);
+                    //showNewest(r);
+                    //showPromotional(r);
+                    sc.nextLine();
+                    RestaurantMenu(r);
+                    break;
+                }
+                case 0: {
+                    System.out.println("Successfully Logout");
+                    break;
+                }
+                default: {
+                    System.out.println("Error. Please key in again.");
+                    RestaurantMenu(r);
+                    break;
+                }
+            }
+        }else{
+            System.out.println("Invalid Input");
+            sc.next();
+            check=0;
+        }
+        }while(check==0);
+    }
+    
+    
 }
