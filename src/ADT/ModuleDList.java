@@ -4,6 +4,8 @@ import domain.Orders;
 import domain.DeliveryMan;
 import domain.DeliveryOrder;
 import domain.WorkStatus;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ModuleDList<T> implements ModuleDInterface<T> 
 {
@@ -212,67 +214,194 @@ public class ModuleDList<T> implements ModuleDInterface<T>
     @Override
     public void displayCustomerPendingOrderInTable(String CustID)
     {
-        int No = 1;
-        Node currentNode = firstNode;
-        Orders ordersHeader = (Orders) currentNode.data;
-        
-        System.out.println("Name : " + ordersHeader.getCustomer().getCustName());
-        System.out.println("Area : " + ordersHeader.getCustomer().getCustArea());
-        System.out.println();
-        
-        for (int i = 1 ; i <= TotalEntries ; i++) 
+        if(!isEmpty()) 
         {
-            Orders orders = (Orders) currentNode.data; 
-            if (orders.getCustomer().getCustID().equals(CustID) && orders.getOrderStatus().equals("1"))
+            int No = 1;
+            boolean line = false;
+            Node currentNode = firstNode;
+            Orders ordersHeader = (Orders) currentNode.data;
+
+            System.out.println("\n\nName : " + ordersHeader.getCustomer().getCustName());
+            System.out.println("Area : " + ordersHeader.getCustomer().getCustArea());
+            System.out.println("\nYour Pending Orders : ");
+            System.out.println("*******************************************************");
+            System.out.printf("* %3s. * %10s * %16s * %12s *\n", "No", "Order ID", "Restaurant Name", "Total Price");
+            System.out.println("*******************************************************");
+            
+
+            for (int i = 1 ; i <= TotalEntries ; i++) 
             {
-                System.out.println(No+". "+orders.toString());
-                No++;
+                Orders orders = (Orders) currentNode.data; 
+                if (orders.getCustomer().getCustID().equals(CustID) && orders.getOrderStatus().equals("1"))
+                {
+                    String ORStatus;
+                    String TotalPrice;
+                    
+                    if(No == 1){System.out.println("*      *            *                  *              *");}
+                    TotalPrice = String.format("RM %5.2f", orders.getTotal());
+                    if(orders.getOrderStatus().equals("1"))
+                    {ORStatus = "Pending";}
+                    else if(orders.getOrderStatus().equals("2"))
+                    {ORStatus = "In Process";}
+                    else if(orders.getOrderStatus().equals("3"))
+                    {ORStatus = "Deliver";}
+                    else if(orders.getOrderStatus().equals("4"))
+                    {ORStatus = "Complete";}
+                    else
+                    {ORStatus = "-";}
+                    
+                    System.out.printf("* %3s. * %10s * %16s * %12s *\n", No, orders.getOrdersID(), orders.getRestaurant().getRestaurantName(), TotalPrice);
+                    if(i == TotalEntries){System.out.println("*      *            *                  *              *");}
+                    line = true;
+                    No++;
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = currentNode.next;
+            if(line){System.out.println("*      *            *                  *              *");}
+            
+            if(No == 1)
+            {
+                System.out.println("*                                                     *");
+                System.out.println("*              No Have Any Pending Order              *");
+                System.out.println("*                                                     *");
+            }
+            System.out.println("*******************************************************");
+        }
+        else
+        {
+            System.out.println("*******************************************************");
+            System.out.println("*                                                     *");
+            System.out.println("*              No Have Any Pending Order              *");
+            System.out.println("*                                                     *");
+            System.out.println("*******************************************************");
         }
     }
     
     @Override
     public void displayCustomerAssignOrderInTable(String CustID)
     {
-        int No = 1;
-        Node currentNode = firstNode;
-        DeliveryOrder DOHeader = (DeliveryOrder) currentNode.data;
-        
-        System.out.println("Name : " + DOHeader.getOrder().getCustomer().getCustName());
-        System.out.println("Area : " + DOHeader.getOrder().getCustomer().getCustArea());
-        
-        for (int i = 1 ; i <= TotalEntries ; i++) 
+        if(!isEmpty()) 
         {
-            DeliveryOrder DO = (DeliveryOrder) currentNode.data;
-            if (DO.getOrder().getCustomer().getCustID().equals(CustID) && DO.getOrder().getOrderStatus().equals("2"))
+            int No = 1;
+            boolean line = false;
+            Node currentNode = firstNode;
+            DeliveryOrder DOHeader = (DeliveryOrder) currentNode.data;
+
+            System.out.println("\n\nName : " + DOHeader.getOrder().getCustomer().getCustName());
+            System.out.println("Area : " + DOHeader.getOrder().getCustomer().getCustArea());
+            System.out.println("\nYour Pending Orders : ");
+            System.out.println("******************************************************************************");
+            System.out.printf("* %3s. * %10s * %16s * %20s * %12s *\n", "No", "Order ID", "Restaurant Name", "DeliveryMan Name", "Total Price");
+            System.out.println("******************************************************************************");
+
+            for (int i = 1 ; i <= TotalEntries ; i++) 
             {
-                System.out.println(No+". "+DO.toString());
-                No++;
+                DeliveryOrder DO = (DeliveryOrder) currentNode.data;
+                
+                if (DO.getOrder().getCustomer().getCustID().equals(CustID) && DO.getOrder().getOrderStatus().equals("2"))
+                {
+                    if(No == 1){System.out.println("*      *            *                  *                      *              *");}
+                    String TotalPrice;
+                    TotalPrice = String.format("RM %5.2f", DO.getOrder().getTotal());
+                    //System.out.println(No+". "+DO.toString());
+                    System.out.printf("* %3s. * %10s * %16s * %20s * %12s *\n", No, DO.getOrder().getOrdersID(), DO.getOrder().getRestaurant().getRestaurantName(), DO.getWS().getDM().getStaffName(), TotalPrice);
+                    line = true;
+                    No++;
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = currentNode.next;
+            if(line){System.out.println("*      *            *                  *                      *              *");}
+            
+            if(No == 1)
+            {
+                System.out.println("*                                                                            *");
+                System.out.println("*                         No Have Any Pending Order                          *");
+                System.out.println("*                                                                            *");
+            }
+            System.out.println("******************************************************************************");
+        }
+        else
+        {
+            System.out.println("***************************************************");
+            System.out.println("*                                                 *");
+            System.out.println("*     Current Do Not Assign Any Pending Order     *");
+            System.out.println("*                                                 *");
+            System.out.println("***************************************************");
         }
     }
     
     @Override
     public void displayCustomerDeliverOrderInTable(String CustID)
     {
-        int No = 1;
-        Node currentNode = firstNode;
-        DeliveryOrder DOHeader = (DeliveryOrder) currentNode.data;
-        
-        System.out.println("Name : " + DOHeader.getOrder().getCustomer().getCustName());
-        System.out.println("Area : " + DOHeader.getOrder().getCustomer().getCustArea());
-        
-        for (int i = 1 ; i <= TotalEntries ; i++) 
+        if(!isEmpty()) 
         {
-            DeliveryOrder DO = (DeliveryOrder) currentNode.data;
-            if (DO.getOrder().getCustomer().getCustID().equals(CustID) && DO.getOrder().getOrderStatus().equals("3"))
+            int No = 1;
+            boolean line = false;
+            Node currentNode = firstNode;
+            DeliveryOrder DOHeader = (DeliveryOrder) currentNode.data;
+
+            System.out.println("\n\nName : " + DOHeader.getOrder().getCustomer().getCustName());
+            System.out.println("Area : " + DOHeader.getOrder().getCustomer().getCustArea());
+            System.out.println("\nYour Pending Orders : ");
+            System.out.println("*****************************************************************************************************");
+            System.out.printf("* %3s. * %10s * %16s * %20s * %12s * %20s *\n", "No", "Order ID", "Restaurant Name", "DeliveryMan Name", "Total Price", "Time Remain");
+            System.out.println("*****************************************************************************************************");
+
+            for (int i = 1 ; i <= TotalEntries ; i++) 
             {
-                //System.out.println(No+". "+DO.timeRemainToString());
-                No++;
+                DeliveryOrder DO = (DeliveryOrder) currentNode.data;
+                if (DO.getOrder().getCustomer().getCustID().equals(CustID) && DO.getOrder().getOrderStatus().equals("3"))
+                {
+                    int difMinutes = 0;
+                    int difHours = 0;
+                    int diff = 0;
+
+                    try 
+                    {
+                        Date d1 = DO.getDeliveredDate().getTime();//assign time
+                        Date d2 = Calendar.getInstance().getTime();//current time
+
+                        //in milliseconds
+                        diff = (int)(d1.getTime() - d2.getTime());
+
+                        difMinutes = diff / (60 * 1000) % 60;
+                        difHours = diff / (60 * 60 * 1000) % 24;
+                    }
+                    catch (Exception e) 
+                    {
+                        e.printStackTrace();
+                    }
+                    
+                    //System.out.println(No+". "+DO.timeRemainToString());
+                    if(No == 1){System.out.println("*      *            *                  *                      *              *                      *");}
+                    String TotalPrice;
+                    String difTime;
+                    TotalPrice = String.format("RM %5.2f", DO.getOrder().getTotal());
+                    difTime = String.format(difHours + " hours " + difMinutes + " minutes");
+                    //System.out.println(No+". "+DO.toString());
+                    System.out.printf("* %3s. * %10s * %16s * %20s * %12s * %20s *\n", No, DO.getOrder().getOrdersID(), DO.getOrder().getRestaurant().getRestaurantName(), DO.getWS().getDM().getStaffName(), TotalPrice, difTime);
+                    line = true;
+                    No++;
+                }
+                currentNode = currentNode.next;
             }
-            currentNode = currentNode.next;
+            if(line){System.out.println("*      *            *                  *                      *              *                      *");}
+            
+            if(No == 1)
+            {
+                System.out.println("*                                                                                                   *");
+                System.out.println("*                                    No Have Any Pending Order                                      *");
+                System.out.println("*                                                                                                   *");
+            }
+            System.out.println("*****************************************************************************************************");
+        }
+        else
+        {
+            System.out.println("*****************************************");
+            System.out.println("*                                       *");
+            System.out.println("*     No Have Any Order Deliver Yet     *");
+            System.out.println("*                                       *");
+            System.out.println("*****************************************");
         }
     }
     
@@ -328,7 +457,11 @@ public class ModuleDList<T> implements ModuleDInterface<T>
                 curNode = curNode.next;
                 i++;
             }//End While Loop
-        }//End If Loop
+        }
+        else
+        {
+            System.out.println("Empty");
+        }
     }
     //==========================s====================
 }
