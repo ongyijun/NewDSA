@@ -89,7 +89,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             value = tempNode.data;
         }
         else{
-            System.out.println("Out Of Bound");
+            System.out.println("No Record In List");
         }
         return value;
     }
@@ -143,16 +143,72 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         }
     }
     
-    public T remove(int givenPosition){
+    private void SortOrderQuantity(){
+        Node currentNode = firstNode;
+        Node tempNode = null;
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else{
+            for(int i=1 ; i<=TotalEntries ; i++){
+                if(i>1&&currentNode.next!=null){
+                    currentNode = currentNode.next;
+                }
+                tempNode = currentNode;
+                for(int j=i+1 ; j<=TotalEntries ; j++){
+                    if(tempNode.next!=null){
+                        tempNode = tempNode.next;
+                        Orders current = (Orders)currentNode.data;
+                        Orders temp = (Orders)tempNode.data;
+                        if(temp.getTotalQuantity()>current.getTotalQuantity()){
+                            T value = tempNode.data;
+                            tempNode.data=currentNode.data;
+                            currentNode.data = value;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private void SortOrderDate(){
+        Node currentNode = firstNode;
+        Node tempNode = null;
+        if(isEmpty()){
+            System.out.println("No Record In List");
+        }
+        else{
+            for(int i=1 ; i<=TotalEntries ; i++){
+                if(i>1&&currentNode.next!=null){
+                    currentNode = currentNode.next;
+                }
+                tempNode = currentNode;
+                for(int j=i+1 ; j<=TotalEntries ; j++){
+                    if(tempNode.next!=null){
+                        tempNode = tempNode.next;
+                        Orders current = (Orders)currentNode.data;
+                        Orders temp = (Orders)tempNode.data;
+                        if(temp.getOrdersDateTime().getTime().compareTo(current.getOrdersDateTime().getTime())>0){
+                            T value = tempNode.data;
+                            tempNode.data=currentNode.data;
+                            currentNode.data = value;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public T remove(int position){
         T value = null;
         Node tempNode;
         if(isEmpty()){
             System.out.println("No Record In List");
         }
-        else if(givenPosition>=1&&givenPosition<=TotalEntries){
-            tempNode = getRecordAt(givenPosition);
+        else if(position>=1&&position<=TotalEntries){
+            tempNode = getRecordAt(position);
             value = tempNode.data;
-            if(givenPosition==1){
+            if(position==1){
                 if(firstNode.next!=null){
                     firstNode = tempNode.next;
                     tempNode.next.previous = null;
@@ -164,7 +220,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
                     // if did not contains totalentries ++, totalentries will become -1
                 }
             }
-            else if(givenPosition==TotalEntries){
+            else if(position==TotalEntries){
                 lastNode = tempNode.previous;
                 tempNode.previous.next = null;
             }
@@ -206,79 +262,17 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         return nextID;
     }
     
-    private void SortOrderQuantity(){
-        Node currentNode = firstNode;
-        Node tempNode = null;
-        if(isEmpty()){
-            System.out.println("No Record");
-        }
-        else{
-            for(int i=1 ; i<=TotalEntries ; i++){
-                if(i>1&&currentNode.next!=null){
-                    currentNode = currentNode.next;
-                }
-                tempNode = currentNode;
-                for(int j=i+1 ; j<=TotalEntries ; j++){
-                    if(tempNode.next!=null){
-                        tempNode = tempNode.next;
-                        Orders current = (Orders)currentNode.data;
-                        Orders temp = (Orders)tempNode.data;
-                        if(temp.getTotalQuantity()>current.getTotalQuantity()){
-                            T value = tempNode.data;
-                            tempNode.data=currentNode.data;
-                            currentNode.data = value;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    private void SortOrderDate(){
-        Node currentNode = firstNode;
-        Node tempNode = null;
-        if(isEmpty()){
-            System.out.println("No Record");
-        }
-        else{
-            for(int i=1 ; i<=TotalEntries ; i++){
-                if(i>1&&currentNode.next!=null){
-                    currentNode = currentNode.next;
-                }
-                tempNode = currentNode;
-                for(int j=i+1 ; j<=TotalEntries ; j++){
-                    if(tempNode.next!=null){
-                        tempNode = tempNode.next;
-                        Orders current = (Orders)currentNode.data;
-                        Orders temp = (Orders)tempNode.data;
-                        if(temp.getOrdersDateTime().getTime().compareTo(current.getOrdersDateTime().getTime())>0){
-                            T value = tempNode.data;
-                            tempNode.data=currentNode.data;
-                            currentNode.data = value;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    public boolean GenerateDetailReportByQuantity(String day){
+    public boolean GenerateDetailReportByQuantity(java.util.Calendar comparecal){
         boolean success = false;
         if(isEmpty()){
             System.out.println("No Record In List");
         }
         else{
             SortOrderQuantity();
-            Calendar comparecal = Calendar.getInstance();
             Calendar cal = Calendar.getInstance();
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             DateFormat dateFormat1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            try{
-                Date date = dateFormat.parse(day);
-                comparecal.setTime(date);
-            }catch(ParseException ex){
-                System.out.print(ex);
-            }
+            
             String reporttitle = "Daily Order Detailed Report Based on Quantity";
             System.out.printf("%78s of %s\n",reporttitle,dateFormat.format(comparecal.getTime()));
             System.out.printf("%64s%s\n",String.format("Generate Date:"),dateFormat.format(cal.getTime()));
@@ -307,23 +301,16 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         return success;
     }
     
-    public boolean GenerateDetailReportByTime(String day){
+    public boolean GenerateDetailReportByTime(java.util.Calendar comparecal){
         boolean success = false;
         if(isEmpty()){
             System.out.println("No Record In List");
         }
         else{
             SortOrderDate();
-            Calendar comparecal = Calendar.getInstance();
             Calendar cal = Calendar.getInstance();
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             DateFormat dateFormat1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            try{
-                Date date = dateFormat.parse(day);
-                comparecal.setTime(date);
-            }catch(ParseException ex){
-                System.out.print(ex);
-            }
             String reporttitle = "Daily Order Detailed Report Based on Time";
             System.out.printf("%78s of %s\n",reporttitle,dateFormat.format(comparecal.getTime()));
             System.out.printf("%64s%s\n",String.format("Generate Date:"),dateFormat.format(cal.getTime()));
@@ -384,7 +371,6 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             double currentFoodTotal = currentDetail.getFoodTotal();
             newsubtotal = subtotal-currentFoodTotal;
             remove(position);
-            currentNode.data = (T)currentDetail;
             SortOrderDetail();
         }
         return newsubtotal;
@@ -393,7 +379,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
     private Node getRecordAt(int position){
         Node tempNode = firstNode;
         if(isEmpty()){
-            System.out.println("Wrong Record");
+            System.out.println("No Record In List");
         }
         else if(position>=1&&position<=TotalEntries){
             for(int i=1; i<position ; i++){
