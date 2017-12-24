@@ -23,6 +23,16 @@ public class DeliveryOrder {
     public DeliveryOrder() {
     }
 
+    public DeliveryOrder(WorkStatus WS, Orders order, Calendar AssignedDate, Calendar AssignedTime, Calendar DeliveredDate, Calendar DeliveredTime, String DeliveryStatus) {
+        this.WS = WS;
+        this.order = order;
+        this.AssignedDate = AssignedDate;
+        this.AssignedTime = AssignedTime;
+        this.DeliveredDate = DeliveredDate;
+        this.DeliveredTime = DeliveredTime;
+        this.DeliveryStatus = DeliveryStatus;
+    }
+    
     public DeliveryOrder(Calendar AssignedDate, Calendar AssignedTime, Calendar DeliveredDate, Calendar DeliveredTime, String DeliveryStatus) {
         this.AssignedDate = AssignedDate;
         this.AssignedTime = AssignedTime;

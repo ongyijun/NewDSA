@@ -38,13 +38,15 @@ public class MainProgram {
     AListInterface<Restaurant> restaurant = new AList<>();
     AListInterface<Food> food = new AList<>();
     AListInterface<Customer> customer = new AList<>();
-    Scanner sc = new Scanner(System.in);
     /**/
     ModuleCInterface<Payment> payment = new ModuleCList<>();
     ModuleCInterface<Orders> order = new ModuleCList<>();
     ModuleCInterface<OrderDetail> orderdetail = new ModuleCList<>();
     
+    ModuleDInterface<DeliveryOrder> CLDOrderList = new ModuleDList<>();
+    ModuleDInterface<WorkStatus> CLWSList = new ModuleDList<>();
     
+    Scanner sc = new Scanner(System.in);
     /**
      * @param args the command line arguments
      */
@@ -148,11 +150,14 @@ public class MainProgram {
 
     public void DMMenu() {
         DeliveryMan DM = (DeliveryMan) loginStaff;
-        String selection = "-1";
-        Date date = new Date();
-        java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
-        System.out.println("Welcome Back, " + loginStaff.getStaffName() + "\nCurrent Date:" + dateFormat.format(date) + "\nCurrent Status: " + DM.getCurrentAvailable());  //display login staff information
-        System.out.println("\nPlease Select The Option Below");
+        //String selection = "-1";
+        //Date date = new Date();
+        //java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        //System.out.println("Welcome Back, " + loginStaff.getStaffName() + "\nCurrent Date:" + dateFormat.format(date) + "\nCurrent Status: " + DM.getCurrentAvailable());  //display login staff information
+        
+        DeliveryManMainMenu(DM);
+        
+        /**System.out.println("\nPlease Select The Option Below");
         System.out.println("1. Clock In / Clock Out \n2. Change Deliver Status \n3. View Deliver Schedule\n4. Update Personal Contact Details\n5. Retrive Customer Details\n0. Log Out");
 
         while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("0")) {
@@ -196,7 +201,7 @@ public class MainProgram {
                     System.out.println("Please Enter Again...");
                 }
             }
-        }
+        }**/
     }
 
     public void AdminMenu() {
@@ -2502,5 +2507,333 @@ public class MainProgram {
         }while(check==0);
     }
     
+    //MODULE D==============================================================================================================================
+    public void DeliveryManMainMenu(DeliveryMan DM)//DeliveryMan <<<<<<<< MAIN MENU >>>>>>>>
+    {
+        Date date = new Date();
+        java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        System.out.println("\n\nWelcome Back, " + loginStaff.getStaffName() + "\nCurrent Date: " + dateFormat.format(date) + "\nCurrent Status: " + DM.getCurrentAvailable());  //display login staff information
+        
+        if(DM.getCurrentAvailable().equals("Not Available"))
+        {
+            DeliveryManMenuNotAva(DM);
+        }
+        else if(DM.getCurrentAvailable().equals("Available"))
+        {
+            AutoAssign1(); DeliveryManMenuAva(DM);
+        }
+        else if(DM.getCurrentAvailable().equals("Break"))
+        {
+            DeliveryManMenuBreak(DM);
+        }
+        else if(DM.getCurrentAvailable().equals("Deliver"))
+        {
+            DeliveryManMenuDeliver(DM);
+        }
+    }
     
+    public void DeliveryManMenuNotAva(DeliveryMan DM)//While DeliveryMan Status "Not Available"
+    {
+        String choice = "None";
+        
+        ModuleDInterface<DeliveryMan> CLDMList = new ModuleDList<>();
+        for(int j=1 ; j<= DMList.getTotalEntries() ; j++){CLDMList.add(DMList.get(j));}
+        
+        //for(int j=1 ; j<= CLDMList.getTotalEntries() ; j++){System.out.println("CL Check : " + CLDMList.get(j).getStaffID());System.out.println("CL Check : " + CLDMList.get(j).getCurrentAvailable());}
+        //for(int j=1 ; j<= DMList.getTotalEntries() ; j++){System.out.println("DM Check : " + DMList.get(j).getStaffID());System.out.println("DM Check : " + DMList.get(j).getCurrentAvailable());}
+        
+        System.out.println("\nPlease Select The Option Below");
+        System.out.println("1. Clock In \n2. Exit");
+        while (!choice.equals("1") && !choice.equals("2")) 
+        {
+            System.out.print("Option : ");
+            choice = s.nextLine();
+            switch (choice) 
+            {
+                case "1": 
+                {
+                    CLDMList.updateDMClockInOut(DM.getStaffID());
+                    DeliveryManMainMenu(DM); 
+                    break;
+                }
+                case "2": {break;}
+                default: {System.out.println("Please Enter Again..."); choice = "None";}
+            }
+        }
+    }
+    
+    public void DeliveryManMenuAva(DeliveryMan DM)//While DeliveryMan Status "Available"
+    {
+        String choice = "None";
+        
+        ModuleDInterface<DeliveryMan> CLDMList = new ModuleDList<>();
+        for(int j=1 ; j<= DMList.getTotalEntries() ; j++){CLDMList.add(DMList.get(j));}
+        
+        //for(int j=1 ; j<= CLDMList.getTotalEntries() ; j++){System.out.println("CL Check : " + CLDMList.get(j).getStaffID());System.out.println("CL Check : " + CLDMList.get(j).getCurrentAvailable());}
+        //for(int j=1 ; j<= DMList.getTotalEntries() ; j++){System.out.println("DM Check : " + DMList.get(j).getStaffID());System.out.println("DM Check : " + DMList.get(j).getCurrentAvailable());}
+        
+        System.out.println("Pending Order");
+        for(int j=1 ; j<= CLDOrderList.getTotalEntries() ; j++)
+        {
+            System.out.println("Order : " + CLDOrderList.get(j).getDeliveryStatus());
+        }
+        
+        System.out.println("\nPlease Select The Option Below");
+        System.out.println("1. Clock Out \n2. Deliver Order \n3. Break \n4. Exit");
+        while (!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4")) 
+        {
+            System.out.print("Option : ");
+            choice = s.nextLine();
+            switch (choice) 
+            {
+                case "1": 
+                {
+                    CLDMList.updateDMClockInOut(DM.getStaffID());
+                    DeliveryManMainMenu(DM); 
+                    break;
+                }
+                case "2": {DeliverOrder(DM); break;}
+                case "3": {DeliveryManStatus(DM); break;}
+                case "4": {break;}
+                default: {System.out.println("Please Enter Again..."); choice = "None";}
+            }
+        }
+    }
+    
+    public void DeliveryManMenuBreak(DeliveryMan DM)//While DeliveryMan Status "Break"
+    {
+        String choice = "None";
+        
+        ModuleDInterface<DeliveryMan> CLDMList = new ModuleDList<>();
+        for(int j=1 ; j<= DMList.getTotalEntries() ; j++){CLDMList.add(DMList.get(j));}
+        
+        System.out.println("\nPlease Select The Option Below");
+        System.out.println("1. Clock Out \n2. Available \n3. Exit");
+        while (!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) 
+        {
+            System.out.print("Option : ");
+            choice = s.nextLine();
+            switch (choice) 
+            {
+                case "1": {CLDMList.updateDMClockInOut(DM.getStaffID()); DeliveryManMainMenu(DM); break;}
+                case "2": {DeliveryManStatus(DM); break;}
+                case "3": {break;}
+                default: {System.out.println("Please Enter Again..."); choice = "None";}
+            }
+        }
+    }
+    
+    public void DeliveryManMenuDeliver(DeliveryMan DM)//While DeliveryMan Status "Deliver"
+    {
+        String choice = "None";
+        
+        ModuleDInterface<DeliveryMan> CLDMList = new ModuleDList<>();
+        for(int j=1 ; j<= DMList.getTotalEntries() ; j++){CLDMList.add(DMList.get(j));}
+        
+        System.out.println("\nPlease Select The Option Below");
+        System.out.println("1. Complete Deliver \n2. Exit");
+        while (!choice.equals("1") && !choice.equals("2")) 
+        {
+            System.out.print("Option : ");
+            choice = s.nextLine();
+            switch (choice) 
+            {
+                case "1": {CompletedDeliver(DM); break;}
+                case "2": {break;}
+                default: {System.out.println("Please Enter Again..."); choice = "None";}
+            }
+        }
+    }
+    
+    public void DeliverOrder(DeliveryMan DM)//Deliver the Pending Order
+    {
+        boolean check = false;
+        
+        for(int i = 1 ; i <= CLDOrderList.getTotalEntries() ; i++)
+        {
+            int deliverTime = 0;
+            if(CLDOrderList.get(i).getWS().getDM().getStaffID().equals(DM.getStaffID()) && CLDOrderList.get(i).getWS().getDM().getCurrentAvailable().equals("Available"))
+            {
+                if(CLDOrderList.get(i).getDeliveryStatus().equals("Pending"))
+                {
+                    //Customer Area 1km = 5minute;
+                    if(CLDOrderList.get(i).getOrder().getCustomer().getCustArea().equals("Setapak"))
+                    {
+                        deliverTime += 5*5;
+                    }
+                    else if(CLDOrderList.get(i).getOrder().getCustomer().getCustArea().equals("Wangsa Maju"))
+                    {
+                        deliverTime += 10*5;
+                    }
+                    else if(CLDOrderList.get(i).getOrder().getCustomer().getCustArea().equals("Genting Kelang"))
+                    {
+                        deliverTime += 15*5;
+                    }
+                    else if(CLDOrderList.get(i).getOrder().getCustomer().getCustArea().equals("Taman Melawati"))
+                    {
+                        deliverTime += 20*5;
+                    }
+                    else
+                    {
+                        deliverTime = 0;
+                    }
+                    
+                    //Restaurant Area 1km = 5minute;
+                    if(CLDOrderList.get(i).getOrder().getRestaurant().getArea().equals("Setapak"))
+                    {
+                        deliverTime += 5*5;
+                    }
+                    else if(CLDOrderList.get(i).getOrder().getRestaurant().getArea().equals("Wangsa Maju"))
+                    {
+                        deliverTime += 10*5;
+                    }
+                    else if(CLDOrderList.get(i).getOrder().getRestaurant().getArea().equals("Genting Kelang"))
+                    {
+                        deliverTime += 15*5;
+                    }
+                    else if(CLDOrderList.get(i).getOrder().getRestaurant().getArea().equals("Taman Melawati"))
+                    {
+                        deliverTime += 20*5;
+                    }
+                    else
+                    {
+                        deliverTime = 0;
+                    }
+                    
+                    Calendar ExtimateDeliverTime = Calendar.getInstance();
+                    ExtimateDeliverTime.add(Calendar.MINUTE, deliverTime);
+                    CLDOrderList.get(i).setDeliveredDate(ExtimateDeliverTime);
+                    CLDOrderList.get(i).setDeliveredTime(ExtimateDeliverTime);
+                    CLDOrderList.get(i).setDeliveryStatus("Deliver");
+                    CLDOrderList.get(i).getOrder().setOrderStatus("3");
+                    
+                    for(int j=1 ; j<= DMList.getTotalEntries() ; j++)
+                    {
+                        if(DMList.get(j).getStaffID().equals(DM.getStaffID()))
+                        {
+                            DMList.get(j).setCurrentAvailable("Deliver");
+                        }
+                    }
+                    check = true;
+                }
+            }
+        }
+        if(!check)
+        {
+            System.out.println("No Deliver Order");
+        }
+        DeliveryManMainMenu(DM);
+    }
+
+    public void CompletedDeliver(DeliveryMan DM)//The Order is complete deliver
+    {
+        for(int i = 1 ; i <= CLDOrderList.getTotalEntries() ; i++)
+        {
+            if(CLDOrderList.get(i).getWS().getDM().getStaffID().equals(DM.getStaffID()) && CLDOrderList.get(i).getWS().getDM().getCurrentAvailable().equals("Deliver"))
+            {
+                if(CLDOrderList.get(i).getDeliveryStatus().equals("Deliver"))
+                {
+                    CLDOrderList.get(i).setDeliveryStatus("Complete");
+                    CLDOrderList.get(i).getOrder().setOrderStatus("4");
+                    
+                    for(int j=1 ; j<= DMList.getTotalEntries() ; j++)
+                    {
+                        if(DMList.get(j).getStaffID().equals(DM.getStaffID()))
+                        {
+                            DMList.get(j).setCurrentAvailable("Available");
+                        }
+                    }
+                }
+            }
+        }
+        DeliveryManMainMenu(DM);
+    }
+    
+    public void DeliveryManStatus(DeliveryMan DM)//Update the delivery status to Break / Available
+    {
+        if(DM.getCurrentAvailable().equals("Available"))
+        {
+            DM.setCurrentAvailable("Break");
+        }
+        else if(DM.getCurrentAvailable().equals("Break"))
+        {
+            DM.setCurrentAvailable("Available");
+        }
+        
+        DeliveryManMainMenu(DM);
+    }
+    
+    public void AutoAssign1()//Get Order
+    {
+        Orders curOrder = new Orders();
+        
+        for(int i = 1 ; i <= order.getTotalEntries() ; i++)
+        {
+            System.out.println("Auto Assign : " + order.get(i).getOrdersID());
+            if(order.get(i).getOrderStatus().equals("1"))
+            {
+                curOrder = order.get(i);
+                AutoAssign2(curOrder);
+            }
+        }
+    }
+    
+    public void AutoAssign2(Orders curOrder)//Assign
+    {
+        Calendar cal = Calendar.getInstance();
+        WorkStatus curWS = new WorkStatus();
+        int tmpPendingDelivery = 0;
+        boolean Available = false;
+        boolean check = false;
+        
+        for(int y=1 ; y<= wsList.getTotalEntries() ; y++){CLWSList.add(wsList.get(y));}
+        for(int j = 1 ; j <= CLWSList.getTotalEntries() ; j++)
+        {
+            if(CLWSList.get(j).getDM().getCurrentAvailable().equals("Available"))
+            {
+                tmpPendingDelivery = CLWSList.get(j).getDM().getTotalPendingDelivery();
+                curWS = CLWSList.get(j);
+                check = true;
+                Available = true;
+            }
+        }
+        
+        for(int i = 1 ; i <= CLWSList.getTotalEntries() ; i++)
+        {
+            if(CLWSList.get(i).getDM().getTotalPendingDelivery() < tmpPendingDelivery && CLWSList.get(i).getDM().getCurrentAvailable().equals("Available"))
+            {
+                curWS = CLWSList.get(i);
+            }
+        }
+        
+        if(!Available)
+        {
+            for(int j = 1 ; j <= CLWSList.getTotalEntries() ; j++)
+            {
+                if(CLWSList.get(j).getDM().getCurrentAvailable().equals("Deliver"))
+                {
+                    tmpPendingDelivery = CLWSList.get(j).getDM().getTotalPendingDelivery();
+                    curWS = CLWSList.get(j);
+                    check = true;
+                }
+            }
+
+            for(int i = 1 ; i <= CLWSList.getTotalEntries() ; i++)
+            {
+                if(CLWSList.get(i).getDM().getTotalPendingDelivery() < tmpPendingDelivery && CLWSList.get(i).getDM().getCurrentAvailable().equals("Deliver"))
+                {
+                    curWS = CLWSList.get(i);
+                }
+            }
+        }
+        
+        if(check)
+        {
+            CLDOrderList.add(new DeliveryOrder(curWS, curOrder, cal, cal, cal, cal, "Pending"));
+            curOrder.setOrderStatus("2");
+            int tpd = curWS.getDM().getTotalPendingDelivery();
+            curWS.getDM().setTotalPendingDelivery(tpd + 1);
+            System.out.println("\nCheck 2 Testing : " + tpd);
+        }
+    }
 }
