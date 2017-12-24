@@ -373,6 +373,7 @@ public class TryModuleC {
     }
     
     public void editFood(){
+        boolean found = false;
         String foodid = "",selection = "";
         int newquantity;
         do{
@@ -393,7 +394,7 @@ public class TryModuleC {
                 selection = "YES";
                 return ;
             }
-            for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
+            for(int i=1 ; i<=currentDetail.getTotalEntries()&&found==false ; i++){
                 if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
                     do{
                         System.out.print("Please Enter the Quantity:");
@@ -404,18 +405,27 @@ public class TryModuleC {
                         newquantity = s.nextInt();
                         s.nextLine();
                     }while(newquantity<1);
+                    found = true;
                     currentOrder.setTotalQuantity(currentOrder.getTotalQuantity()-currentDetail.get(i).getQuantity()+newquantity);
                     Subtotal = currentDetail.editCart(newquantity,i,currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
                 }
             }
-            System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
-            selection = s.nextLine();
-            selection = selection.toUpperCase();
+            if(found == false){
+                System.out.print("Wrong Food ID");
+                selection = "YES";
+            }
+            else{
+                System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
+                selection = s.nextLine();
+                selection = selection.toUpperCase();
+            }
+            
         }while(selection.equals("YES"));
     }
     
     public void deleteFood(){
+        boolean found = false;
         String foodid = "",selection = "";
         do{
             System.out.println("\n\nBelow Are The Foods You Have Ordered Inside Your Cart");
@@ -435,16 +445,23 @@ public class TryModuleC {
                 selection = "YES";
                 return;
             }
-            for(int i=1 ; i<=currentDetail.getTotalEntries() ; i++){
+            for(int i=1 ; i<=currentDetail.getTotalEntries()&&found==false ; i++){
                 if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
+                    found = true;
                     currentOrder.setTotalQuantity(currentOrder.getTotalQuantity()-currentDetail.get(i).getQuantity());
                     Subtotal = currentDetail.deleteFood(i, currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
                 }
             }
-            System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
-            selection = s.nextLine();
-            selection = selection.toUpperCase();
+            if(found == false){
+                System.out.print("Wrong Food ID");
+                selection = "YES";
+            }
+            else{
+                System.out.print("Do You Want To Continue(Yes to continue, others to back)?");
+                selection = s.nextLine();
+                selection = selection.toUpperCase();
+            }
         }while(selection.equals("YES"));
     }
     
@@ -532,10 +549,18 @@ public class TryModuleC {
     
     public void GenerateOrderReport(){
         String reportday = "";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar comparecal = Calendar.getInstance();
         System.out.print("Please Enter The Day (YYYY/MM/DD) : ");
         reportday = s.nextLine();
-        order.GenerateDetailReportByQuantity(reportday);
-        order.GenerateDetailReportByTime(reportday);
+        try{
+            Date date = dateFormat.parse(reportday);
+            comparecal.setTime(date);
+        }catch(ParseException ex){
+            System.out.print("Wrong Format");
+        }
+        order.GenerateDetailReportByQuantity(comparecal);
+        order.GenerateDetailReportByTime(comparecal);
     }
     
     public void retrieveCustomer(){
