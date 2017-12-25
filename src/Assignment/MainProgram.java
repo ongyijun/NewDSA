@@ -2124,7 +2124,7 @@ public class MainProgram {
         System.out.println("Food Availability: Available");
         //System.out.println(flist.get(totalFood+1).getRestaurant());
         System.out.println("Successfully Added");
-        sc.nextLine();
+        //sc.nextLine();
         }else{
             System.out.println("Invalid Input");
             sc.next();
@@ -2201,7 +2201,7 @@ public class MainProgram {
                         String uName = sc.nextLine();
                         food.get(i).setFoodName(uName);
                         System.out.println("Successfully updated");
-                        sc.nextLine();
+                        //sc.nextLine();
                         RestaurantMenu(r);
                         break;
                     }
@@ -2300,6 +2300,7 @@ public class MainProgram {
                     }
                     default:{
                         System.out.println("Invalid. Please try again.");
+                        break;
                     }
                 }
 
@@ -2308,6 +2309,7 @@ public class MainProgram {
             }
             if(fid.equals("E")){
                 RestaurantMenu(r);
+                id = true;
             }
             if(id == false){
                 System.out.println("Invalid Food ID, Please try again.");
