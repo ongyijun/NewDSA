@@ -2158,7 +2158,7 @@ public class MainProgram {
         System.out.println("------------------");
         System.out.println("Login as " + r.getRestaurantName() + " Restaurant\n");
         foodMenu(r);
-        System.out.print("Enter Food ID to update: ");
+        System.out.print("Enter Food ID to update (E to exit): ");
         String fid = sc.nextLine().toUpperCase();
         int i=1; 
         while(i<=food.getNumOfEntries()){
@@ -2294,6 +2294,9 @@ public class MainProgram {
 
                 }
                     i++;
+            }
+            if(fid.equals("E")){
+                RestaurantMenu(r);
             }
             if(id == false){
                 System.out.println("Invalid Food ID, Please try again.");
@@ -3041,7 +3044,7 @@ public class MainProgram {
                 case "1": {CLORList.displayCustomerPendingOrderInTable(CustID); DisplayCustomerOrder(cust); break;}
                 case "2": {CLDOrderList.displayCustomerAssignOrderInTable(CustID); DisplayCustomerOrder(cust); break;}
                 case "3": {CLDOrderList.displayCustomerDeliverOrderInTable(CustID); DisplayCustomerOrder(cust); break;}
-                case "4": {CustomerMenu(cust); break;}
+                case "4": {break;}
                 default: {System.out.println("Please Enter Again..."); choice = "None";}
             }
         }
