@@ -18,5 +18,7 @@ public interface AListInterface<T> {
     public boolean replace(int pos, T entry);
     public void delete(int pos);
     public void sortNewest();
+    public void sortNormal();
     public void sortPromotional();
+    public void sortRestaurantByArea();
 }
