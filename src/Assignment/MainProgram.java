@@ -1333,6 +1333,7 @@ public class MainProgram {
                     CustomerMenu(customer.get(i));
                 }
                 else{
+                    check++;
                     System.out.println("Password is Invalid");
                     CustomerLogin();
                 }
