@@ -1412,15 +1412,15 @@ public class MainProgram {
                         found = true;
                         order.get(j).setOrderStatus("0");
                         payment.get(j).setPaymentStatus("0");
-                        System.out.println("Cancel Order Successful, Payment Amount Have Been Returned.");
+                        System.out.printf("Cancel Order Successful, Payment Amount Have Been Returned.\n");
                     }
                 }
                 if(found == false){
-                    System.out.println("Please Key In Again");
+                    System.out.printf("Please Key In Again\\n");
                 }
             }
             else{
-                System.out.println("No Record");
+                System.out.printf("No Record\n\n");
             }
         }while(found == false&&recordfound == true);
     }
@@ -1439,7 +1439,7 @@ public class MainProgram {
         System.out.print("Please Enter the Restaurant Name (Example:KFC) 0 to Back: ");
         selection = s.nextLine();
         if(selection.equals("0")){
-            CustomerMenu(current);
+            System.out.printf("\n\n\n");
         }
         else{
         for(int i=1 ; i<=restaurant.getNumOfEntries()&&find==false ; i++){
@@ -1502,7 +1502,6 @@ public class MainProgram {
                 currentDetail.clear();
                 Subtotal = 0.00;
                 CurrentFood.clear();
-                CustomerMenu(current);
                 break;
             }
             else if(foodid.equals("V")){
@@ -1580,7 +1579,7 @@ public class MainProgram {
                         break;
                     }
                     case "2":{
-                        deleteFood();
+                        removeCartFood();
                         break;
                     }
                     case "3":{
@@ -1657,7 +1656,7 @@ public class MainProgram {
         }while(selection.equals("YES"));
     }
     
-    public void deleteFood(){
+    public void removeCartFood(){
         boolean found = false;
         String foodid = "",selection = "";
         do{
@@ -1682,7 +1681,7 @@ public class MainProgram {
                 if(currentDetail.get(i).getFood().getFoodID().toUpperCase().equals(foodid.toUpperCase())){
                     found = true;
                     currentOrder.setTotalQuantity(currentOrder.getTotalQuantity()-currentDetail.get(i).getQuantity());
-                    Subtotal = currentDetail.deleteFood(i, currentOrder.getSubtotal());
+                    Subtotal = currentDetail.removeCartFood(i, currentOrder.getSubtotal());
                     currentOrder.setSubtotal(Subtotal);
                 }
             }
@@ -1789,10 +1788,11 @@ public class MainProgram {
         try{
             Date date = dateFormat.parse(reportday);
             comparecal.setTime(date);
+            order.GenerateDetailReportByQuantity(comparecal);
         }catch(ParseException ex){
-            System.out.print("Wrong Format");
+            System.out.println("Wrong Format\n\n");
         }
-        order.GenerateDetailReportByQuantity(comparecal);
+        
     }
     
     public void GenerateOrderReportByTime(){
@@ -1804,10 +1804,11 @@ public class MainProgram {
         try{
             Date date = dateFormat.parse(reportday);
             comparecal.setTime(date);
+            order.GenerateDetailReportByTime(comparecal);
         }catch(ParseException ex){
-            System.out.print("Wrong Format");
+            System.out.println("Wrong Format\n\n");
         }
-        order.GenerateDetailReportByTime(comparecal);
+        
     }
     
     public void retrieveCustomer(){
