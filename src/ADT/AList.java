@@ -109,7 +109,7 @@ public class AList<T> implements AListInterface<T> {
                     fNode = bNode;
                 }
             }else{
-            System.out.println("No data inside.");
+            System.out.println("No data.");
         }
     }
     
@@ -162,6 +162,8 @@ public class AList<T> implements AListInterface<T> {
                     }
                 }  
             }
+        }else{
+            System.out.println("No data.");
         }
     }
     
@@ -210,6 +212,8 @@ public class AList<T> implements AListInterface<T> {
                     }
                 }  
             }
+        }else{
+            System.out.println("No data.");
         }
     }
     
@@ -258,6 +262,8 @@ public class AList<T> implements AListInterface<T> {
                     }
                 }  
             }
+        }else{
+            System.out.println("No data.");
         }
     }
     
