@@ -1483,7 +1483,7 @@ public class MainProgram {
             System.out.printf("Food Price-> RM%.2f\n",CurrentFood.get(k).getFoodPrice());
         }*/
         
-        showFoodMenu(r);
+        showFoodMenu(restaurant.get(resIndex),food);
         System.out.println("---------------------------------------------------");
         while(!foodid.equals("C")&&!foodid.equals("0")&&!foodid.equals("V")&&checkout==false){
             System.out.println("Please Enter the Food ID that You Want");
@@ -2393,25 +2393,25 @@ public class MainProgram {
  
     }
     
-    public void showFoodMenu(Restaurant r){
+    public void showFoodMenu(Restaurant r, AListInterface<Food> f){
         char rMenu = r.getRMenu();
         switch(rMenu){
             case 'A':{
-                showMenu(r);
+                showMenu(r,f);
                 break;
             }
             case 'N':{
-                showNewest(r);
+                showNewest(r,f);
                 break;
             }
             case 'P':{
-                showPromotional(r);
+                showPromotional(r,f);
                 break;
             }
         }
     }
     
-    public void showMenu(Restaurant r){
+    public void showMenu(Restaurant r, AListInterface<Food> f){
         System.out.println("---------");
         System.out.println("Food Menu");
         System.out.println("---------");
@@ -2427,7 +2427,7 @@ public class MainProgram {
         }
     }
     
-    public void showNewest(Restaurant r){
+    public void showNewest(Restaurant r, AListInterface<Food> f){
         System.out.println("---------");
         System.out.println("Food Menu");
         System.out.println("---------");
@@ -2446,7 +2446,7 @@ public class MainProgram {
         food.sortNormal();   
     }
     
-    public void showPromotional(Restaurant r){
+    public void showPromotional(Restaurant r, AListInterface<Food> f){
         System.out.println("-----------------------------------------------------------------------------------------------------------");
         System.out.printf("%8s %20s %15s %15s %18s \n","Food ID","Food Name","Food Price (RM)","Food Type","Promotional Status");
         System.out.println("-----------------------------------------------------------------------------------------------------------");
@@ -2543,7 +2543,7 @@ public class MainProgram {
                     break;
                 }
                 case 5:{
-                    showFoodMenu(r);
+                    showFoodMenu(r,food);
                     sc.nextLine();
                     RestaurantMenu(r);
                     break;
