@@ -31,10 +31,6 @@ public class MainProgram {
     double Subtotal = 0.00;
     Scanner s = new Scanner(System.in);
     ModuleCInterface<Food> CurrentFood = new ModuleCList<>();
-    /*Jye Jye chg here to ur list, currentFood is mine one*/
-    //ModuleCInterface<Restaurant> restaurant = new ModuleCList<>();
-    //ModuleCInterface<Food> food = new ModuleCList<>();
-    //ModuleCInterface<Customer> customer = new ModuleCList<>();
     AListInterface<Restaurant> restaurant = new AList<>();
     AListInterface<Food> food = new AList<>();
     AListInterface<Customer> customer = new AList<>();
@@ -48,9 +44,6 @@ public class MainProgram {
 
     Scanner sc = new Scanner(System.in);
 
-    /**
-     * @param args the command line arguments
-     */
     // All Menu Start
     public void menu() {
 
@@ -87,7 +80,6 @@ public class MainProgram {
                 }
                 case "4": {
                     boolean a = RestaurantLogin(r);
-
                     if (a = true) {
                         menu();
                     }
@@ -150,35 +142,7 @@ public class MainProgram {
 
     public void DMMenu() {
         DeliveryMan DM = (DeliveryMan) loginStaff;
-        //String selection = "-1";
-        //Date date = new Date();
-        //java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
-        //System.out.println("Welcome Back, " + loginStaff.getStaffName() + "\nCurrent Date:" + dateFormat.format(date) + "\nCurrent Status: " + DM.getCurrentAvailable());  //display login staff information
-
         DeliveryManMainMenu(DM);
-
-        /**
-         * System.out.println("\nPlease Select The Option Below");
-         * System.out.println("1. Clock In / Clock Out \n2. Change Deliver
-         * Status \n3. View Deliver Schedule\n4. Update Personal Contact
-         * Details\n5. Retrive Customer Details\n0. Log Out");
-         *
-         * while (!selection.equals("1") && !selection.equals("2") &&
-         * !selection.equals("3") && !selection.equals("4") &&
-         * !selection.equals("5") && !selection.equals("0")) {
-         * System.out.print("Option : "); selection = s.nextLine(); switch
-         * (selection) { case "1": { // D.DeliveryMenClockInOut(DMList,
-         * deliveryMen.getStaffID()); DMMenu(); break; } case "2": { //
-         * D.ChangeDeliverStatus(DMList, deliveryMen.getStaffID()); DMMenu();
-         * break; } case "3": { //D.ViewDeliverSchedule(customer, DMList, order,
-         * restaurant, deliveryMen.getStaffID()); DMMenu(); break; } case "4": {
-         * DeliveryManUpdatePersonalDetails(); DMMenu(); break; } case "5": {
-         * retrieveCustomer(); DMMenu(); break; } case "0": { loginStaff = null;
-         * System.out.println("Thank You For Using Our System.\nPress Any Key to
-         * Continue..."); s.nextLine(); System.out.println("\n\n\n"); break; }
-         * default: { System.out.println("Please Enter Again..."); } }
-        }*
-         */
     }
 
     public void AdminMenu() {
@@ -850,7 +814,7 @@ public class MainProgram {
         }
     }
 
-    public void CustomerFeedBackRating(DeliveryOrder DO) {  // Don't know implement at where
+    public void CustomerFeedBackRating(DeliveryOrder DO) {
         boolean success = false;
         while (!success) {
             try {
@@ -1264,41 +1228,6 @@ public class MainProgram {
         MP.payment.add(new Payment("PA000003", MP.order.get(3), 12.00, cal1, "1", "Online"));
         MP.payment.add(new Payment("PA000004", MP.order.get(4), 13.00, cal, "1", "Online"));
         MP.menu();
-        // TODO code application logic here
-        /*Calendar date3 = Calendar.getInstance();
-         Calendar date1 = Calendar.getInstance();
-         Calendar date2 = Calendar.getInstance();
-         Calendar date4 = Calendar.getInstance();
-         date3.add(Calendar.MINUTE, 5);
-         date2.add(Calendar.MINUTE, 3);
-         date4.add(Calendar.MINUTE, 1);
-         DeliveryMan newEntry = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date1);
-         DeliveryMan newEntry3 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date3);
-         DeliveryMan newEntry2 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date2);
-         DeliveryMan newEntry4 = new DeliveryMan(0, "", "", "", "", "", "", "", 'C', "", "", "", "", 0, 0, date4);
-         DM.add(newEntry3);
-         DM.add(newEntry2);
-         DM.add(newEntry);
-
-         System.out.println(DM.get(1).getJoinDate().getTime());
-         System.out.println(DM.get(2).getJoinDate().getTime());
-         System.out.println(DM.get(3).getJoinDate().getTime() + "\n");
-
-         DM.SortMostExperienceDeliveryMan();
-
-         DM.add(newEntry4);
-         System.out.println("\n" + DM.get(1).getJoinDate().getTime());
-         System.out.println(DM.get(2).getJoinDate().getTime());
-         System.out.println(DM.get(3).getJoinDate().getTime());
-         System.out.println(DM.get(4).getJoinDate().getTime() + "\n");
-
-         DM.SortMostExperienceDeliveryMan();
-
-         System.out.println("\n" + DM.get(1).getJoinDate().getTime());
-         System.out.println(DM.get(2).getJoinDate().getTime());
-         System.out.println(DM.get(3).getJoinDate().getTime());
-         System.out.println(DM.get(4).getJoinDate().getTime());*/
-
     }//==========================================================================Void Main
 
     /*Module C Beginning*/
@@ -1376,8 +1305,7 @@ public class MainProgram {
                     if (!find) {
                         System.out.println("There is no completed order yet.\nPress Enter to Continue...\n");
                         s.nextLine();
-                    }
-                    else{
+                    } else {
                         System.out.println("There is no more pending Feedback available.\nPress Enter to Continue...\n");
                         s.nextLine();
                     }
@@ -1489,11 +1417,6 @@ public class MainProgram {
         currentOrder.setTotal(Subtotal * 1.06);
         System.out.println("\n\nBelow are the foods provided by " + restaurant.get(resIndex).getRestaurantName());
         System.out.println("---------------------------------------------------");
-        /*for(int k=1 ; k<=CurrentFood.getTotalEntries() ; k++){
-            System.out.println("Food ID->"+CurrentFood.get(k).getFoodID());
-            System.out.println("Food Name->"+CurrentFood.get(k).getFoodName());
-            System.out.printf("Food Price-> RM%.2f\n",CurrentFood.get(k).getFoodPrice());
-        }*/
 
         showFoodMenu(restaurant.get(resIndex), food);
         System.out.println("---------------------------------------------------");
@@ -1758,19 +1681,6 @@ public class MainProgram {
                     System.out.printf("Subtotal: RM%.2f\n", currentOrder.getSubtotal());
                     System.out.printf("GST: RM%.2f\n", (currentOrder.getSubtotal() * 0.06));
                     System.out.printf("Total: RM%.2f\n", currentOrder.getTotal());
-                    /*DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    for(int k=1 ; k<=order.getTotalEntries() ; k++){
-                        System.out.println("---------------------------------");
-                        System.out.println("Order Date Time->"+dateFormat.format(order.get(k).getOrdersDateTime().getTime()));
-                        System.out.println("---------------------------------");
-                        System.out.println("Restaurant Name->"+order.get(k).getRestaurant().getRestaurantName());
-                        for(int j=1 ; j<=orderdetail.getTotalEntries(); j++){
-                            System.out.println(orderdetail.get(j).getFoodTotal());
-                        }
-                        System.out.printf("Subtotal->RM%.2f\n",order.get(k).getSubtotal());
-                        System.out.printf("Total->RM%.2f\n",order.get(k).getTotal());
-                        System.out.println("-----------------------------");
-                    }*/
                     currentOrder = new Orders();
                     currentDetail.clear();
                     Subtotal = 0.00;
@@ -1854,7 +1764,6 @@ public class MainProgram {
     }
 
     /*End of Module C*/
-
     //Module A
     public void CustomerRegistration() {
         int select = 0, check = 0;
@@ -2068,9 +1977,6 @@ public class MainProgram {
         System.out.println("--------");
         System.out.println("Add Food");
         System.out.println("--------");
-
-        //int totalFood = flist.getNumOfEntries();
-        //String foodid = String.format("FM%06d", totalFood + 1);
         String foodid = FoodID();
         System.out.println("Food ID: " + foodid);
         System.out.print("Food Name: ");
@@ -2121,9 +2027,7 @@ public class MainProgram {
                 System.out.println("Price: RM" + food.get(i).getFoodPrice());
                 System.out.println("Food Type: " + food.get(i).getFoodType());
                 System.out.println("Food Availability: Available");
-                //System.out.println(flist.get(totalFood+1).getRestaurant());
                 System.out.println("Successfully Added");
-                //sc.nextLine();
             } else {
                 System.out.println("Invalid Input");
                 sc.next();
@@ -2200,7 +2104,6 @@ public class MainProgram {
                         String uName = sc.nextLine();
                         food.get(i).setFoodName(uName);
                         System.out.println("Successfully updated");
-                        //sc.nextLine();
                         RestaurantMenu(r);
                         break;
                     }
@@ -2607,9 +2510,6 @@ public class MainProgram {
         for (int j = 1; j <= DMList.getTotalEntries(); j++) {
             CLDMList.add(DMList.get(j));
         }
-
-        //for(int j=1 ; j<= CLDMList.getTotalEntries() ; j++){System.out.println("CL Check : " + CLDMList.get(j).getStaffID());System.out.println("CL Check : " + CLDMList.get(j).getCurrentAvailable());}
-        //for(int j=1 ; j<= DMList.getTotalEntries() ; j++){System.out.println("DM Check : " + DMList.get(j).getStaffID());System.out.println("DM Check : " + DMList.get(j).getCurrentAvailable());}
         System.out.println("\nPlease Select The Option Below");
         System.out.println("1. Clock In \n2. Exit");
         while (!choice.equals("1") && !choice.equals("2")) {
@@ -2655,9 +2555,6 @@ public class MainProgram {
         for (int j = 1; j <= DMList.getTotalEntries(); j++) {
             CLDMList.add(DMList.get(j));
         }
-
-        //for(int j=1 ; j<= CLDMList.getTotalEntries() ; j++){System.out.println("CL Check : " + CLDMList.get(j).getStaffID());System.out.println("CL Check : " + CLDMList.get(j).getCurrentAvailable());}
-        //for(int j=1 ; j<= DMList.getTotalEntries() ; j++){System.out.println("DM Check : " + DMList.get(j).getStaffID());System.out.println("DM Check : " + DMList.get(j).getCurrentAvailable());}
         System.out.println("\nToday Delivery Order : ");
         System.out.println("***************************************************************************");
         System.out.printf("*%3s * %10s * %16s * %15s * %16s * \n", "No", "Order ID", "Restaurant Area", "Customer Area", "Delivery Status");
@@ -2942,7 +2839,6 @@ public class MainProgram {
         cal.add(Calendar.MINUTE, -2);
 
         for (int i = 1; i <= order.getTotalEntries(); i++) {
-            //if(order.get(i).getOrderStatus().equals("1") && order.get(i).getOrdersDateTime().getTime().after(cal.getTime()))
             if (order.get(i).getOrderStatus().equals("1")) {
                 curOrder = order.get(i);
                 AutoAssign2(curOrder);
@@ -3056,13 +2952,9 @@ public class MainProgram {
         String dateEnter = "";
         boolean check = false;
 
-        //do
-        //{
         System.out.print("Enter Date (dd/MM/yyyy): ");
         dateEnter = sc.nextLine();
 
-        //dateEnter = String.format("%d/%d/%d", dayEnter, monthEnter, yearEnter);
-        //}while();
         System.out.println("DeliveryMan TotalDeliver Report on " + dateEnter);
         System.out.println("*****************************************************************************************************");
         System.out.printf("* %10s * %15s * %20s * %20s * %20s *\n", "Working ID", "DeliveryMan ID", "DeliveryMan Name", "Check In Time", "Total Deliver Order");
