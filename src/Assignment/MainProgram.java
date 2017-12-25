@@ -165,7 +165,6 @@ public class MainProgram {
             selection = s.nextLine();
             switch (selection) {
                 case "1": {
-                    CustomerFeedBackRating(DM);
                     // D.DeliveryMenClockInOut(DMList, deliveryMen.getStaffID());
                     DMMenu();
                     break;
@@ -210,67 +209,61 @@ public class MainProgram {
         java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
         System.out.println("Welcome Back, " + loginStaff.getStaffName() + "\nCurrent Date:" + dateFormat.format(date) + "\n");  //display login staff information
         System.out.println("Please Select The Option Below");
-        System.out.println("1. View Delivery Man Clock In & Clock Out");
-        System.out.println("2. Retrieve Delivery Man Pending Delivery");
-        System.out.println("3. Generate Total Deliveries Report");
-        System.out.println("4. Generate Total Distance Report");
-        System.out.println("5. Generate Top 20 Most Experience Delivery Man Report");
-        System.out.println("6. Generate Top 20 Most Rating Delivery Man Report");
-        System.out.println("7. Generate Daily Sales Detailed Report(Total Quantity)");
-        System.out.println("8. Generate Daily Sales Detailed Report(Order Time)");
-        System.out.println("9. Generate DeliveryMan Total Deliver Report");
-        System.out.println("10. Generate Restaurant Detailed Report");
+        System.out.println("1. Retrieve Delivery Man Pending Delivery");
+        System.out.println("2. Generate Total Deliveries Report");
+        System.out.println("3. Generate Total Distance Report");
+        System.out.println("4. Generate Top 20 Most Experience Delivery Man Report");
+        System.out.println("5. Generate Top 20 Most Rating Delivery Man Report");
+        System.out.println("6. Generate Daily Sales Detailed Report(Total Quantity)");
+        System.out.println("7. Generate Daily Sales Detailed Report(Order Time)");
+        System.out.println("8. Generate DeliveryMan Total Deliver Report");
+        System.out.println("9. Generate Restaurant Detailed Report");
         System.out.println("0. Log Out");
-        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("6") && !selection.equals("7") && !selection.equals("8") && !selection.equals("9") && !selection.equals("10") && !selection.equals("0")) {
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("6") && !selection.equals("7") && !selection.equals("8") && !selection.equals("9") && !selection.equals("0")) {
             System.out.print("Option: ");
             selection = s.nextLine();
             switch (selection) {
                 case "1": {
-                    //D.ViewDeliverManClockInOut(DMList);
-                    AdminMenu();
-                    break;
-                }
-                case "2": {
                     RetrievePendingDelivery();
                     AdminMenu();
                     break;
                 }
-                case "3": {
+                case "2": {
                     generateTotalDeliveriesReport();
                     AdminMenu();
                     break;
                 }
-                case "4": {
+                case "3": {
                     generateTotalDistanceReport();
                     AdminMenu();
                     break;
                 }
-                case "5": {
+                case "4": {
                     generateMostExperienceDeliverymanReport();
                     AdminMenu();
                     break;
                 }
-                case "6": {
+                case "5": {
                     generateMostRatingDeliverymanReport();
                     AdminMenu();
                     break;
                 }
-                case "7": {
+                case "6": {
                     GenerateOrderReportByQuantity();
                     AdminMenu();
                     break;
                 }
-                case "8": {
+                case "7": {
                     GenerateOrderReportByTime();
                     AdminMenu();
                     break;
                 }
-                case "9": {
+                case "8": {
                     GenerateDeliveryManTotalDeliverReport();
                     AdminMenu();
                     break;
                 }
-                case "10": {
+                case "9": {
                     genDetailReportByArea();
                     AdminMenu();
                     break;
@@ -879,15 +872,15 @@ public class MainProgram {
         }
     }
 
-    public void CustomerFeedBackRating(DeliveryMan DM) {
+    public void CustomerFeedBackRating(DeliveryOrder DO) {  // Don't know implement at where
         boolean success = false;
         while (!success) {
             try {
-                System.out.println("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man? (-1 to Cancel) :");
+                System.out.print("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man, "+DO.getWS().getDM().getStaffName()+"? (-1 to Cancel) :");
                 double rate = s.nextDouble();
                 s.nextLine();
                 if (rate < -1 || rate > 10) {
-                    System.out.print("Please Enter the Integer in range of 0.0 to 10.0 only.\nPress Enter to Continue...");
+                    System.out.println("Please Enter the Integer in range of 0.0 to 10.0 only.\nPress Enter to Continue...");
                     s.nextLine();
                     System.out.println("\n\n");
                 } else if (rate == -1) {
@@ -896,7 +889,7 @@ public class MainProgram {
                     System.out.println("\n\n");
                     success = true;
                 } else {
-                    boolean update = DMList.updateDeliveryManRating(DM.getStaffID(), rate);
+                    boolean update = DMList.updateDeliveryManRating(DO.getWS().getDM().getStaffID(), rate);
                     if (update) {
                         System.out.println("Thank You for your feedback, has a nice day.\nPress Enter to Continue...");
                         s.nextLine();
@@ -1012,7 +1005,7 @@ public class MainProgram {
                             for (int i = 1; i <= wsList.getTotalEntries(); i++) {
                                 if (wsList.get(i).getTotalDeliveredOrder() > 0 && compareDate.equals(SDF.format(wsList.get(i).getCheckIn().getTime()))) {
                                     System.out.println("\n" + wsList.get(i).getDM().getStaffID() + "\t" + wsList.get(i).getDM().getStaffName() + "\t" + SDF2.format(wsList.get(i).getCheckIn().getTime()) + "\t"
-                                            + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDeliveredOrder() + "\n");
+                                            + SDF2.format(wsList.get(i).getCheckOut().getTime()) + "\t" + wsList.get(i).getTotalDeliveredOrder());
                                     count++;
                                 }
                             }
@@ -1223,13 +1216,14 @@ public class MainProgram {
 
         MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750, HRjoinDate));
         MP.ADList.add(new Admin(20000, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 6000, 6000, ADjoinDate));
-        MP.wsList.add(new WorkStatus("WS000001", HRjoinDate, DMjoinDate, 0, 0, MP.DMList.get(1)));
+        
         MP.restaurant.add(new Restaurant("RE000001", "Nandos", "Western", 'A', "Tneh Chee Wei", "asd", "016-1234567", "Setapak", "100", "1234567890"));
         MP.restaurant.add(new Restaurant("RE000002", "KFC", "FastFood", 'N', "Abu", "ase", "016-1234321", "Wangsa Maju", "200", "2"));
         MP.restaurant.add(new Restaurant("RE000003", "abc", "MalayFood", 'A', "T", "se", "011-12345678", "Wangsa Maju", "200", "2"));
         MP.restaurant.add(new Restaurant("RE000004", "Texas", "FastFood", 'N', "Ali", "ase", "016-5555555", "Genting Kelang", "200", "2"));
         MP.restaurant.add(new Restaurant("RE000005", "qwrv", "FastFood", 'N', "Mohamad Dahoud", "ase", "016-1235776", "Wangsa Maju", "200", "2"));
         MP.restaurant.add(new Restaurant("RE000006", "Sri aa", "FastFood", 'N', "Lee lee lee", "ase", "016-9864234", "Setapak", "200", "2"));
+        
         MP.food.add(new Food("FM000001", "Chicken Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 1));
         MP.food.add(new Food("FM000002", "Fish Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 3));
         MP.food.add(new Food("FM000003", "Beef Bolognese", 13.50, "Side Dish", 'A', MP.restaurant.get(1), 3));
@@ -1239,10 +1233,21 @@ public class MainProgram {
         MP.food.add(new Food("FM000007", "Chicken Rice", 9.50, "Main Dish", 'A', MP.restaurant.get(1), 3));
         MP.food.add(new Food("FM000008", "Dinner Plate D", 5.50, "Side Dish", 'A', MP.restaurant.get(2), 1));
         MP.food.add(new Food("FM000009", "Dinner Plate E", 6.50, "Beverage", 'A', MP.restaurant.get(2),2));
+        
         MP.customer.add(new Customer("CU000001", "Miw Jin Li", "14,Taman Cantik,53300,Setapak,Kuala Lumpur", "Setapak", "0167897898", "971003355333", "1234567890"));
         MP.customer.add(new Customer("CU000002", "Miw Jin Le", "14,Taman Cantik,53300,Wangsa Maju,Kuala Lumpur", "Wangsa Maju", "0167897899", "970104079999", "1234567890"));
-        MP.wsList.add(new WorkStatus("WS000001", WSCheckINOut, WSCheckINOut, 0, 6, MP.DMList.get(2)));
-        MP.wsList.add(new WorkStatus("WS000002", WSCheckINOut, WSCheckINOut, 0, 0, MP.DMList.get(5)));
+        
+        Calendar previous = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        try{
+        Date date = df.parse("2017/12/24");
+        previous.setTime(date);
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        MP.wsList.add(new WorkStatus("WS000001", previous, previous, 11, 3, MP.DMList.get(1)));
+        MP.wsList.add(new WorkStatus("WS000002", WSCheckINOut, WSCheckINOut, 15, 6, MP.DMList.get(2)));
+        MP.wsList.add(new WorkStatus("WS000003", WSCheckINOut, WSCheckINOut, 0, 0, MP.DMList.get(5)));
         
         Calendar cal = Calendar.getInstance();
         Calendar cal1 = Calendar.getInstance();
@@ -1328,6 +1333,7 @@ public class MainProgram {
                     CustomerMenu(customer.get(i));
                 }
                 else{
+                    check++;
                     System.out.println("Password is Invalid");
                     CustomerLogin();
                 }
@@ -3025,11 +3031,13 @@ public class MainProgram {
         
         if(check)
         {
-            CLDOrderList.add(new DeliveryOrder(curWS, curOrder, cal, cal, cal, cal, "Pending"));
+            DeliveryOrder DO = new DeliveryOrder(curWS, curOrder, cal, cal, cal, cal, "Pending");
+            CLDOrderList.add(DO);
             curOrder.setOrderStatus("2");
             int tpd = curWS.getDM().getTotalPendingDelivery();
             curWS.getDM().setTotalPendingDelivery(tpd + 1);
         }
+        
     }
     
     public void DisplayCustomerOrder(Customer cust)
