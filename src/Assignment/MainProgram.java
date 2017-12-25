@@ -2944,7 +2944,8 @@ public class MainProgram {
         for (int j = 1; j <= wsList.getTotalEntries(); j++) {
             CLWSList.add(wsList.get(j));
         }
-
+        
+        CLWSList.SortTotalDelivery();
         Calendar curCal = Calendar.getInstance();
         Scanner sc = new Scanner(System.in);
         java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
