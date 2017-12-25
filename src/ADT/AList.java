@@ -39,11 +39,6 @@ public class AList<T> implements AListInterface<T> {
         return numOfEntries;
     }
     
-    public void clear() {
-        fNode = null;
-        numOfEntries = 0;
-  }
-    
     public void add(T entry){
         Node node = new Node(entry);
         if(isEmpty()){
@@ -70,21 +65,6 @@ public class AList<T> implements AListInterface<T> {
             return data;
         }
         return data;
-    }
-    
-    public boolean replace(int pos, T entry){
-        boolean successful = true;
-        
-        if ((pos>0)&&(pos<=numOfEntries)) {
-            Node currentNode = fNode;
-                for (int i=0; i<pos -1; ++i) {
-                    currentNode = currentNode.next;
-                }
-            currentNode.data = entry;
-        } else {
-            successful = false;
-        }   
-        return successful;
     }
     
     public void delete(int pos){
