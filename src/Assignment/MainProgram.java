@@ -1497,8 +1497,14 @@ public class MainProgram {
             foodid = foodid.toUpperCase();
             
             if(foodid.equals("C")){
-                checkout = Confirmation(current);
-                if(checkout==false){
+                if(!currentDetail.isEmpty()){
+                    checkout = Confirmation(current);
+                    if(checkout==false){
+                        makeOrder(current,resIndex);
+                    }
+                }
+                else{
+                    System.out.println("You Did Not Order Food Yet.");
                     makeOrder(current,resIndex);
                 }
             }
