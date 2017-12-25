@@ -23,5 +23,5 @@ public interface ModuleCInterface<T> {
     public boolean GenerateDetailReportByQuantity(java.util.Calendar comparecal);
     public boolean GenerateDetailReportByTime(java.util.Calendar comparecal);
     public double editCart(int newquantity, int position, double subtotal);
-    public double deleteFood(int position, double subtotal);
+    public double removeCartFood(int position, double subtotal);
 }
