@@ -219,8 +219,9 @@ public class MainProgram {
         System.out.println("7. Generate Daily Sales Detailed Report(Total Quantity)");
         System.out.println("8. Generate Daily Sales Detailed Report(Order Time)");
         System.out.println("9. Generate DeliveryMan Total Deliver Report");
+        System.out.println("10. Generate Restaurant Detailed Report");
         System.out.println("0. Log Out");
-        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("6") && !selection.equals("7") && !selection.equals("8") && !selection.equals("9") && !selection.equals("0")) {
+        while (!selection.equals("1") && !selection.equals("2") && !selection.equals("3") && !selection.equals("4") && !selection.equals("5") && !selection.equals("6") && !selection.equals("7") && !selection.equals("8") && !selection.equals("9") && !selection.equals("10") && !selection.equals("0")) {
             System.out.print("Option: ");
             selection = s.nextLine();
             switch (selection) {
@@ -266,6 +267,11 @@ public class MainProgram {
                 }
                 case "9": {
                     GenerateDeliveryManTotalDeliverReport();
+                    AdminMenu();
+                    break;
+                }
+                case "10": {
+                    genDetailReportByArea();
                     AdminMenu();
                     break;
                 }
@@ -1218,16 +1224,20 @@ public class MainProgram {
         MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750, HRjoinDate));
         MP.ADList.add(new Admin(20000, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 6000, 6000, ADjoinDate));
         MP.wsList.add(new WorkStatus("WS000001", HRjoinDate, DMjoinDate, 0, 0, MP.DMList.get(1)));
-        MP.restaurant.add(new Restaurant("RE000001", "Nandos", "Western", 'A', "Tneh Chee Wei", "asd", "016-6666666", "Setapak", "100", "1234567890"));
-        MP.restaurant.add(new Restaurant("RE000002", "KFC", "FastFood", 'N', "Tneh Chee Wai", "asd", "016-6666666", "Wangsa Maju", "200", "1234567890"));
-        MP.food.add(new Food("FM000001", "Chicken Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 3));
-        MP.food.add(new Food("FM000002", "Fish Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 1));
-        MP.food.add(new Food("FM000003", "Beef Bolognese", 13.50, "Side Dish", 'A', MP.restaurant.get(1), 2));
-        MP.food.add(new Food("FM000004", "Dinner Plate A", 11.50, "Beverage", 'A', MP.restaurant.get(2), 3));
+        MP.restaurant.add(new Restaurant("RE000001", "Nandos", "Western", 'A', "Tneh Chee Wei", "asd", "016-1234567", "Setapak", "100", "1234567890"));
+        MP.restaurant.add(new Restaurant("RE000002", "KFC", "FastFood", 'N', "Abu", "ase", "016-1234321", "Wangsa Maju", "200", "2"));
+        MP.restaurant.add(new Restaurant("RE000003", "abc", "MalayFood", 'A', "T", "se", "011-12345678", "Wangsa Maju", "200", "2"));
+        MP.restaurant.add(new Restaurant("RE000004", "Texas", "FastFood", 'N', "Ali", "ase", "016-5555555", "Genting Kelang", "200", "2"));
+        MP.restaurant.add(new Restaurant("RE000005", "qwrv", "FastFood", 'N', "Mohamad Dahoud", "ase", "016-1235776", "Wangsa Maju", "200", "2"));
+        MP.restaurant.add(new Restaurant("RE000006", "Sri aa", "FastFood", 'N', "Lee lee lee", "ase", "016-9864234", "Setapak", "200", "2"));
+        MP.food.add(new Food("FM000001", "Chicken Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 1));
+        MP.food.add(new Food("FM000002", "Fish Bolognese", 11.50, "Main Dish", 'A', MP.restaurant.get(1), 3));
+        MP.food.add(new Food("FM000003", "Beef Bolognese", 13.50, "Side Dish", 'A', MP.restaurant.get(1), 3));
+        MP.food.add(new Food("FM000004", "Dinner Plate A", 11.50, "Beverage", 'A', MP.restaurant.get(2), 1));
         MP.food.add(new Food("FM000005", "Dinner Plate B", 12.50, "Side Dish", 'A', MP.restaurant.get(2), 2));
-        MP.food.add(new Food("FM000006", "Dinner Plate C", 13.50, "Beverage", 'A', MP.restaurant.get(2), 1));
-        MP.food.add(new Food("FM000007", "Chicken Rice", 9.50, "Rice", 'A', MP.restaurant.get(1), 3));
-        MP.food.add(new Food("FM000008", "Dinner Plate D", 5.50, "Side Dish", 'A', MP.restaurant.get(2), 3));
+        MP.food.add(new Food("FM000006", "Dinner Plate C", 13.50, "Beverage", 'A', MP.restaurant.get(2), 3));
+        MP.food.add(new Food("FM000007", "Chicken Rice", 9.50, "Main Dish", 'A', MP.restaurant.get(1), 3));
+        MP.food.add(new Food("FM000008", "Dinner Plate D", 5.50, "Side Dish", 'A', MP.restaurant.get(2), 1));
         MP.food.add(new Food("FM000009", "Dinner Plate E", 6.50, "Beverage", 'A', MP.restaurant.get(2),2));
         MP.customer.add(new Customer("CU000001", "Miw Jin Li", "14,Taman Cantik,53300,Setapak,Kuala Lumpur", "Setapak", "0167897898", "971003355333", "1234567890"));
         MP.customer.add(new Customer("CU000002", "Miw Jin Le", "14,Taman Cantik,53300,Wangsa Maju,Kuala Lumpur", "Wangsa Maju", "0167897899", "970104079999", "1234567890"));
@@ -1467,11 +1477,13 @@ public class MainProgram {
         currentOrder.setTotal(Subtotal*1.06);
         System.out.println("\n\nBelow are the foods provided by "+restaurant.get(resIndex).getRestaurantName());
         System.out.println("---------------------------------------------------");
-        for(int k=1 ; k<=CurrentFood.getTotalEntries() ; k++){
+        /*for(int k=1 ; k<=CurrentFood.getTotalEntries() ; k++){
             System.out.println("Food ID->"+CurrentFood.get(k).getFoodID());
             System.out.println("Food Name->"+CurrentFood.get(k).getFoodName());
             System.out.printf("Food Price-> RM%.2f\n",CurrentFood.get(k).getFoodPrice());
-        }
+        }*/
+        
+        showFoodMenu(r);
         System.out.println("---------------------------------------------------");
         while(!foodid.equals("C")&&!foodid.equals("0")&&!foodid.equals("V")&&checkout==false){
             System.out.println("Please Enter the Food ID that You Want");
@@ -1977,8 +1989,6 @@ public class MainProgram {
             Restaurant rest = new Restaurant(restid, rName, rType, rMenu, oName, add, no, area, latitude, pass);
             restaurant.add(rest);
             System.out.println("Successfully Registered.");
-            System.out.println(rest);
-            //System.out.println("Restaurant Name: " + rlist.get(totalRest+1).getRestaurantName());
         }
         }else{
             System.out.println("Invalid Input");
@@ -2233,6 +2243,7 @@ public class MainProgram {
                         System.out.println("1-Normal 2-Promo 3-Exclusive Promo");
                         do{
                             System.out.print("Updated Promotional Status: ");
+                            if(sc.hasNextInt()){
                             int select = sc.nextInt();
                             switch(select){
                                 case 1:{
@@ -2261,6 +2272,11 @@ public class MainProgram {
                                     a = 0;
                                     break;
                                 }
+                            }
+                            }else{
+                                System.out.println("Invalid Input");
+                                sc.next();
+                                a = 0;
                             }
                         }while(a==0);
                         break;
@@ -2427,7 +2443,7 @@ public class MainProgram {
                         food.get(i).getFoodPrice(),food.get(i).getFoodType());
             }
         }
-        food.sortNewest();   
+        food.sortNormal();   
     }
     
     public void showPromotional(Restaurant r){
@@ -2436,7 +2452,7 @@ public class MainProgram {
         System.out.println("-----------------------------------------------------------------------------------------------------------");
         food.sortPromotional();
         for(int j=1 ; j<=food.getNumOfEntries() ; j++){
-            //if((r.getRestaurantID()).equals(flist.get(j).getRestaurant().getRestaurantID())&& flist.get(j).getFoodAvailability()=='A'){
+            if((r.getRestaurantID()).equals(food.get(j).getRestaurant().getRestaurantID())&& food.get(j).getFoodAvailability()=='A'){
                 int pstatus = food.get(j).getpStatus();
                 String pstat = "";
                 switch(pstatus){
@@ -2455,10 +2471,40 @@ public class MainProgram {
                 }
                 System.out.printf("%8s %20s %15.2f %15s %18s \n",food.get(j).getFoodID(),food.get(j).getFoodName(),
                         food.get(j).getFoodPrice(),food.get(j).getFoodType(),pstat);
-            //}
+            }
+            
         }
+        food.sortNormal();
     }
     
+    public void genDetailReportByArea(){
+        restaurant.sortRestaurantByArea();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println("Printed on " + dateFormat.format(date));
+        System.out.println("Restaurant Detailed Report\n");
+        
+
+        System.out.println("-----------------------------------------------------------------"
+                + "-------------------------------------------------------------------------");
+        System.out.printf("%13s %20s %15s %20s %15s %18s %30s\n","Restaurant ID","Restaurant Name","Restaurant Type",
+                "Owner Name","Contact No","Area","Address");
+        System.out.println("------------------------------------------------------------------"
+                + "-----------------------------------------------------------------------");
+        
+        
+        for(int j=1 ; j<=restaurant.getNumOfEntries() ; j++){
+            System.out.printf("%13s %20s %15s %20s %15s %18s %30s\n",restaurant.get(j).getRestaurantID(),
+                    restaurant.get(j).getRestaurantName(),restaurant.get(j).getRestaurantType(),restaurant.get(j).getOwnerName(),
+                    restaurant.get(j).getContactNo(),restaurant.get(j).getArea(),restaurant.get(j).getAddress());
+        }
+        
+        System.out.println("------------------------------------------------------------------"
+                + "-----------------------------------------------------------------------");
+        System.out.printf("%113s%6d%12s\n","Total Number Of Registered Restaurant: ",restaurant.getNumOfEntries()," Restaurants.");
+        System.out.println("------------------------------------------------------------------"
+                + "-----------------------------------------------------------------------");
+    }
     
     public void RestaurantMenu(Restaurant r) {
         int check = 0;
@@ -2498,9 +2544,6 @@ public class MainProgram {
                 }
                 case 5:{
                     showFoodMenu(r);
-                   // foodMenu(r);
-                    //showNewest(r);
-                    //showPromotional(r);
                     sc.nextLine();
                     RestaurantMenu(r);
                     break;
@@ -2522,6 +2565,11 @@ public class MainProgram {
         }
         }while(check==0);
     }
+    
+    
+    
+    
+    //End Module A---------------------------------------------------------------------------------------------------------
     
     //MODULE D==============================================================================================================================
     public void DeliveryManMainMenu(DeliveryMan DM)//DeliveryMan <<<<<<<< MAIN MENU >>>>>>>>
