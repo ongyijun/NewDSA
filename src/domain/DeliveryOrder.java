@@ -19,11 +19,12 @@ public class DeliveryOrder {
     private Calendar DeliveredDate;
     private Calendar DeliveredTime;
     private String DeliveryStatus;
+    private String Feedback;
 
     public DeliveryOrder() {
     }
 
-    public DeliveryOrder(WorkStatus WS, Orders order, Calendar AssignedDate, Calendar AssignedTime, Calendar DeliveredDate, Calendar DeliveredTime, String DeliveryStatus) {
+    public DeliveryOrder(WorkStatus WS, Orders order, Calendar AssignedDate, Calendar AssignedTime, Calendar DeliveredDate, Calendar DeliveredTime, String DeliveryStatus, String Feedback) {
         this.WS = WS;
         this.order = order;
         this.AssignedDate = AssignedDate;
@@ -31,14 +32,16 @@ public class DeliveryOrder {
         this.DeliveredDate = DeliveredDate;
         this.DeliveredTime = DeliveredTime;
         this.DeliveryStatus = DeliveryStatus;
+        this.Feedback = Feedback;
     }
     
-    public DeliveryOrder(Calendar AssignedDate, Calendar AssignedTime, Calendar DeliveredDate, Calendar DeliveredTime, String DeliveryStatus) {
+    public DeliveryOrder(Calendar AssignedDate, Calendar AssignedTime, Calendar DeliveredDate, Calendar DeliveredTime, String DeliveryStatus, String Feedback) {
         this.AssignedDate = AssignedDate;
         this.AssignedTime = AssignedTime;
         this.DeliveredDate = DeliveredDate;
         this.DeliveredTime = DeliveredTime;
         this.DeliveryStatus = DeliveryStatus;
+        this.Feedback = Feedback;
     }
 
     public WorkStatus getWS() {
@@ -95,6 +98,14 @@ public class DeliveryOrder {
 
     public void setDeliveryStatus(String DeliveryStatus) {
         this.DeliveryStatus = DeliveryStatus;
+    }
+
+    public String getFeedback() {
+        return Feedback;
+    }
+
+    public void setFeedback(String Feedback) {
+        this.Feedback = Feedback;
     }
     
     
