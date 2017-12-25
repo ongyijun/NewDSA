@@ -3044,7 +3044,7 @@ public class MainProgram {
                 case "1": {CLORList.displayCustomerPendingOrderInTable(CustID); DisplayCustomerOrder(cust); break;}
                 case "2": {CLDOrderList.displayCustomerAssignOrderInTable(CustID); DisplayCustomerOrder(cust); break;}
                 case "3": {CLDOrderList.displayCustomerDeliverOrderInTable(CustID); DisplayCustomerOrder(cust); break;}
-                case "4": {CustomerMenu(cust); break;}
+                case "4": {break;}
                 default: {System.out.println("Please Enter Again..."); choice = "None";}
             }
         }
