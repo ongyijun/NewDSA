@@ -17,11 +17,11 @@ public interface ModuleCInterface<T> {
     public boolean isEmpty();
     public void clear();
     public void SortOrderDetail();
-    public T remove(int givenPosition);
+    public T remove(int position);
     public String GetCurrentOrderID();
     public String GetCurrentPaymentID();
-    public boolean GenerateDetailReportByQuantity(String day);
-    public boolean GenerateDetailReportByTime(String day);
+    public boolean GenerateDetailReportByQuantity(java.util.Calendar comparecal);
+    public boolean GenerateDetailReportByTime(java.util.Calendar comparecal);
     public double editCart(int newquantity, int position, double subtotal);
-    public double deleteFood(int position, double subtotal);
+    public double removeCartFood(int position, double subtotal);
 }
