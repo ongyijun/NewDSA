@@ -12,10 +12,8 @@ package ADT;
 public interface AListInterface<T> {
     public boolean isEmpty();
     public int getNumOfEntries();
-    public void clear();
     public void add(T entry);
     public T get(int pos);
-    public boolean replace(int pos, T entry);
     public void delete(int pos);
     public void sortNewest();
     public void sortNormal();
