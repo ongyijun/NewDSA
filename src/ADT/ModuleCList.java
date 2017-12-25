@@ -360,7 +360,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
         return newsubtotal;
     }
     
-    public double deleteFood(int position, double subtotal){
+    public double removeCartFood(int position, double subtotal){
         double newsubtotal = 0.00;
         if(isEmpty()){
             System.out.println("No Record In List");

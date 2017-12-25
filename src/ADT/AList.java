@@ -39,11 +39,6 @@ public class AList<T> implements AListInterface<T> {
         return numOfEntries;
     }
     
-    public void clear() {
-        fNode = null;
-        numOfEntries = 0;
-  }
-    
     public void add(T entry){
         Node node = new Node(entry);
         if(isEmpty()){
@@ -72,21 +67,6 @@ public class AList<T> implements AListInterface<T> {
         return data;
     }
     
-    public boolean replace(int pos, T entry){
-        boolean successful = true;
-        
-        if ((pos>0)&&(pos<=numOfEntries)) {
-            Node currentNode = fNode;
-                for (int i=0; i<pos -1; ++i) {
-                    currentNode = currentNode.next;
-                }
-            currentNode.data = entry;
-        } else {
-            successful = false;
-        }   
-        return successful;
-    }
-    
     public void delete(int pos){
         if(!isEmpty()){
             if((pos>0)&&(pos<=numOfEntries)){
@@ -112,10 +92,6 @@ public class AList<T> implements AListInterface<T> {
     
     public void sortNewest(){ //Sort from newest food item to the oldest food item
         Node cNode = fNode;
-        /*
-        Food f1 =(Food)fNode.data;
-        int id = Integer.parseInt(f1.getFoodID().replaceAll("\\D+", ""));
-        */
         Node bNode = null;
         Node aNode = null;
         if(!isEmpty()){
@@ -137,48 +113,148 @@ public class AList<T> implements AListInterface<T> {
         }
     }
     
-    public void sortNormal(){
-        
-    }
-    
-    public void sortPromotional(){
+    public void sortNormal(){ //Sort based on ascending order of foodid
         if(!isEmpty()){
             Node cNode = fNode;
             Node bNode = null;
             Node aNode = null;
+            Node temp = null;
             Food f = null;
             Food f2 = null;
             if(numOfEntries>2){
                 for(int i=1;i<=numOfEntries;i++){
-                    if(cNode.next!=null){
-                        for(int j=1;j<=numOfEntries;j++){
-                            f = (Food) cNode.data;
-                            f2 = (Food)cNode.next.data;
-                            if(f.getpStatus()<f2.getpStatus()){
-                                aNode=cNode.next;
-                                cNode.next=bNode;
-                                bNode=cNode;
-                                cNode=aNode;
-                            }
-                        } 
-                        fNode=bNode;
+                    
+                    temp=cNode;
+                    int k=i+1;
+                    
+                    while(k<=numOfEntries){
+                        temp=temp.next;
+                        Food cf=(Food)cNode.data;
+                        int id = Integer.parseInt(cf.getFoodID().replaceAll("\\D+", ""));
+                        Food tempf=(Food)temp.data;
+                        int tempid = Integer.parseInt(tempf.getFoodID().replaceAll("\\D+", ""));
+                        
+                        if(id>tempid){
+                            T data=temp.data;
+                            temp.data=cNode.data;
+                            cNode.data=data;
+                        }
+                        k++;
                     }
-                    //fNode=bNode;
-                } 
+                    cNode=cNode.next;
+                }
+            }else if(numOfEntries==2){
+                f = (Food) cNode.data;
+                int id1 = Integer.parseInt(f.getFoodID().replaceAll("\\D+", ""));
+                f2 = (Food) cNode.next.data; 
+                int id2 = Integer.parseInt(f2.getFoodID().replaceAll("\\D+", ""));
+                for(int i=1; i<=numOfEntries;i++){
+                    if(cNode!=null){
+                        if(id1>id2){
+                            bNode=cNode.next;
+                            cNode.next=aNode;
+                            aNode=cNode;
+                            cNode=bNode;
+                        }else{
+                            aNode=cNode;
+                        }
+                        fNode=aNode;  
+                    }
+                }  
+            }
+        }
+    }
+    
+    public void sortPromotional(){// Sort the food menu based on the promotional status
+        if(!isEmpty()){
+            Node cNode = fNode;
+            Node bNode = null;
+            Node aNode = null;
+            Node temp = null;
+            Food f = null;
+            Food f2 = null;
+            if(numOfEntries>2){
+                for(int i=1;i<=numOfEntries;i++){
+                    
+                    temp=cNode;
+                    int k=i+1;
+                    
+                    while(k<=numOfEntries){
+                        temp=temp.next;
+                        Food cf=(Food)cNode.data;
+                        Food tempf=(Food)temp.data;
+                        
+                        if(cf.getpStatus()<tempf.getpStatus()){
+                            T data=temp.data;
+                            temp.data=cNode.data;
+                            cNode.data=data;
+                        }
+                        k++;
+                    }
+                    cNode=cNode.next;
+                }
             }else if(numOfEntries==2){
                 f = (Food) cNode.data;
                 f2 = (Food) cNode.next.data; 
                 for(int i=1; i<=numOfEntries;i++){
                     if(cNode!=null){
                         if(f.getpStatus()<f2.getpStatus()){
-                            aNode=cNode.next;
-                            cNode.next=bNode;
-                            bNode=cNode;
-                            cNode=aNode;
+                            bNode=cNode.next;
+                            cNode.next=aNode;
+                            aNode=cNode;
+                            cNode=bNode;
                         }else{
-                            bNode=cNode;
+                            aNode=cNode;
                         }
-                        fNode=bNode;  
+                        fNode=aNode;  
+                    }
+                }  
+            }
+        }
+    }
+    
+    public void sortRestaurantByArea(){//Sort the restaurant based on area
+        if(!isEmpty()){
+            Node cNode = fNode;
+            Node bNode = null;
+            Node aNode = null;
+            Node temp = null;
+            Restaurant r = null;
+            Restaurant r1 = null;
+            if(numOfEntries>2){
+                for(int i=1;i<=numOfEntries;i++){
+                    
+                    temp=cNode;
+                    int k=i+1;
+                    
+                    while(k<=numOfEntries){
+                        temp=temp.next;
+                        Restaurant cr=(Restaurant)cNode.data;
+                        Restaurant tempr=(Restaurant)temp.data;
+                        
+                        if(cr.getArea().compareTo(tempr.getArea())>0){
+                            T data=temp.data;
+                            temp.data=cNode.data;
+                            cNode.data=data;
+                        }
+                        k++;
+                    }
+                    cNode=cNode.next;
+                }
+            }else if(numOfEntries==2){
+                r = (Restaurant) cNode.data;
+                r1 = (Restaurant) cNode.next.data; 
+                for(int i=1; i<=numOfEntries;i++){
+                    if(cNode!=null){
+                        if(r.getArea().compareTo(r1.getArea())>0){
+                            bNode=cNode.next;
+                            cNode.next=aNode;
+                            aNode=cNode;
+                            cNode=bNode;
+                        }else{
+                            aNode=cNode;
+                        }
+                        fNode=aNode;  
                     }
                 }  
             }
