@@ -284,7 +284,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             int j=0;
             for(int i=1 ; i<=TotalEntries ; i++){
                 Orders record = (Orders)tempNode.data;
-                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0&&!record.getOrderStatus().equals("0")){
+                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0&&record.getOrderStatus().equals("4")){
                     System.out.printf("\t\t- %4d    -",j+1);
                     System.out.printf("%14s    -",record.getCustomer().getCustName());
                     System.out.printf("%15s     -",record.getRestaurant().getRestaurantName());
@@ -322,7 +322,7 @@ public class ModuleCList<T> implements ModuleCInterface<T> {
             int j=0;
             for(int i=1 ; i<=TotalEntries ; i++){
                 Orders record = (Orders)tempNode.data;
-                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0&&!record.getOrderStatus().equals("0")){
+                if(dateFormat.format(record.getOrdersDateTime().getTime()).compareTo(dateFormat.format(comparecal.getTime()))==0&&record.getOrderStatus().equals("4")){
                     System.out.printf("\t\t- %4d    -",j+1);
                     System.out.printf("%14s    -",record.getCustomer().getCustName());
                     System.out.printf("%15s     -",record.getRestaurant().getRestaurantName());
