@@ -1921,7 +1921,6 @@ public class MainProgram {
                 Customer cust = new Customer(CustID, CustName, CustAddress, CustArea, CustTelNo, CustIC, CustPass);
                 customer.add(cust);
                 System.out.println("Successfully Registered.");
-                System.out.println(cust);
 
             }
         }else{
@@ -2124,7 +2123,7 @@ public class MainProgram {
         System.out.println("Food Type: " + food.get(i).getFoodType());
         System.out.println("Food Availability: Available");
         //System.out.println(flist.get(totalFood+1).getRestaurant());
-        System.out.println("Please press any key to continue.");
+        System.out.println("Successfully Added");
         sc.nextLine();
         }else{
             System.out.println("Invalid Input");
@@ -2547,7 +2546,6 @@ public class MainProgram {
                 }
                 case 2: {
                     updateFoodInterface(r);
-                    sc.nextLine();
                     break;
                 }
                 case 3: {
@@ -2560,7 +2558,6 @@ public class MainProgram {
                 }
                 case 5:{
                     showFoodMenu(r,food);
-                    sc.nextLine();
                     RestaurantMenu(r);
                     break;
                 }
