@@ -87,6 +87,7 @@ public class MainProgram {
                 }
                 case "5": {
                     CustomerRegistration();
+                    menu();
                     break;
                 }
                 case "0": {
@@ -408,6 +409,7 @@ public class MainProgram {
 
     //Miw Start
     public boolean StaffLogin(String username) {   //verify the Staff ussername and password
+        loginStaff = null;
         boolean login = false;
         for (int i = 1; i <= DMList.getTotalEntries(); i++) {  //verify is it delivery man
             if (DMList.get(i).getStaffID().equals(username)) {   //if found username
@@ -437,7 +439,7 @@ public class MainProgram {
         }
         for (int i = 1; i <= HRList.getTotalEntries(); i++) {  //verify is it HR
             if (HRList.get(i).getStaffID().equals(username)) {
-                if (DMList.get(i).getWorkingStatus().equals("Employed")) {
+                if (HRList.get(i).getWorkingStatus().equals("Employed")) {
                     while (login == false) {
                         System.out.print("Please Enter Password (-1 to back): ");
                         String pw = s.nextLine();
@@ -463,7 +465,7 @@ public class MainProgram {
         }
         for (int i = 1; i <= ADList.getTotalEntries(); i++) {  //verify is it Admin
             if (ADList.get(i).getStaffID().equals(username)) {
-                if (DMList.get(i).getWorkingStatus().equals("Employed")) {
+                if (ADList.get(i).getWorkingStatus().equals("Employed")) {
                     while (login == false) {
 
                         System.out.print("Please Enter Password (-1 to back): ");
@@ -611,7 +613,7 @@ public class MainProgram {
             if (success) {
                 return true;
             } else {
-                System.out.println("Error! The IC have been used!\nPress Enter to Continue...");
+                System.out.println("Error! The ID or IC have been used!\nPress Enter to Continue...");
                 s.nextLine();
                 return false;
             }
@@ -640,7 +642,7 @@ public class MainProgram {
             if (success) {
                 return true;
             } else {
-                System.out.println("Error! The IC have been used!\nPress Enter to Continue...");
+                System.out.println("Error! The ID or IC have been used!\nPress Enter to Continue...");
                 s.nextLine();
                 return false;
             }
@@ -685,7 +687,7 @@ public class MainProgram {
             if (success) {
                 return true;
             } else {
-                System.out.println("Error! The IC have been used!\nPress Enter to Continue...");
+                System.out.println("Error! The ID or IC have been used!\nPress Enter to Continue...");
                 s.nextLine();
                 return false;
             }
@@ -818,7 +820,7 @@ public class MainProgram {
         boolean success = false;
         while (!success) {
             try {
-                System.out.print("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man, " + DO.getWS().getDM().getStaffName() + "? (-1 to Cancel) :");
+                System.out.print("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man, " + DO.getWS().getDM().getStaffName() + " for Order: "+DO.getOrder().getOrdersID()+"? (-1 to Cancel) :");
                 double rate = s.nextDouble();
                 s.nextLine();
                 if (rate < -1 || rate > 10) {
@@ -855,6 +857,7 @@ public class MainProgram {
                     }
                 }
             } catch (Exception ex) {
+                s.nextLine();
                 System.out.println("Please Enter only INTEGERs!\nPress Enter to Continue...");
                 s.nextLine();
             }
@@ -876,7 +879,7 @@ public class MainProgram {
             System.out.print("*");
         }
         for (int i = 1; i <= DMList.getTotalEntries(); i++) {
-            if (DMList.get(i).getTotalPendingDelivery() > 0) {
+            if (DMList.get(i).getTotalPendingDelivery() > 0 && DMList.get(i).getWorkingStatus().equals("Employed")) {
                 System.out.print("\n" + DMList.get(i).getStaffID() + "\t"
                         + DMList.get(i).getStaffName() + "\t" + DMList.get(i).getCurrentAvailable() + "\t\t"
                         + DMList.get(i).getCurrentLocation() + "\t\t" + DMList.get(i).getTotalPendingDelivery());
@@ -1206,11 +1209,11 @@ public class MainProgram {
         Calendar cal2 = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         try {
-            Date date = dateFormat.parse("2017/12/21 12:21:12");
+            Date date = dateFormat.parse("2017/12/26 10:22:12");
             cal.setTime(date);
-            Date date1 = dateFormat.parse("2017/12/21 11:21:12");
+            Date date1 = dateFormat.parse("2017/12/26 11:21:12");
             cal1.setTime(date1);
-            Date date2 = dateFormat.parse("2017/12/21 10:21:12");
+            Date date2 = dateFormat.parse("2017/12/26 10:21:12");
             cal2.setTime(date2);
         } catch (ParseException ex) {
             System.out.println(ex);
@@ -1264,7 +1267,7 @@ public class MainProgram {
 
     public void CustomerMenu(Customer current) {
         String selection = "";
-
+        
         System.out.println("--------------");
         System.out.println("Customer Menu");
         System.out.println("--------------");
@@ -1349,7 +1352,7 @@ public class MainProgram {
                     return;
                 }
                 for (int j = 1; j <= order.getTotalEntries() && found == false; j++) {
-                    if (order.get(j).getOrdersID().toUpperCase().equals(orderid.toUpperCase()) && cal.get(Calendar.MINUTE) - order.get(j).getOrdersDateTime().get(Calendar.MINUTE) < 2 && order.get(j).getOrderStatus().equals("1")
+                    if (order.get(j).getOrdersID().toUpperCase().equals(orderid.toUpperCase()) && cal.getTimeInMillis() - order.get(j).getOrdersDateTime().getTimeInMillis() < 2 * 60 * 1000 && order.get(j).getOrderStatus().equals("1")
                             && order.get(j).getCustomer().getCustID().equals(current.getCustID())) {
                         found = true;
                         order.get(j).setOrderStatus("0");
@@ -1358,7 +1361,7 @@ public class MainProgram {
                     }
                 }
                 if (found == false) {
-                    System.out.printf("Please Key In Again\\n");
+                    System.out.printf("Please Key In Again\n\n");
                 }
             } else {
                 System.out.printf("No Record\n\n");
@@ -1391,7 +1394,7 @@ public class MainProgram {
                             CurrentFood.add(food.get(j));
                         }
                     }
-                    makeOrder(customer.get(1), resIndex);
+                    makeOrder(current, resIndex);
                 }
             }
             if (find == false) {
@@ -1901,7 +1904,7 @@ public class MainProgram {
                 for (int i = 1; i <= restaurant.getNumOfEntries(); i++) {
                     if (add.equals(restaurant.get(i).getAddress())) {
                         System.out.println("Restaurant already exists in the system.");
-                        RestaurantRegistration();
+                        menu();
                         b = false;
                     }
                 }
@@ -1952,7 +1955,6 @@ public class MainProgram {
             }
             if (idcount == 0) {
                 System.out.println("Invalid ID");
-                RestaurantLogin(r);
             }
         }
         return exit;
@@ -1991,6 +1993,7 @@ public class MainProgram {
                 char select = Character.toUpperCase(sc.next().charAt(0));
                 char fAval = 'A';
                 int pStatus = 1;
+                sc.nextLine();
                 switch (select) {
 
                     case 'M': {
@@ -2035,6 +2038,7 @@ public class MainProgram {
             }
         } while (check == 0);
         RestaurantMenu(r);
+       
     }
 
     public void foodMenu(Restaurant r) {
@@ -2592,6 +2596,12 @@ public class MainProgram {
                             }
                         }
                     }
+                    if(!checking)
+                    {
+                        Scanner sc = new Scanner(System.in);
+                        System.out.println("\n\nPlease complete all the deliver first.");
+                        sc.nextLine();
+                    }
                     DeliveryManMainMenu(DM);
                     break;
                 }
@@ -2653,6 +2663,12 @@ public class MainProgram {
                             }
                         }
                     }
+                    if(!checking)
+                    {
+                        Scanner sc = new Scanner(System.in);
+                        System.out.println("\n\nPlease complete all the deliver first.");
+                        sc.nextLine();
+                    }
                     DeliveryManMainMenu(DM);
                     break;
                 }
@@ -2700,7 +2716,7 @@ public class MainProgram {
         System.out.println("**********************************************************************");
 
         System.out.println("\nDeliver Order Customer Detail : ");
-        for (int j = 1; j <= order.getTotalEntries(); j++) {
+        for (int j = 1; j <= CLDOrderList.getTotalEntries(); j++) {
             if (CLDOrderList.get(j).getDeliveryStatus().equals("Deliver") && CLDOrderList.get(j).getWS().getDM().getStaffID().equals(DM.getStaffID())) {
                 System.out.printf("%-8s : %-50s\n", "Name", CLDOrderList.get(j).getOrder().getCustomer().getCustName());
                 System.out.printf("%-8s : %-50s\n", "Tel.", CLDOrderList.get(j).getOrder().getCustomer().getCustTelNo());
