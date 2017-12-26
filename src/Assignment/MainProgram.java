@@ -701,39 +701,44 @@ public class MainProgram {
                 find = true;
                 DeliveryMan DM = DMList.get(i);
                 if (DM.getWorkingStatus().equals("Employed")) {
-                    String choice = "-1";
-                    System.out.println("\n\nName: " + DM.getStaffName() + "\nIC: " + DM.getStaffIC());
-                    System.out.print("Choose A Reason\n 1. Retired\n 2. Resigned\n 0. Back\n");
-                    while (!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
-                        System.out.print("Your Choice: ");
-                        choice = s.nextLine();
-                        switch (choice) {
-                            case "1": {
-                                DM.setWorkingStatus("Retired");
-                                boolean success = DMList.updateDeliveryManDetail(DM);
-                                if (success) {
-                                    System.out.println("\nUpdate Successfully.\nPress Enter to Continue...");
-                                    s.nextLine();
+                    if (DM.getTotalPendingDelivery() == 0) {
+                        String choice = "-1";
+                        System.out.println("\n\nName: " + DM.getStaffName() + "\nIC: " + DM.getStaffIC());
+                        System.out.print("Choose A Reason\n 1. Retired\n 2. Resigned\n 0. Back\n");
+                        while (!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
+                            System.out.print("Your Choice: ");
+                            choice = s.nextLine();
+                            switch (choice) {
+                                case "1": {
+                                    DM.setWorkingStatus("Retired");
+                                    boolean success = DMList.updateDeliveryManDetail(DM);
+                                    if (success) {
+                                        System.out.println("\nUpdate Successfully.\nPress Enter to Continue...");
+                                        s.nextLine();
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                            case "2": {
-                                DM.setWorkingStatus("Resigned");
-                                boolean success = DMList.updateDeliveryManDetail(DM);
-                                if (success) {
-                                    System.out.println("Update Successfully.\nPress Enter to Continue...");
-                                    s.nextLine();
+                                case "2": {
+                                    DM.setWorkingStatus("Resigned");
+                                    boolean success = DMList.updateDeliveryManDetail(DM);
+                                    if (success) {
+                                        System.out.println("Update Successfully.\nPress Enter to Continue...");
+                                        s.nextLine();
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                            case "0": {
-                                break;
-                            }
-                            default: {
-                                System.out.println("Error, Please Key In Again.\n");
-                                break;
+                                case "0": {
+                                    break;
+                                }
+                                default: {
+                                    System.out.println("Error, Please Key In Again.\n");
+                                    break;
+                                }
                             }
                         }
+                    } else {
+                        System.out.println("Error. Delivery Man has pending delivery!\nPress Enter to Continue...");
+                        s.nextLine();
                     }
                 } else {
                     System.out.println("Error. Delivery Man Already Not Working With Us!\nPress Enter to Continue...");
@@ -820,7 +825,7 @@ public class MainProgram {
         boolean success = false;
         while (!success) {
             try {
-                System.out.print("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man, " + DO.getWS().getDM().getStaffName() + " for Order: "+DO.getOrder().getOrdersID()+"? (-1 to Cancel) :");
+                System.out.print("Thank You For using our System.\n ( 0.0 - 10.0 )How much would you like to rate our Delivery Man, " + DO.getWS().getDM().getStaffName() + " for Order: " + DO.getOrder().getOrdersID() + "? (-1 to Cancel) :");
                 double rate = s.nextDouble();
                 s.nextLine();
                 if (rate < -1 || rate > 10) {
@@ -1163,11 +1168,11 @@ public class MainProgram {
         Calendar WSCheckINOut = Calendar.getInstance();
         DMjoinDate.add(Calendar.MONTH, 5);
         HRjoinDate.add(Calendar.MONTH, 1);
-        MP.DMList.add(new DeliveryMan(1, "Not Available", "Not Available", 4.3, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456781", 'M', "2341 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
+        MP.DMList.add(new DeliveryMan(0, "Not Available", "Not Available", 4.3, 1, "DM000001", "123456", "Ong Yi Jun", "971009-02-5213", "012-3456781", 'M', "2341 Lorong 3 Jalan ABC, 51020 KL", "OngYiJun@gmail.com", "Delivery Man", "Employed", 3500, 3500, ADjoinDate));
         MP.DMList.add(new DeliveryMan(0, "Available", "Not Available", 9.75, 5, "DM000002", "123456", "Ong Yi Yi", "971009-02-5213", "012-3456782", 'M', "2342 Lorong 3 Jalan ABC, 51021 KL", "OngYiYi@gmail.com", "Delivery Man", "Employed", 3750, 3750, HRjoinDate));
-        MP.DMList.add(new DeliveryMan(3, "Not Available", "Not Available", 5.6, 2, "DM000003", "123456", "Ong Jun Jun", "971009-02-5213", "012-3456783", 'M', "2343 Lorong 3 Jalan ABC, 51022 KL", "OngJunJun@gmail.com", "Delivery Man", "Employed", 4000, 4000, HRjoinDate));
-        MP.DMList.add(new DeliveryMan(4, "Not Available", "Not Available", 7.4, 3, "DM000004", "123456", "Ong Ong Yi", "971009-02-5213", "012-3456784", 'M', "2344 Lorong 3 Jalan ABC, 51023 KL", "OngOngYi@gmail.com", "Delivery Man", "Employed", 3250, 3250, DMjoinDate));
-        MP.DMList.add(new DeliveryMan(2, "Available", "Not Available", 5.5, 7, "DM000005", "123456", "Ong Ong Jun", "971009-02-5213", "012-3456785", 'M', "2345 Lorong 3 Jalan ABC, 51024 KL", "OngOngJun@gmail.com", "Delivery Man", "Employed", 3000, 3000, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(0, "Not Available", "Not Available", 5.6, 2, "DM000003", "123456", "Ong Jun Jun", "971009-02-5213", "012-3456783", 'M', "2343 Lorong 3 Jalan ABC, 51022 KL", "OngJunJun@gmail.com", "Delivery Man", "Employed", 4000, 4000, HRjoinDate));
+        MP.DMList.add(new DeliveryMan(0, "Not Available", "Not Available", 7.4, 3, "DM000004", "123456", "Ong Ong Yi", "971009-02-5213", "012-3456784", 'M', "2344 Lorong 3 Jalan ABC, 51023 KL", "OngOngYi@gmail.com", "Delivery Man", "Employed", 3250, 3250, DMjoinDate));
+        MP.DMList.add(new DeliveryMan(0, "Available", "Not Available", 5.5, 7, "DM000005", "123456", "Ong Ong Jun", "971009-02-5213", "012-3456785", 'M', "2345 Lorong 3 Jalan ABC, 51024 KL", "OngOngJun@gmail.com", "Delivery Man", "Employed", 3000, 3000, DMjoinDate));
 
         MP.HRList.add(new HR(1, "HR000001", "123456", "Ong Ong Jun", "970707-07-0707", "010-2255533", 'M', "Jalan Prima Setapak, KL", "OngOngJun@hotmail.com", "HR", "Employed", 3500, 3750, HRjoinDate));
         MP.ADList.add(new Admin(20000, "AD000001", "123456", "ABC", "123456678", "012-345678", 'M', "22A, Deaman Ap, KL", "E@e.com", "Admin", "Employed", 6000, 6000, ADjoinDate));
@@ -1267,7 +1272,7 @@ public class MainProgram {
 
     public void CustomerMenu(Customer current) {
         String selection = "";
-        
+
         System.out.println("--------------");
         System.out.println("Customer Menu");
         System.out.println("--------------");
@@ -2038,7 +2043,7 @@ public class MainProgram {
             }
         } while (check == 0);
         RestaurantMenu(r);
-       
+
     }
 
     public void foodMenu(Restaurant r) {
@@ -2596,8 +2601,7 @@ public class MainProgram {
                             }
                         }
                     }
-                    if(!checking)
-                    {
+                    if (!checking) {
                         Scanner sc = new Scanner(System.in);
                         System.out.println("\n\nPlease complete all the deliver first.");
                         sc.nextLine();
@@ -2663,8 +2667,7 @@ public class MainProgram {
                             }
                         }
                     }
-                    if(!checking)
-                    {
+                    if (!checking) {
                         Scanner sc = new Scanner(System.in);
                         System.out.println("\n\nPlease complete all the deliver first.");
                         sc.nextLine();
@@ -2953,7 +2956,7 @@ public class MainProgram {
     }
 
     public void GenerateDeliveryManTotalDeliverReport() {
-        
+
         wsList.SortTotalDelivery();
         Calendar curCal = Calendar.getInstance();
         Scanner sc = new Scanner(System.in);
